@@ -53,7 +53,7 @@ LDFLAGS		:= -B$(PSL1GHT)/target/lib \
 	@cp $(ICON0) $(BUILDDIR)/pkg/
 	@$(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
 	@$(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
-	@if test -n $(PKGFILES) -a -d $(PKGFILES); then cp -rf $(PKGFILES)/* $(BUILDDIR)/pkg/; fi
+	@if test -n "$(PKGFILES)" -a -d "$(PKGFILES)"; then cp -rf $(PKGFILES)/* $(BUILDDIR)/pkg/; fi
 	@$(PKG) --contentid $(CONTENTID) $(BUILDDIR)/pkg/ $@ >> /dev/null
 	@echo "[PKG] $(basename $(notdir $@)).geohot.pkg"
 	@cp $@ $(basename $@).geohot.pkg
