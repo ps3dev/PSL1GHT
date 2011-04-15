@@ -4,6 +4,8 @@
 #include "compiler.h"
 #include "compilerfp.h"
 
+#include <iostream>
+
 #if !defined(WIN32)
 #include <dlfcn.h>
 #endif
@@ -63,7 +65,7 @@ static bool InitCompiler()
 #if defined(WIN32)
 	HMODULE libcgc=LoadLibrary("cg.dll");
 #elif defined(__APPLE__)
-    void *libcgc=dlopen("cg.dylib", RTLD_LAZY);
+    void *libcgc=dlopen("/Library/Frameworks/Cg.framework/Cg", RTLD_LAZY);
 #else
     void *libcgc=dlopen("libCg.so", RTLD_LAZY);
 #endif
@@ -167,6 +169,8 @@ int compileVP()
 		prg = (char*)cgGetProgramString(program,CG_COMPILED_PROGRAM);
 	}
 
+	fprintf(stderr,"%s\n",prg);
+
 	if(prg) {
 		CVPParser parser;
 		CCompiler compiler;
@@ -220,6 +224,7 @@ int compileVP()
 				it->user = lastoff + (n*sizeof(rsxProgramAttrib));
 				attribs[n].index = SWAP32(it->index);
 				attribs[n].name_off = SWAP32(0);
+				attribs[n].type = it->type;
 				n++;
 			}
 		}
@@ -316,6 +321,8 @@ int compileFP()
 		prg = (char*)cgGetProgramString(program,CG_COMPILED_PROGRAM);
 	}
 
+	fprintf(stderr,"%s\n",prg);
+
 	if(prg) {
 		CFPParser parser;
 		CCompilerFP compiler;
@@ -350,6 +357,7 @@ int compileFP()
 				it->user = lastoff + (n*sizeof(rsxProgramAttrib));
 				attribs[n].index = SWAP32(it->index);
 				attribs[n].name_off = SWAP32(0);
+				attribs[n].type = it->type;
 				n++;
 			}
 		}

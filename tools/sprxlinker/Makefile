@@ -26,8 +26,8 @@ TARGET		:= sprxlinker$(POSTFIX)
 SOURCE		:= .
 INCLUDE		:= .
 
-CFLAGS		:= -O2 -Wall --std=gnu99
-LDFLAGS		:= -lelf
+CFLAGS		:= -O2 -Wall --std=gnu99 -I/opt/local/include
+LDFLAGS		:= -L/opt/local/lib -lelf
 
 CC		:= gcc
 
