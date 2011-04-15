@@ -851,3 +851,75 @@ void rsxSetTransformBranchBits(gcmContextData *context,u32 branchBits)
 
 	RSX_CONTEXT_CURRENT_END(2);
 }
+
+void
+rsxSetTransferData(gcmContextData * context,uint8_t mode,uint32_t dst,uint32_t outpitch,uint32_t src,uint32_t inpitch,uint32_t linelength,uint32_t linecount)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(12);
+
+  *RSX_CONTEXT_CURRENTP++ = RSX_SUBCHANNEL_METHOD(1,0x184,2);
+  *RSX_CONTEXT_CURRENTP++ = (mode & 0x1) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+  *RSX_CONTEXT_CURRENTP++ = (mode & 0x2) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+
+  *RSX_CONTEXT_CURRENTP++ = RSX_SUBCHANNEL_METHOD(1,0x30c,8);
+  *RSX_CONTEXT_CURRENTP++ = src;
+  *RSX_CONTEXT_CURRENTP++ = dst;
+  *RSX_CONTEXT_CURRENTP++ = inpitch;
+  *RSX_CONTEXT_CURRENTP++ = outpitch;
+  *RSX_CONTEXT_CURRENTP++ = linelength;
+  *RSX_CONTEXT_CURRENTP++ = linecount;
+  *RSX_CONTEXT_CURRENTP++ = ((u32)1 << 8) | 1;
+  *RSX_CONTEXT_CURRENTP++ = 0;
+
+  RSX_CONTEXT_CURRENT_END(12);
+}
+
+void
+rsxSetTransferDataMode(gcmContextData * context,u8 mode)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(3);
+  *RSX_CONTEXT_CURRENTP++ = RSX_SUBCHANNEL_METHOD(1,0x184,2);
+  *RSX_CONTEXT_CURRENTP++ = (mode & 0x1) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+  *RSX_CONTEXT_CURRENTP++ = (mode & 0x2) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+  RSX_CONTEXT_CURRENT_END(3);
+}
+
+void
+rsxSetTransferDataOffset(gcmContextData *context,u32 dst,u32 src)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(5);
+
+  *RSX_CONTEXT_CURRENTP++ = RSX_SUBCHANNEL_METHOD(1,0x30c,2);
+  *RSX_CONTEXT_CURRENTP++ = src;
+  *RSX_CONTEXT_CURRENTP++ = dst;
+  *RSX_CONTEXT_CURRENTP++ = RSX_SUBCHANNEL_METHOD(1,0x328,1);
+  *RSX_CONTEXT_CURRENTP++ = 0;
+
+  RSX_CONTEXT_CURRENT_END(5);
+}
+
+void
+rsxSetTransferDataFormat(gcmContextData * context,s32 inpitch,s32 outpitch,u32 linelength,u32 linecount,u8 inbytes,u8 outbytes)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(6);
+
+  *RSX_CONTEXT_CURRENTP++ = RSX_SUBCHANNEL_METHOD(1,0x314,5);
+  *RSX_CONTEXT_CURRENTP++ = inpitch;
+  *RSX_CONTEXT_CURRENTP++ = outpitch;
+  *RSX_CONTEXT_CURRENTP++ = linelength;
+  *RSX_CONTEXT_CURRENTP++ = linecount;
+  *RSX_CONTEXT_CURRENTP++ = ((u32)outbytes << 8) | inbytes;
+
+  RSX_CONTEXT_CURRENT_END(6);
+}
+
+void
+rsxSetTimeStamp(gcmContextData * context,u32 index)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(2);
+
+  *RSX_CONTEXT_CURRENTP++ = RSX_METHOD(0x1800,1);
+  *RSX_CONTEXT_CURRENTP++ = ((index << 4) & 0xFFFFFFF) | (0x1000000);
+
+  RSX_CONTEXT_CURRENT_END(2);
+}

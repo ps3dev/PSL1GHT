@@ -244,6 +244,11 @@ void rsxSetBlendEquation(gcmContextData *context,u16 color,u16 alpha);
 void rsxSetBlendColor(gcmContextData *context,u16 color0,u16 color1);
 void rsxSetBlendEnable(gcmContextData *context,u32 enable);
 void rsxSetTransformBranchBits(gcmContextData *context,u32 branchBits);
+void rsxSetTransferData(gcmContextData *,u8,u32,u32,u32,u32,u32,u32);
+void rsxSetTransferDataMode(gcmContextData *,u8);
+void rsxSetTransferDataOffset(gcmContextData *,u32,u32);
+void rsxSetTransferDataFormat(gcmContextData *,s32,s32,u32,u32,u8,u8);
+void rsxSetTimeStamp(gcmContextData *,u32);
 
 #ifdef __cplusplus
 	}
