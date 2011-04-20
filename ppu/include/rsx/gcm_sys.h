@@ -523,6 +523,83 @@ typedef struct _gcmTexture
 	u32 offset;
 } gcmTexture;
 
+#define GCM_TRANSFER_SURFACE 0
+#define GCM_TRANSFER_SWIZZLE 1
+
+#define GCM_TRANSFER_CONVERSION_DITHER 0
+#define GCM_TRANSFER_CONVERSION_TRUNCATE 1
+#define GCM_TRANSFER_CONVERSION_SUBTRACT_TRUNCATE 2
+
+#define GCM_TRANSFER_SCALE_FORMAT_A1R5G5B5 1
+#define GCM_TRANSFER_SCALE_FORMAT_X1R5G5B5 2
+#define GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8 3
+#define GCM_TRANSFER_SCALE_FORMAT_X8R8G8B8 4
+#define GCM_TRANSFER_SCALE_FORMAT_CR8YB8CB8YA8 5
+#define GCM_TRANSFER_SCALE_FORMAT_YB8CR8YA8CB8 6
+#define GCM_TRANSFER_SCALE_FORMAT_R5G6B5 7
+#define GCM_TRANSFER_SCALE_FORMAT_Y8 8
+#define GCM_TRANSFER_SCALE_FORMAT_AY8 9
+#define GCM_TRANSFER_SCALE_FORMAT_EYB8ECR8EYA8ECB8 0xa
+#define GCM_TRANSFER_SCALE_FORMAT_ECR8EYB8ECB8EYA8 0xb
+#define GCM_TRANSFER_SCALE_FORMAT_A8B8G8R8 0xc
+#define GCM_TRANSFER_SCALE_FORMAT_X8B8G8R8 0xd
+
+#define GCM_TRANSFER_OPERATION_SRCCOPY_AND 0
+#define GCM_TRANSFER_OPERATION_ROP_AND 1
+#define GCM_TRANSFER_OPERATION_BLEND_AND 2
+#define GCM_TRANSFER_OPERATION_SRCCOPY 3
+#define GCM_TRANSFER_OPERATION_SRCCOPY_PREMULT 4
+#define GCM_TRANSFER_OPERATION_BLEND_PREMULT 5
+
+#define GCM_TRANSFER_ORIGIN_CENTER 1
+#define GCM_TRANSFER_ORIGIN_CORNER 2
+
+#define GCM_TRANSFER_INTERPOLATOR_NEAREST 0 // point sampling
+#define GCM_TRANSFER_INTERPOLATOR_LINEAR 1 // bilinear interpolation
+
+#define GCM_TRANSFER_SURFACE_FORMAT_R5G6B5 4
+#define GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8 0xa
+#define GCM_TRANSFER_SURFACE_FORMAT_Y32 0xb
+
+
+typedef struct _gcmTransferScale {
+  u32 conversion;
+  u32 format;
+  u32 operation;
+  s16 clipX;
+  s16 clipY;
+  u16 clipW;
+  u16 clipH;
+  s16 outX;
+  s16 outY;
+  u16 outW;
+  u16 outH;
+  s32 ratioX;
+  s32 ratioY;
+  u16 inW;
+  u16 inH;
+  u16 pitch;
+  u8 origin;
+  u8 interp;
+  u32 offset;
+  u16 inX;
+  u16 inY;
+} gcmTransferScale;
+
+typedef struct _gcmTransferSurface {
+  u32 format;
+  u16 pitch;
+  u16 _padding;
+  u32 offset;
+} gcmTransferSurface;
+
+typedef struct _gcmTransferSwizzle {
+  u16 format;
+  u8 width;
+  u8 height;
+  u32 offset;
+} gcmTransferSwizzle;
+
 typedef s32 (*gcmContextCallback)(gcmContextData *context,u32 count);
 
 /*! \brief Initialize the RSX context.

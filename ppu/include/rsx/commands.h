@@ -248,6 +248,11 @@ void rsxSetTransferData(gcmContextData *,u8,u32,u32,u32,u32,u32,u32);
 void rsxSetTransferDataMode(gcmContextData *,u8);
 void rsxSetTransferDataOffset(gcmContextData *,u32,u32);
 void rsxSetTransferDataFormat(gcmContextData *,s32,s32,u32,u32,u8,u8);
+void rsxSetTransferImage(gcmContextData *,const u8,const u32,const u32,const u32,const u32,const u32,const u32,const u32,const u32,const u32,const u32,const u32);
+void rsxSetTransferScaleMode(gcmContextData *,const u8,const u8);
+void rsxSetTransferScaleSurface(gcmContextData *,const gcmTransferScale *,const gcmTransferSurface *);
+void rsxSetTransferScaleSwizzle(gcmContextData *,const gcmTransferScale *,const gcmTransferSwizzle *);
+
 void rsxSetTimeStamp(gcmContextData *,u32);
 
 #ifdef __cplusplus
