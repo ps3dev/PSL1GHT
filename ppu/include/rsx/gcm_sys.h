@@ -7,6 +7,18 @@
 
 #include <ppu-types.h>
 
+static inline
+s32 rsxGetFixedSint32(const float f)
+{
+  return (int32_t)(f * 1048576.0f);
+}
+
+static inline
+u16 rsxGetFixedUint16(const float f)
+{
+  return (uint16_t)(f * 16.0f);
+}
+
 /*! \brief true boolean value */
 #define GCM_TRUE								1
 /*! \brief false boolean value */
