@@ -574,34 +574,102 @@ typedef struct _gcmTexture
 #define GCM_TRANSFER_SURFACE_FORMAT_Y32 0xb
 
 
+  /*! \brief Specify scaled image blit geometry and format for rsxSetTransferImage() */
 typedef struct _gcmTransferScale {
+
+  /*! \brief Not sure what this dones. Possible values:
+    - \ref GCM_TRANSFER_CONVERSION_DITHER
+    - \ref GCM_TRANSFER_CONVERSION_TRUNCATE
+    - \ref GCM_TRANSFER_CONVERSION_SUBTRACT_TRUNCATE
+   */
   u32 conversion;
+
+  /*! \brief Format of image data. Possible values:
+    - \ref GCM_TRANSFER_SCALE_FORMAT_A1R5G5B5
+    - \ref GCM_TRANSFER_SCALE_FORMAT_X1R5G5B5
+    - \ref GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_X8R8G8B8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_CR8YB8CB8YA8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_YB8CR8YA8CB8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_R5G6B5
+    - \ref GCM_TRANSFER_SCALE_FORMAT_Y8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_AY8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_EYB8ECR8EYA8ECB8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_ECR8EYB8ECB8EYA8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_A8B8G8R8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_X8B8G8R8
+   */
   u32 format;
+
+  /*! \brief Blit operation. Possible values:
+    - \ref GCM_TRANSFER_OPERATION_SRCCOPY_AND
+    - \ref GCM_TRANSFER_OPERATION_ROP_AND
+    - \ref GCM_TRANSFER_OPERATION_BLEND_AND
+    - \ref GCM_TRANSFER_OPERATION_SRCCOPY
+    - \ref GCM_TRANSFER_OPERATION_SRCCOPY_PREMULT
+    - \ref GCM_TRANSFER_OPERATION_BLEND_PREMULT
+   */
   u32 operation;
+
+  /*! \brief Clipping rectangle, within the destination surface. */
   s16 clipX;
   s16 clipY;
   u16 clipW;
   u16 clipH;
+
+  /*! \brief Origin of destination rectangle. */
   s16 outX;
   s16 outY;
+  /*! \brief Size of the destination rectangle. */
   u16 outW;
   u16 outH;
+
+  /*! \brief Ratios of the source rectangle size to the destination rectangle size, encoded as a 32-bit signed fixed-point number. Such a value can be obtained from a floating point number by rsxGetFixedSint32(). */
   s32 ratioX;
   s32 ratioY;
+
+  /*! \brief Size of the source rectangle. */
   u16 inW;
   u16 inH;
+
+  /*! \brief Pitch size, in bytes, of the source image data (width multiplied by the number of bytes in each pixel). */
   u16 pitch;
+
+  /*! \brief How the origin of each pixel is determined. Possible values:
+    - \ref GCM_TRANSFER_ORIGIN_CENTER
+    - \ref GCM_TRANSFER_ORIGIN_CORNER
+   */
   u8 origin;
+
+  /*! \brief Sampling for scaled blits. Possible values:
+    - \ref GCM_TRANSFER_INTERPOLATOR_NEAREST: no interpolation
+    - \ref GCM_TRANSFER_INTERPOLATOR_LINEAR: bilinear interpolation
+   */
   u8 interp;
+  
+  /*! \brief Image data offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory(). */
   u32 offset;
+
+  /*! \brief Origin of destination rectangle. */
   u16 inX;
   u16 inY;
 } gcmTransferScale;
 
+  /*! \brief Specify destination surface characteristics for rsxSetTransferImage(). */
 typedef struct _gcmTransferSurface {
+
+  /*! \brief Format of destination surface. Possible values are:
+    - \ref GCM_TRANSFER_SURFACE_FORMAT_R5G6B5
+    - \ref GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8
+    - \ref GCM_TRANSFER_SURFACE_FORMAT_Y32
+   */
   u32 format;
+
+  /*! \brief Pitch for destination surface (width multipied by the number of bytes per pixel). */
   u16 pitch;
   u16 _padding;
+
+  /*! \brief Destination suface memory offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory(). */
   u32 offset;
 } gcmTransferSurface;
 
