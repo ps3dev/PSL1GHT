@@ -332,9 +332,11 @@ void rsxSetTransferScaleMode(gcmContextData *context,const u8 mode,const u8 surf
    */
 void rsxSetTransferScaleSurface(gcmContextData *context,const gcmTransferScale *scale,const gcmTransferSurface *surface);
 
+#if 0
   /*! \brief Unfinished.
    */
 void rsxSetTransferScaleSwizzle(gcmContextData *,const gcmTransferScale *,const gcmTransferSwizzle *);
+#endif
 
 void rsxSetTimeStamp(gcmContextData *,u32);
 

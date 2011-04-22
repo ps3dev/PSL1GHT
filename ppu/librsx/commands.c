@@ -1002,6 +1002,8 @@ rsxSetTransferScaleSurface(gcmContextData *context,const gcmTransferScale *scale
   RSX_CONTEXT_CURRENT_END(20);
 }
 
+#if 0
+// This is unfinished.
 void
 rsxSetTransferScaleSwizzle(gcmContextData *context,const gcmTransferScale *scale,const gcmTransferSwizzle *swizzle)
 {
@@ -1030,6 +1032,7 @@ rsxSetTransferScaleSwizzle(gcmContextData *context,const gcmTransferScale *scale
 
   RSX_CONTEXT_CURRENT_END(18);
 }
+#endif
 
 void
 rsxSetTimeStamp(gcmContextData * context,u32 index)
