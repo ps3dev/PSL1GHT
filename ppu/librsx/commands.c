@@ -885,20 +885,6 @@ rsxSetTransferDataMode(gcmContextData * context,u8 mode)
 }
 
 void
-rsxSetTransferDataOffset(gcmContextData *context,u32 dst,u32 src)
-{
-  RSX_CONTEXT_CURRENT_BEGIN(5);
-
-  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(1,0x30c,2);
-  RSX_CONTEXT_CURRENTP[1] = src;
-  RSX_CONTEXT_CURRENTP[2] = dst;
-  RSX_CONTEXT_CURRENTP[3] = RSX_SUBCHANNEL_METHOD(1,0x328,1);
-  RSX_CONTEXT_CURRENTP[4] = 0;
-
-  RSX_CONTEXT_CURRENT_END(5);
-}
-
-void
 rsxSetTransferDataFormat(gcmContextData * context,s32 inpitch,s32 outpitch,u32 linelength,u32 linecount,u8 inbytes,u8 outbytes)
 {
   RSX_CONTEXT_CURRENT_BEGIN(6);
@@ -911,6 +897,20 @@ rsxSetTransferDataFormat(gcmContextData * context,s32 inpitch,s32 outpitch,u32 l
   RSX_CONTEXT_CURRENTP[5] = ((u32)outbytes << 8) | inbytes;
 
   RSX_CONTEXT_CURRENT_END(6);
+}
+
+void
+rsxSetTransferDataOffset(gcmContextData *context,u32 dst,u32 src)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(5);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(1,0x30c,2);
+  RSX_CONTEXT_CURRENTP[1] = src;
+  RSX_CONTEXT_CURRENTP[2] = dst;
+  RSX_CONTEXT_CURRENTP[3] = RSX_SUBCHANNEL_METHOD(1,0x328,1);
+  RSX_CONTEXT_CURRENTP[4] = 0;
+
+  RSX_CONTEXT_CURRENT_END(5);
 }
 
 void
@@ -928,7 +928,7 @@ rsxSetTransferImage(gcmContextData *context,const u8 mode,const u32 dstOffset,co
   RSX_CONTEXT_CURRENTP[5] = 0x313371c3;
 
   RSX_CONTEXT_CURRENTP[6] = RSX_SUBCHANNEL_METHOD(3,0x30c,1);
-  RSX_CONTEXT_CURRENTP[7] = dstOffset + (dstY * dstPitch) + (dstX * bytesPerPixel);
+  RSX_CONTEXT_CURRENTP[7] = dstOffset;
 
   RSX_CONTEXT_CURRENTP[8] = RSX_SUBCHANNEL_METHOD(3,0x300,2);
   RSX_CONTEXT_CURRENTP[9] = (bytesPerPixel == 4) ? GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8 : (bytesPerPixel == 2) ? GCM_TRANSFER_SURFACE_FORMAT_R5G6B5 : 0;
@@ -948,7 +948,7 @@ rsxSetTransferImage(gcmContextData *context,const u8 mode,const u32 dstOffset,co
   RSX_CONTEXT_CURRENTP[21] = RSX_SUBCHANNEL_METHOD(6,0x400,4);
   RSX_CONTEXT_CURRENTP[22] = (height << 16) | width;
   RSX_CONTEXT_CURRENTP[23] = srcPitch | (GCM_TRANSFER_ORIGIN_CORNER << 16) | (GCM_TRANSFER_INTERPOLATOR_NEAREST << 24);
-  RSX_CONTEXT_CURRENTP[24] = srcOffset + (srcY * srcPitch) + (srcX * bytesPerPixel);
+  RSX_CONTEXT_CURRENTP[24] = srcOffset;
   RSX_CONTEXT_CURRENTP[25] = 0;
 
   RSX_CONTEXT_CURRENT_END(26);
