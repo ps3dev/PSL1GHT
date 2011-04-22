@@ -36,7 +36,8 @@ typedef struct sys_cond_attr
 */
 LV2_SYSCALL sysCondCreate(sys_cond_t *cond,sys_mutex_t mutex,const sys_cond_attr_t *attr)
 {
-	return lv2syscall3(105,(u64)cond,mutex,(u64)attr);
+	lv2syscall3(105,(u64)cond,mutex,(u64)attr);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Destroy a condition variable.
@@ -45,7 +46,8 @@ LV2_SYSCALL sysCondCreate(sys_cond_t *cond,sys_mutex_t mutex,const sys_cond_attr
 */
 LV2_SYSCALL sysCondDestroy(sys_cond_t cond)
 {
-	return lv2syscall1(106,cond);
+	lv2syscall1(106,cond);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Wait for a condition variable to be signaled.
@@ -62,7 +64,8 @@ nonzero in case of error or if a timeout occured.
 */
 LV2_SYSCALL sysCondWait(sys_cond_t cond,u64 timeout_usec)
 {
-	return lv2syscall2(107,cond,timeout_usec);
+	lv2syscall2(107,cond,timeout_usec);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Signal a condition variable to at most one waiting thread.
@@ -71,7 +74,8 @@ LV2_SYSCALL sysCondWait(sys_cond_t cond,u64 timeout_usec)
 */
 LV2_SYSCALL sysCondSignal(sys_cond_t cond)
 {
-	return lv2syscall1(108,cond);
+	lv2syscall1(108,cond);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Signal a condition variable to all waiting threads.
@@ -80,7 +84,8 @@ LV2_SYSCALL sysCondSignal(sys_cond_t cond)
 */
 LV2_SYSCALL sysCondBroadcast(sys_cond_t cond)
 {
-	return lv2syscall1(109,cond);
+	lv2syscall1(109,cond);
+	return_to_user_prog(s32);
 }
 
 #ifdef __cplusplus

@@ -79,7 +79,8 @@ typedef struct sys_mutex_attr
 */
 LV2_SYSCALL sysMutexCreate(sys_mutex_t *mutex,const sys_mutex_attr_t *attr)
 {
-	return lv2syscall2(100,(u64)mutex,(u64)attr);
+	lv2syscall2(100,(u64)mutex,(u64)attr);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Destroy a mutex.
@@ -88,7 +89,8 @@ LV2_SYSCALL sysMutexCreate(sys_mutex_t *mutex,const sys_mutex_attr_t *attr)
 */
 LV2_SYSCALL sysMutexDestroy(sys_mutex_t mutex)
 {
-	return lv2syscall1(101,mutex);
+	lv2syscall1(101,mutex);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Lock a mutex.
@@ -99,7 +101,8 @@ nonzero in case of error or if a timeout occured.
 */
 LV2_SYSCALL sysMutexLock(sys_mutex_t mutex,u64 timeout_usec)
 {
-	return lv2syscall2(102,mutex,timeout_usec);
+	lv2syscall2(102,mutex,timeout_usec);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Try to lock a mutex (non-blocking).
@@ -109,7 +112,8 @@ nonzero in case of error or if the mutex is already locked by another thread.
 */
 LV2_SYSCALL sysMutexTryLock(sys_mutex_t mutex)
 {
-	return lv2syscall1(103,mutex);
+	lv2syscall1(103,mutex);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Unlock a previously locked mutex.
@@ -118,7 +122,8 @@ LV2_SYSCALL sysMutexTryLock(sys_mutex_t mutex)
 */
 LV2_SYSCALL sysMutexUnlock(sys_mutex_t mutex)
 {
-	return lv2syscall1(104,mutex);
+	lv2syscall1(104,mutex);
+	return_to_user_prog(s32);
 }
 
 #ifdef __cplusplus

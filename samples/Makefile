@@ -1,4 +1,4 @@
-TARGETS := audio graphics input network spu sys video
+TARGETS := audio graphics input network spu sys
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET; done

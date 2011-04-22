@@ -45,7 +45,7 @@ int main(int argc,char *argv[])
 
 	sysSpuInitialize(6,0);
 	sysSpuImageImport(&image,spu_bin,0);
-	sysSpuThreadGroupCreate(&group_id,1,100,&grpattr);
+	sysSpuThreadGroupCreate(&group_id,6,100,&grpattr);
 
 	spu = (spustr_t*)memalign(128,6*sizeof(spustr_t));
 	array = (u32*)memalign(128,4*sizeof(u32));

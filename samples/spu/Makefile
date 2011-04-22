@@ -1,4 +1,4 @@
-TARGETS := spuchain spudma sputest sputhread # spuparallel
+TARGETS := spuchain spudma sputest sputhread spuparallel
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET bin; done

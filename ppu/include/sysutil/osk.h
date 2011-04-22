@@ -137,7 +137,7 @@ typedef struct _osk_cb_return_param
 	u16 *str;
 } oskCallbackReturnParam;
 
-typedef struct _osk_seperate_window_option
+typedef struct _osk_separate_window_option
 {
 	oskContinuousMode continuous;
 	s32 mask;
@@ -146,7 +146,7 @@ typedef struct _osk_seperate_window_option
 	oskLayoutInfo *inputFieldLayoutInfo;
 	oskLayoutInfo *inputPanelLayoutInfo;
 	u32 reserved;
-} oskSeperateWindowOption;
+} oskSeparateWindowOption;
 
 s32 oskSetInitialInputDevice(oskInputDevice input);
 s32 oskGetSize(u16 *width, u16 *height, oskType type);

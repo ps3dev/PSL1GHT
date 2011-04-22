@@ -83,7 +83,8 @@ typedef struct sys_event
 */
 LV2_SYSCALL sysEventQueueCreate(sys_event_queue_t *eventQ,sys_event_queue_attr_t *attrib,sys_ipc_key_t key,s32 size)
 {
-	return lv2syscall4(128,(u64)eventQ,(u64)attrib,key,size);
+	lv2syscall4(128,(u64)eventQ,(u64)attrib,key,size);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Destroy an event queue.
@@ -93,7 +94,8 @@ LV2_SYSCALL sysEventQueueCreate(sys_event_queue_t *eventQ,sys_event_queue_attr_t
 */
 LV2_SYSCALL sysEventQueueDestroy(sys_event_queue_t eventQ,s32 mode)
 {
-	return lv2syscall2(129,eventQ,mode);
+	lv2syscall2(129,eventQ,mode);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Receive an event from an event queue.
@@ -108,7 +110,11 @@ The current thread blocks until an event is received or the timeout period
 */
 LV2_SYSCALL sysEventQueueReceive(sys_event_queue_t eventQ,sys_event_t *event,u64 timeout_usec)
 {
-	return lv2syscall3(130,eventQ,(u64)event,timeout_usec);
+	lv2syscall3(130,eventQ,(u64)event,timeout_usec);
+#ifdef REG_PASS_SYS_EVENT_QUEUE_RECEIVE
+	REG_PASS_SYS_EVENT_QUEUE_RECEIVE;
+#endif
+	return_to_user_prog(s32);
 }
 
 /*! \brief Drain an event queue.
@@ -119,15 +125,15 @@ This function removes all pending events in the queue, making it empty.
 */
 LV2_SYSCALL sysEventQueueDrain(sys_event_queue_t eventQ)
 {
-	return lv2syscall1(133,eventQ);
+	lv2syscall1(133,eventQ);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Create an event port.
 
 This function creates an event port for sending events thru a connected event queue.
 \param portId Pointer to receive the event port id.
-\param portType Type of the port to create.
-
+\param portType Type of the port to create. \n
 Possible values:
 - \ref SYS_EVENT_PORT_LOCAL
 \param name User defined name or \ref SYS_EVENT_PORT_NO_NAME.
@@ -135,7 +141,8 @@ Possible values:
 */
 LV2_SYSCALL sysEventPortCreate(sys_event_port_t *portId,int portType,u64 name)
 {
-	return lv2syscall3(134,(u64)portId,portType,name);
+	lv2syscall3(134,(u64)portId,portType,name);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Destroys an event port.
@@ -144,7 +151,8 @@ LV2_SYSCALL sysEventPortCreate(sys_event_port_t *portId,int portType,u64 name)
 */
 LV2_SYSCALL sysEventPortDestroy(sys_event_port_t portId)
 {
-	return lv2syscall1(135,portId);
+	lv2syscall1(135,portId);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Send an event.
@@ -158,7 +166,8 @@ This function sends an event to the event queue that is connected with the speci
 */
 LV2_SYSCALL sysEventPortSend(sys_event_port_t portId,u64 data0,u64 data1,u64 data2)
 {
-	return lv2syscall4(138,portId,data0,data1,data2);
+	lv2syscall4(138,portId,data0,data1,data2);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Connect an event port to an event queue in the same process.
@@ -168,7 +177,8 @@ LV2_SYSCALL sysEventPortSend(sys_event_port_t portId,u64 data0,u64 data1,u64 dat
 */
 LV2_SYSCALL sysEventPortConnectLocal(sys_event_port_t portId,sys_event_queue_t eventQ)
 {
-	return lv2syscall2(136,portId,eventQ);
+	lv2syscall2(136,portId,eventQ);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Disconnect an event port from an event queue.
@@ -177,7 +187,8 @@ LV2_SYSCALL sysEventPortConnectLocal(sys_event_port_t portId,sys_event_queue_t e
 */
 LV2_SYSCALL sysEventPortDisconnect(sys_event_port_t portId)
 {
-	return lv2syscall1(137,portId);
+	lv2syscall1(137,portId);
+	return_to_user_prog(s32);
 }
 
 #ifdef __cplusplus

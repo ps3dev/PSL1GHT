@@ -44,7 +44,8 @@
 } while(0)
 
 static vu32 running = 0;
-static sys_ppu_thread_t thr0,thr1;
+static sys_ppu_thread_t thr0;
+//static sys_ppu_thread_t thr1;
 
 static vu32 exit_flag = 0;
 static volatile int listen_socket = -1;
@@ -193,7 +194,7 @@ reloop:
 		u32 magic = 0;
 		if(read(f,&magic,sizeof(u32))<0)
 			continueloop();
-		
+
 		if(magic!=0x48415858) {
 			fprintf(stderr,"Wrong HAXX magic\n");
 			continueloop();

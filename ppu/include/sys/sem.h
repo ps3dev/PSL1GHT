@@ -44,7 +44,8 @@ typedef struct sys_sem_attr
 */
 LV2_SYSCALL sysSemCreate(sys_sem_t *sem,const sys_sem_attr_t *attr,s32 initial_val,s32 max_val)
 {
-	return lv2syscall4(90,(u64)sem,(u64)attr,initial_val,max_val);
+	lv2syscall4(90,(u64)sem,(u64)attr,initial_val,max_val);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Destroy a semaphore.
@@ -53,7 +54,8 @@ LV2_SYSCALL sysSemCreate(sys_sem_t *sem,const sys_sem_attr_t *attr,s32 initial_v
 */
 LV2_SYSCALL sysSemDestroy(sys_sem_t sem)
 {
-	return lv2syscall1(91,sem);
+	lv2syscall1(91,sem);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Wait and reserve a semaphore.
@@ -64,7 +66,8 @@ nonzero in case of error or if a timeout occured.
 */
 LV2_SYSCALL sysSemWait(sys_sem_t sem,u64 timeout_usec)
 {
-	return lv2syscall2(92,sem,timeout_usec);
+	lv2syscall2(92,sem,timeout_usec);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Reserve a semaphore (non-blocking).
@@ -74,7 +77,8 @@ nonzero in case of error or if the semaphore value is below 1.
 */
 LV2_SYSCALL sysSemTryWait(sys_sem_t sem)
 {
-	return lv2syscall1(93,sem);
+	lv2syscall1(93,sem);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Release a semaphore.
@@ -84,7 +88,8 @@ LV2_SYSCALL sysSemTryWait(sys_sem_t sem)
 */
 LV2_SYSCALL sysSemPost(sys_sem_t sem,s32 count)
 {
-	return lv2syscall2(94,sem,count);
+	lv2syscall2(94,sem,count);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get the value of a semaphore.
@@ -94,7 +99,8 @@ LV2_SYSCALL sysSemPost(sys_sem_t sem,s32 count)
 */
 LV2_SYSCALL sysSemGetValue(sys_sem_t sem,s32 *count)
 {
-	return lv2syscall2(114,sem,(u64)count);
+	lv2syscall2(114,sem,(u64)count);
+	return_to_user_prog(s32);
 }
 
 #ifdef __cplusplus

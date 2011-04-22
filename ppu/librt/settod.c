@@ -7,7 +7,7 @@
 #include <sys/time.h>
 #include <sys/lv2errno.h>
 
-#include <ppu-lv2.h>
+#include <sys/systime.h>
 
 int
 _DEFUN(__librt_settod_r,(r,ptimeval,ptimezone),
@@ -20,5 +20,5 @@ _DEFUN(__librt_settod_r,(r,ptimeval,ptimezone),
 	sec = ptimeval->tv_sec;
 	nsec = ptimeval->tv_usec*1000;
 
-	return lv2errno_r(r,lv2syscall2(146,sec,nsec));
+	return lv2errno_r(r,sysSetCurrentTime(sec,nsec));
 }

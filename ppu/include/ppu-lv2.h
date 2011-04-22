@@ -3,197 +3,185 @@
 
 #include <ppu-types.h>
 
-#define LV2_INLINE static inline __attribute__((unused))
+#define LV2_INLINE static inline
 #define LV2_SYSCALL LV2_INLINE s32
 
-#define __lv2syscallarg0
-#define __lv2syscallarg1 __lv2syscallarg0, u64 a1
-#define __lv2syscallarg2 __lv2syscallarg1, u64 a2
-#define __lv2syscallarg3 __lv2syscallarg2, u64 a3
-#define __lv2syscallarg4 __lv2syscallarg3, u64 a4
-#define __lv2syscallarg5 __lv2syscallarg4, u64 a5
-#define __lv2syscallarg6 __lv2syscallarg5, u64 a6
-#define __lv2syscallarg7 __lv2syscallarg6, u64 a7
-#define __lv2syscallarg8 __lv2syscallarg7, u64 a8
+#define lv2syscall0(syscall)													\
+	register u64 p1 asm("3");													\
+	register u64 p2 asm("4");													\
+	register u64 p3 asm("5");													\
+	register u64 p4 asm("6");													\
+	register u64 p5 asm("7");													\
+	register u64 p6 asm("8");													\
+	register u64 p7 asm("9");													\
+	register u64 p8 asm("10");													\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-#define __lv2syscallclobber8 "r0","r2","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory"
-#define __lv2syscallclobber7 __lv2syscallclobber8,"r10"
-#define __lv2syscallclobber6 __lv2syscallclobber7,"r9"
-#define __lv2syscallclobber5 __lv2syscallclobber6,"r8"
-#define __lv2syscallclobber4 __lv2syscallclobber5,"r7"
-#define __lv2syscallclobber3 __lv2syscallclobber4,"r6"
-#define __lv2syscallclobber2 __lv2syscallclobber3,"r5"
-#define __lv2syscallclobber1 __lv2syscallclobber2,"r4"
-#define __lv2syscallclobber0 __lv2syscallclobber1,"r3"
 
-#define __lv2syscallparam1(reg) reg(p1)
-#define __lv2syscallparam2(reg) __lv2syscallparam1(reg),reg(p2)
-#define __lv2syscallparam3(reg) __lv2syscallparam2(reg),reg(p3)
-#define __lv2syscallparam4(reg) __lv2syscallparam3(reg),reg(p4)
-#define __lv2syscallparam5(reg) __lv2syscallparam4(reg),reg(p5)
-#define __lv2syscallparam6(reg) __lv2syscallparam5(reg),reg(p6)
-#define __lv2syscallparam7(reg) __lv2syscallparam6(reg),reg(p7)
-#define __lv2syscallparam8(reg) __lv2syscallparam7(reg),reg(p8)
+#define lv2syscall1(syscall,a1)													\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4");													\
+	register u64 p3 asm("5");													\
+	register u64 p4 asm("6");													\
+	register u64 p5 asm("7");													\
+	register u64 p6 asm("8");													\
+	register u64 p7 asm("9");													\
+	register u64 p8 asm("10");													\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-#define __lv2syscall "r"(s)
 
-#define __lv2syscallreg(num,reg) \
-	register u64 p##num asm(reg) = a##num
-#define __lv2syscallregs(sys) \
-	register u64 s asm("11") = (sys)
+#define lv2syscall2(syscall,a1,a2)												\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5");													\
+	register u64 p4 asm("6");													\
+	register u64 p5 asm("7");													\
+	register u64 p6 asm("8");													\
+	register u64 p7 asm("9");													\
+	register u64 p8 asm("10");													\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-LV2_INLINE u64 lv2syscall0(u64 syscall __lv2syscallarg0)
-{
-	__lv2syscallregs(syscall);
-	register u64 p1 asm("3") = 0;
 
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam1("=r")
-		: __lv2syscall
-		: __lv2syscallclobber1
-	);
-	return p1;
-}
+#define lv2syscall3(syscall,a1,a2,a3)											\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6");													\
+	register u64 p5 asm("7");													\
+	register u64 p6 asm("8");													\
+	register u64 p7 asm("9");													\
+	register u64 p8 asm("10");													\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-LV2_INLINE u64 lv2syscall1(u64 syscall __lv2syscallarg1)
-{
-	__lv2syscallregs(syscall);
-	__lv2syscallreg(1,"3");
 
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam1("=r")
-		: __lv2syscallparam1("r"),__lv2syscall
-		: __lv2syscallclobber1
-	);
-	return p1;
-}
+#define lv2syscall4(syscall,a1,a2,a3,a4)										\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7");													\
+	register u64 p6 asm("8");													\
+	register u64 p7 asm("9");													\
+	register u64 p8 asm("10");													\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-LV2_INLINE u64 lv2syscall2(u64 syscall __lv2syscallarg2)
-{
-	__lv2syscallregs(syscall);
-	__lv2syscallreg(1,"3");
-	__lv2syscallreg(2,"4");
 
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam2("=r")
-		: __lv2syscallparam2("r"),__lv2syscall
-		: __lv2syscallclobber2
-	);
-	return p1;
-}
+#define lv2syscall5(syscall,a1,a2,a3,a4,a5)										\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7") = (a5);											\
+	register u64 p6 asm("8");													\
+	register u64 p7 asm("9");													\
+	register u64 p8 asm("10");													\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-LV2_INLINE u64 lv2syscall3(u64 syscall __lv2syscallarg3)
-{
-	__lv2syscallregs(syscall);
-	__lv2syscallreg(1,"3");
-	__lv2syscallreg(2,"4");
-	__lv2syscallreg(3,"5");
 
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam3("=r")
-		: __lv2syscallparam3("r"),__lv2syscall
-		: __lv2syscallclobber3
-	);
-	return p1;
-}
+#define lv2syscall6(syscall,a1,a2,a3,a4,a5,a6)									\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7") = (a5);											\
+	register u64 p6 asm("8") = (a6);											\
+	register u64 p7 asm("9");													\
+	register u64 p8 asm("10");													\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-LV2_INLINE u64 lv2syscall4(u64 syscall __lv2syscallarg4)
-{
-	__lv2syscallregs(syscall);
-	__lv2syscallreg(1,"3");
-	__lv2syscallreg(2,"4");
-	__lv2syscallreg(3,"5");
-	__lv2syscallreg(4,"6");
 
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam4("=r")
-		: __lv2syscallparam4("r"),__lv2syscall
-		: __lv2syscallclobber4
-	);
-	return p1;
-}
+#define lv2syscall7(syscall,a1,a2,a3,a4,a5,a6,a7)								\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7") = (a5);											\
+	register u64 p6 asm("8") = (a6);											\
+	register u64 p7 asm("9") = (a7);											\
+	register u64 p8 asm("10");													\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-LV2_INLINE u64 lv2syscall5(u64 syscall __lv2syscallarg5)
-{
-	__lv2syscallregs(syscall);
-	__lv2syscallreg(1,"3");
-	__lv2syscallreg(2,"4");
-	__lv2syscallreg(3,"5");
-	__lv2syscallreg(4,"6");
-	__lv2syscallreg(5,"7");
 
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam5("=r")
-		: __lv2syscallparam5("r"),__lv2syscall
-		: __lv2syscallclobber5
-	);
-	return p1;
-}
+#define lv2syscall8(syscall,a1,a2,a3,a4,a5,a6,a7,a8)							\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7") = (a5);											\
+	register u64 p6 asm("8") = (a6);											\
+	register u64 p7 asm("9") = (a7);											\
+	register u64 p8 asm("10") = (a8);											\
+	register u64 scn asm("11") = (syscall);										\
+	__asm__ __volatile__("sc"													\
+						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
+						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
+						 : "r"(p1), "r"(p2), "r"(p3), "r"(p4),					\
+						   "r"(p5), "r"(p6), "r"(p7), "r"(p8), "r"(scn)			\
+						 : "r0","r12","lr","ctr","xer","cr0","cr1","cr5","cr6","cr7","memory")
 
-LV2_INLINE u64 lv2syscall6(u64 syscall __lv2syscallarg6)
-{
-	__lv2syscallregs(syscall);
-	__lv2syscallreg(1,"3");
-	__lv2syscallreg(2,"4");
-	__lv2syscallreg(3,"5");
-	__lv2syscallreg(4,"6");
-	__lv2syscallreg(5,"7");
-	__lv2syscallreg(6,"8");
 
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam6("=r")
-		: __lv2syscallparam6("r"),__lv2syscall
-		: __lv2syscallclobber6
-	);
-	return p1;
-}
+#define return_to_user_prog(ret_type)			return (ret_type)(p1)
 
-LV2_INLINE u64 lv2syscall7(u64 syscall __lv2syscallarg7)
-{
-	__lv2syscallregs(syscall);
-	__lv2syscallreg(1,"3");
-	__lv2syscallreg(2,"4");
-	__lv2syscallreg(3,"5");
-	__lv2syscallreg(4,"6");
-	__lv2syscallreg(5,"7");
-	__lv2syscallreg(6,"8");
-	__lv2syscallreg(7,"9");
+#define register_passing_1(type)				(type)(p2)
+#define register_passing_2(type)				(type)(p3)
+#define register_passing_3(type)				(type)(p4)
+#define register_passing_4(type)				(type)(p5)
+#define register_passing_5(type)				(type)(p6)
+#define register_passing_6(type)				(type)(p7)
+#define register_passing_7(type)				(type)(p8)
 
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam7("=r")
-		: __lv2syscallparam7("r"),__lv2syscall
-		: __lv2syscallclobber7
-	);
-	return p1;
-}
-
-LV2_INLINE u64 lv2syscall8(u64 syscall __lv2syscallarg8)
-{
-	__lv2syscallregs(syscall);
-	__lv2syscallreg(1,"3");
-	__lv2syscallreg(2,"4");
-	__lv2syscallreg(3,"5");
-	__lv2syscallreg(4,"6");
-	__lv2syscallreg(5,"7");
-	__lv2syscallreg(6,"8");
-	__lv2syscallreg(7,"9");
-	__lv2syscallreg(8,"10");
-
-	__asm__ __volatile__ (
-		"sc"
-		: __lv2syscallparam8("=r")
-		: __lv2syscallparam8("r"),__lv2syscall
-		: __lv2syscallclobber8
-	);
-	return p1;
-}
+#define REG_PASS_SYS_EVENT_QUEUE_RECEIVE		\
+event->source = register_passing_1(u64);		\
+event->data_1 = register_passing_2(u64);		\
+event->data_2 = register_passing_3(u64);		\
+event->data_3 = register_passing_4(u64)
 
 #endif

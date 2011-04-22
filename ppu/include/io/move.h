@@ -101,7 +101,7 @@ typedef struct _gem_state
     f32 temperature;
     f32 camera_pitch_angle;
     u32 tracking;
-} GemState;
+} gemState;
 
 typedef struct _gem_attribute
 {

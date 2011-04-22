@@ -25,16 +25,14 @@
  *  - All 6 SPUs do the same job in parallel, hence 4*6 for all SPUs.
  */
 
-#include <psl1ght/lv2.h>
-#include <psl1ght/lv2/spu.h>
-#include <lv2/spu.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
 
-#include "spu.bin.h"
+#include <sys/spu.h>
+
+#include "spu_bin.h"
 #include "spustr.h"
 
 #define ptr2ea(x) ((u64)(void *)(x))
@@ -43,22 +41,22 @@ int main(int argc, const char* argv[])
 {
 	sysSpuImage image;
 	u32 group_id;
-	Lv2SpuThreadAttributes attr = { ptr2ea("mythread"), 8+1, LV2_SPU_THREAD_ATTRIBUTE_NONE };
-	Lv2SpuThreadGroupAttributes grpattr = { 7+1, ptr2ea("mygroup"), 0, 0 };
-	Lv2SpuThreadArguments arg[6];
+	sysSpuThreadAttribute attr = { ptr2ea("mythread"), 8+1, SPU_THREAD_ATTR_NONE };
+	sysSpuThreadGroupAttribute grpattr = { 7+1, ptr2ea("mygroup"), 0, 0 };
+	sysSpuThreadArgument arg[6];
 	u32 cause, status;
 	int i;
 	spustr_t *spu = memalign(16, 6*sizeof(spustr_t));
 	uint32_t *array = memalign(16, 24*sizeof(uint32_t));
 
 	printf("Initializing 6 SPUs... ");
-	printf("%08x\n", lv2SpuInitialize(6, 0));
+	printf("%08x\n", sysSpuInitialize(6, 0));
 
 	printf("Loading ELF image... ");
 	printf("%08x\n", sysSpuImageImport(&image, spu_bin, 0));
 
 	printf("Creating thread group... ");
-	printf("%08x\n", lv2SpuThreadGroupCreate(&group_id, 6, 100, &grpattr));
+	printf("%08x\n", sysSpuThreadGroupCreate(&group_id, 6, 100, &grpattr));
 	printf("group id = %d\n", group_id);
 
 	/* create 6 spu threads */
@@ -67,18 +65,18 @@ int main(int argc, const char* argv[])
 		spu[i].count = 6;
 		spu[i].sync = 0;
 		spu[i].array_ea = ptr2ea(array);
-		arg[i].argument1 = ptr2ea(&spu[i]);
+		arg[i].arg0 = ptr2ea(&spu[i]);
 
 		printf("Creating SPU thread... ");
-		printf("%08x\n", lv2SpuThreadInitialize(&spu[i].id, group_id, i, &image, &attr, &arg[i]));
+		printf("%08x\n", sysSpuThreadInitialize(&spu[i].id, group_id, i, &image, &attr, &arg[i]));
 		printf("thread id = %d\n", spu[i].id);
 
 		printf("Configuring SPU... %08x\n",
-		lv2SpuThreadSetConfiguration(spu[i].id, LV2_SPU_SIGNAL1_OVERWRITE|LV2_SPU_SIGNAL2_OVERWRITE));
+		sysSpuThreadSetConfiguration(spu[i].id, SPU_SIGNAL1_OVERWRITE|SPU_SIGNAL2_OVERWRITE));
 	}
 
 	printf("Starting SPU thread group... ");
-	printf("%08x\n", lv2SpuThreadGroupStart(group_id));
+	printf("%08x\n", sysSpuThreadGroupStart(group_id));
 
 	printf("Initial array: ");
 	for (i = 0; i < 24; i++) {
@@ -90,7 +88,7 @@ int main(int argc, const char* argv[])
 	/* Send signal notification to waiting spus */
 	for (i = 0; i < 6; i++)
 		printf("Sending signal... %08x\n",
-			lv2SpuThreadWriteSignal(spu[i].id, 0, 1));
+			sysSpuThreadWriteSignal(spu[i].id, 0, 1));
 
 	printf("Waiting for SPUs to return...\n");
 	for (i = 0; i < 6; i++)
@@ -102,7 +100,7 @@ int main(int argc, const char* argv[])
 	printf("\n");
 
 	printf("Joining SPU thread group... ");
-	printf("%08x\n", lv2SpuThreadGroupJoin(group_id, &cause, &status));
+	printf("%08x\n", sysSpuThreadGroupJoin(group_id, &cause, &status));
 	printf("cause=%d status=%d\n", cause, status);
 
 	printf("Closing image... %08x\n", sysSpuImageClose(&image));

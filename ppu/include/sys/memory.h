@@ -30,42 +30,50 @@
 
 LV2_SYSCALL sysMemoryAllocate(size_t size,u64 flags,mem_addr_t *alloc_addr)
 {
-	return lv2syscall3(348,size,flags,(u64)alloc_addr);
+	lv2syscall3(348,size,flags,(u64)alloc_addr);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysMemoryFree(mem_addr_t start_addr)
 {
-	return lv2syscall1(349,start_addr);
+	lv2syscall1(349,start_addr);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysMMapperAllocateAddress(size_t size,u64 flags,size_t alignment,mem_addr_t *alloc_addr)
 {
-	return lv2syscall4(330,size,flags,alignment,(u64)alloc_addr);
+	lv2syscall4(330,size,flags,alignment,(u64)alloc_addr);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysMMapperFreeAddress(mem_addr_t start_addr)
 {
-	return lv2syscall1(331,start_addr);
+	lv2syscall1(331,start_addr);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysMMapperSearchAndMap(mem_addr_t start_addr,mem_id_t mem_id,u64 flags,mem_addr_t *alloc_addr)
 {
-	return lv2syscall4(337,start_addr,mem_id,flags,(u64)alloc_addr);
+	lv2syscall4(337,start_addr,mem_id,flags,(u64)alloc_addr);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysMemContainerCreate(mem_container_t *container,size_t size)
 {
-	return lv2syscall2(324,(u64)container,size);
+	lv2syscall2(324,(u64)container,size);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysMemContainerDestroy(mem_container_t container)
 {
-	return lv2syscall1(325,container);
+	lv2syscall1(325,container);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysMemAllocateFromContainer(size_t size,mem_container_t container,u64 flags,mem_addr_t *alloc_addr)
 {
-	return lv2syscall4(350,size,container,flags,(u64)alloc_addr);
+	lv2syscall4(350,size,container,flags,(u64)alloc_addr);
+	return_to_user_prog(s32);
 }
 
 #ifdef __cplusplus

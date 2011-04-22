@@ -4,7 +4,13 @@
 
 PREFIX          := ppu
 
-TARGET		:= audiosync.elf
+TARGET		:= audiosync.self
+
+TITLE		:= Template - PSL1GHT
+APPID		:= TEST00003
+CONTENTID	:= UP0001-$(APPID)_00-0000000000000000
+ICON0		:= /usr/local/ps3dev/bin/ICON0.PNG
+SFOXML		:= /usr/local/ps3dev/bin/sfo.xml
 
 FLAGS		:= -std=gnu99
 INCLUDES	:=
@@ -23,6 +29,10 @@ ASFLAGS		:=
 CFLAGS		:= -Wall -pedantic -O3 $(FLAGS) -I$(PSL1GHT)/$(PREFIX)/include $(INCLUDES)
 CPPFLAGS	:= $(CFLAGS)
 LDFLAGS		:= -L$(PSL1GHT)/$(PREFIX)/lib $(LIBS)
+
+MAKE_SELF	:= make_self_npdrm
+MAKE_SFO	:= sfo.py
+MAKE_PKG	:= pkg.py
 
 ##
 ## Files
@@ -66,8 +76,14 @@ clean:
 	$(LD) $(OFILES) $(LDFLAGS) -o $@
 
 %.self: %.elf
-	@echo "TODO"
+	$(MAKE_SELF) $< $@ $(CONTENTID) >> /dev/null
 
-%.pkg: %.self
-	@echo "TODO"
-
+%.pkg: %.elf
+	@rm -Rf pkg
+	@mkdir -p pkg
+	@mkdir -p pkg/USRDIR
+	@cp $(ICON0) pkg
+	$(MAKE_SELF) $< pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
+	$(MAKE_SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) pkg/PARAM.SFO
+	$(MAKE_PKG) --contentid $(CONTENTID) pkg/ $@ >> /dev/null
+	@rm -Rf pkg

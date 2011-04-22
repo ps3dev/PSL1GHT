@@ -1,7 +1,6 @@
 #ifndef __PPU_ASM_H__
 #define __PPU_ASM_H__
 
-#include <ppc-asm.h>
 #include <ppu_intrinsics.h>
 
 #define PPU_ALIGNMENT			8

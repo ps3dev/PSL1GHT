@@ -42,7 +42,8 @@ s32 sysThreadCreate(sys_ppu_thread_t *threadid,void (*entry)(void *),void *arg,s
 */
 LV2_SYSCALL sysThreadJoin(sys_ppu_thread_t threadid,u64 *retval)
 {
-	return lv2syscall2(44,threadid,(u64)retval);;
+	lv2syscall2(44,threadid,(u64)retval);;
+	return_to_user_prog(s32);
 }
 
 /*! \brief Preempt the calling PPU thread.
@@ -50,7 +51,8 @@ LV2_SYSCALL sysThreadJoin(sys_ppu_thread_t threadid,u64 *retval)
 */
 LV2_SYSCALL sysThreadYield()
 {
-	return lv2syscall0(43);
+	lv2syscall0(43);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Make a PPU thread detached (non-joinable).
@@ -59,7 +61,8 @@ LV2_SYSCALL sysThreadYield()
 */
 LV2_SYSCALL sysThreadDetach(sys_ppu_thread_t threadid)
 {
-	return lv2syscall1(45,threadid);
+	lv2syscall1(45,threadid);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Test the joinable or detached state of the calling PPU thread.
@@ -69,7 +72,8 @@ LV2_SYSCALL sysThreadDetach(sys_ppu_thread_t threadid)
 */
 LV2_SYSCALL sysThreadJoinState(s32 *joinable)
 {
-	return lv2syscall1(46,(u64)joinable);
+	lv2syscall1(46,(u64)joinable);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Set the priority of a PPU thread.
@@ -79,7 +83,8 @@ LV2_SYSCALL sysThreadJoinState(s32 *joinable)
 */
 LV2_SYSCALL sysThreadSetPriority(sys_ppu_thread_t threadid,s32 prio)
 {
-	return lv2syscall2(47,threadid,prio);
+	lv2syscall2(47,threadid,prio);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get the priority of a PPU thread.
@@ -89,7 +94,8 @@ LV2_SYSCALL sysThreadSetPriority(sys_ppu_thread_t threadid,s32 prio)
 */
 LV2_SYSCALL sysThreadGetPriority(sys_ppu_thread_t threadid,s32 *prio)
 {
-	return lv2syscall2(48,threadid,(u64)prio);
+	lv2syscall2(48,threadid,(u64)prio);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Rename a PPU thread.
@@ -99,7 +105,8 @@ LV2_SYSCALL sysThreadGetPriority(sys_ppu_thread_t threadid,s32 *prio)
 */
 LV2_SYSCALL sysThreadRename(sys_ppu_thread_t threadid,const char *name)
 {
-	return lv2syscall2(56,threadid,(u64)name);
+	lv2syscall2(56,threadid,(u64)name);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Recover a PPU thread after a page fault.
@@ -108,7 +115,8 @@ LV2_SYSCALL sysThreadRename(sys_ppu_thread_t threadid,const char *name)
 */
 LV2_SYSCALL sysThreadRecoverPageFault(sys_ppu_thread_t threadid)
 {
-	return lv2syscall1(57,threadid);
+	lv2syscall1(57,threadid);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get stack information from the current PPU thread.
@@ -117,17 +125,16 @@ LV2_SYSCALL sysThreadRecoverPageFault(sys_ppu_thread_t threadid)
 */
 LV2_SYSCALL sysThreadGetStackInformation(sys_ppu_thread_stack_t *info)
 {
-	s32 ret = 0;
 	struct _sys_ppu_thread_stack_t_32 {
 		u32 addr;
 		u32 size;
 	} info32;
 
-	ret = lv2syscall1(49,(u64)(&info32));
+	lv2syscall1(49,(u64)(&info32));
 	info->addr = (void*)((u64)info32.addr);
 	info->size = info32.size;
 
-	return ret;
+	return_to_user_prog(s32);
 }
 
 #ifdef __cplusplus

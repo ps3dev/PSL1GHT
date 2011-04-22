@@ -4,19 +4,21 @@
 #include <string.h>
 
 #include <sys/spu.h>
+#include <sys/event_queue.h>
 
 #include "spu_bin.h"
 
+#define SPUP 10
 #define ptr2ea(x)			((u64)((void*)(x)))
-
-static vu32 spu_sync __attribute__((aligned(128))) = 0;
-static vu32 spu_response __attribute__((aligned(128))) = 0;
 
 int main(int argc,char *argv[])
 {
 	u32 cause,status;
 	sysSpuImage image;
 	u32 thread_id,group_id;
+	sys_event_queue_t evQ;
+	sys_event_t event;
+	sys_event_queue_attr_t evQAttr = { SYS_EVENT_QUEUE_FIFO, SYS_EVENT_QUEUE_PPU, "myEvQ" };
 	sysSpuThreadArgument arg = { 0, 0, 0, 0 };
 	sysSpuThreadGroupAttribute grpattr = { 7+1, ptr2ea("mygroup"), 0, 0 };
 	sysSpuThreadAttribute attr = { ptr2ea("mythread"), 8+1, SPU_THREAD_ATTR_NONE };
@@ -26,25 +28,39 @@ int main(int argc,char *argv[])
 
 	sysSpuThreadGroupCreate(&group_id,1,100,&grpattr);
 
-	arg.arg0 = ptr2ea(&spu_sync);
-	arg.arg1 = ptr2ea(&spu_response);
+	sysEventQueueCreate(&evQ, &evQAttr, 0x4242, 16);
+
 	sysSpuThreadInitialize(&thread_id,group_id,0,&image,&attr,&arg);
+
 	sysSpuThreadSetConfiguration(thread_id,(SPU_SIGNAL1_OVERWRITE | SPU_SIGNAL2_OVERWRITE));
+
+	sysSpuThreadConnectEvent(thread_id, evQ, SPU_THREAD_EVENT_USER, SPUP);
 
 	printf("Starting SPU thread group....\n");
 	sysSpuThreadGroupStart(group_id);
 
-	printf("input value: 42\n");
+	printf("input value: 11\n");
 
-	spu_sync = 0;
-	sysSpuThreadWriteSignal(thread_id,0,42);
+	sysSpuThreadWriteSignal(thread_id,0,11);
 
 	printf("Waiting for SPU to return....\n");
-	while(spu_sync==0);
+	sysEventQueueReceive(evQ, &event, 0);
 
-	printf("output value: %d\n",spu_response);
+	if (event.source == SPU_THREAD_EVENT_USER_KEY
+		&& event.data_1 == thread_id
+		&& (event.data_2>>32) == SPUP)
+	{
+		int data0 = event.data_2&0xffffff;
+		int data1 = event.data_3;
+		printf("output values: %d %d\n", data0, data1);
+	}
+	else
+		printf("error: unexpected event value!\n");
 
 	sysSpuThreadGroupJoin(group_id,&cause,&status);
+	sysSpuThreadDisconnectEvent(thread_id, SPU_THREAD_EVENT_USER, SPUP);
+
+	sysSpuThreadGroupDestroy(group_id);
 	sysSpuImageClose(&image);
 
 	return 0;

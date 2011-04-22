@@ -717,7 +717,7 @@ s32 gcmGetConfiguration(gcmConfiguration *config);
 
 Once a flip occurred, querying for a subsequent flip requires the flip status
 to be reset using \ref gcmResetFlipStatus.
-\return zero if no flip occured, nonzero otherwise.
+\return zero if a flip occured, nonzero otherwise.
 */
 s32 gcmGetFlipStatus();
 
