@@ -4,8 +4,6 @@
 #include "compiler.h"
 #include "compilerfp.h"
 
-#include <iostream>
-
 #if !defined(WIN32)
 #include <dlfcn.h>
 #endif
@@ -65,7 +63,7 @@ static bool InitCompiler()
 #if defined(WIN32)
 	HMODULE libcgc=LoadLibrary("cg.dll");
 #elif defined(__APPLE__)
-    void *libcgc=dlopen("/Library/Frameworks/Cg.framework/Cg", RTLD_LAZY);
+    void *libcgc=dlopen("Cg", RTLD_LAZY);
 #else
     void *libcgc=dlopen("libCg.so", RTLD_LAZY);
 #endif
@@ -168,8 +166,6 @@ int compileVP()
 		}
 		prg = (char*)cgGetProgramString(program,CG_COMPILED_PROGRAM);
 	}
-
-	fprintf(stderr,"%s\n",prg);
 
 	if(prg) {
 		CVPParser parser;
@@ -320,8 +316,6 @@ int compileFP()
 		}
 		prg = (char*)cgGetProgramString(program,CG_COMPILED_PROGRAM);
 	}
-
-	fprintf(stderr,"%s\n",prg);
 
 	if(prg) {
 		CFPParser parser;
