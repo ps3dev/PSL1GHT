@@ -1,4 +1,4 @@
-/*! \file memory.h
+/*! \file sys/memory.h
  \brief Memory management functions.
 */
 

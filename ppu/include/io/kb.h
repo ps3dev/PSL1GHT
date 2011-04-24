@@ -216,18 +216,18 @@ typedef enum KbMapping {
 
 /*! \brief Keyboard info data structure. */
 typedef struct KbInfo {
-	u32 max;					/* max kb allowed to connect */
-	u32 connected;				/* how many kb connected */
-	u32 info;					/* Bit 0 lets the system intercept keyboard? other bits are reserved */
-	u8 status[MAX_KEYBOARDS];	/* Connections status, status Index equal to Keyboard Number
+	u32 max;					/*!< \brief max kb allowed to connect */
+	u32 connected;				/*!< \brief how many kb connected */
+	u32 info;					/*!< \brief Bit 0 lets the system intercept keyboard? other bits are reserved */
+	u8 status[MAX_KEYBOARDS];	/*!< \brief Connections status, status Index equal to Keyboard Number
 								   value 0: Not connected and 1: Connected */
 } KbInfo;
 
 /*! \brief Keyboard config data structure. */
 typedef struct KbConfig {
-	u32 mapping;	/* See KbMapping enum definition */
-	u32 rmode;		/* See KbRmode enum definition */
-	u32 codetype;	/* See KbCodeType enum definition */
+	u32 mapping;	/*!< \brief See KbMapping enum definition */
+	u32 rmode;		/*!< \brief See KbRmode enum definition */
+	u32 codetype;	/*!< \brief See KbCodeType enum definition */
 } KbConfig;
 
 /*!

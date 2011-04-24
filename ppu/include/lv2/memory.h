@@ -1,3 +1,7 @@
+/*! \file lv2/memory.h
+ \brief Memory management functions.
+*/
+
 #ifndef __LV2_MEMORY_H__
 #define __LV2_MEMORY_H__
 
