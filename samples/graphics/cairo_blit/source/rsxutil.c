@@ -1,8 +1,3 @@
-/*
- * This software is distributed under the terms of the GNU General Public
- * License ("GPL") version 3, as published by the Free Software Foundation.
- */
-
 #include <ppu-lv2.h>
 #include <stdio.h>
 #include <malloc.h>
