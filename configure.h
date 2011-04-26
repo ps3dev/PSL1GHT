@@ -7,7 +7,7 @@
 // does not require Kammy to be run in the PS3.
 // Listen to the stdout on your PC with e.g.
 //   nc -l -p 4000
-//#define _STDIO_TO_NET
+#define _STDIO_TO_NET
 // If __STDIO_TO_NET is defined, this is the
 // IP and port to which to send the packets
 #define _STDIO_NET_IP "10.0.0.3"
