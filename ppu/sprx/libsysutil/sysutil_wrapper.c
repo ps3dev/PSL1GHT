@@ -17,32 +17,32 @@ extern s32 msgDialogOpenErrorCodeEx(u32 errorCode,opd32 *func,void *usrData,void
 /* sysSave functions */
 extern s32 sysSaveListLoad2Ex (u32 version, sysSaveListSettings *listSettings,
     sysSaveBufferSettings *bufferSettings, opd32 *listCb, opd32 *statusCb,
-    opd32 *fileCb, mem_container_t container, void *user_data);
+    opd32 *fileCb, sys_mem_container_t container, void *user_data);
 extern s32 sysSaveListSave2Ex (u32 version, sysSaveListSettings *listSettings,
     sysSaveBufferSettings *bufferSettings, opd32 *listCb, opd32 *statusCb,
-    opd32 *fileCb, mem_container_t container, void *user_data);
+    opd32 *fileCb, sys_mem_container_t container, void *user_data);
 extern s32 sysSaveListAutoLoadEx (u32 version, sysSaveErrorDialogMode errorDialogMode,
     sysSaveListSettings *listSettings, sysSaveBufferSettings *bufferSettings,
     opd32 *fixedCb, opd32 *statusCb, opd32 *fileCb,
-    mem_container_t container,  void *user_data);
+    sys_mem_container_t container,  void *user_data);
 extern s32 sysSaveListAutoSaveEx (u32 version, sysSaveErrorDialogMode errorDialogMode,
     sysSaveListSettings *listSettings, sysSaveBufferSettings *bufferSettings,
     opd32 *fixedCb, opd32 *statusCb, opd32 *fileCb,
-    mem_container_t container, void *user_data);
+    sys_mem_container_t container, void *user_data);
 extern s32 sysSaveFixedLoad2Ex (u32 version, sysSaveListSettings *listSettings,
     sysSaveBufferSettings *bufferSettings, opd32 *fixedCb, opd32 *statusCb,
-    opd32 *fileCb, mem_container_t container, void *user_data);
+    opd32 *fileCb, sys_mem_container_t container, void *user_data);
 extern s32 sysSaveFixedSave2Ex (u32 version, sysSaveListSettings *listSettings,
     sysSaveBufferSettings *bufferSettings, opd32 *fixedCb, opd32 *statusCb,
-    opd32 *fileCb, mem_container_t container, void *user_data);
+    opd32 *fileCb, sys_mem_container_t container, void *user_data);
 extern s32 sysSaveAutoLoad2Ex (s32 version, const char *directoryName,
     sysSaveErrorDialogMode errorDialogMode,
     sysSaveBufferSettings *bufferSettings, opd32 *statusCb, opd32 *fileCb,
-    mem_container_t container, void *user_data);
+    sys_mem_container_t container, void *user_data);
 extern s32 sysSaveAutoSave2Ex (s32 version, const char *directoryName,
     sysSaveErrorDialogMode errorDialogMode,
     sysSaveBufferSettings *bufferSettings,
-    opd32 *statusCb, opd32 *fileCb, mem_container_t container, void *user_data);
+    opd32 *statusCb, opd32 *fileCb, sys_mem_container_t container, void *user_data);
 
 // sysUtil wrapper functions
 s32 sysUtilRegisterCallback(s32 slot,sysutilCallback cb,void *usrdata)
@@ -73,7 +73,7 @@ s32 sysSaveListLoad2 (u32 version,
     sysSaveListCallback listCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data)
 {
   return sysSaveListLoad2Ex(version,
@@ -90,7 +90,7 @@ s32 sysSaveListSave2 (u32 version,
     sysSaveListCallback listCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data)
 {
   return sysSaveListSave2Ex (version,
@@ -108,7 +108,7 @@ s32 sysSaveListAutoLoad (u32 version,
     sysSaveFixedCallback fixedCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data)
 {
   return sysSaveListAutoLoadEx (version,
@@ -126,7 +126,7 @@ s32 sysSaveListAutoSave (u32 version,
     sysSaveFixedCallback fixedCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data)
 {
   return sysSaveListAutoSaveEx (version,
@@ -143,7 +143,7 @@ s32 sysSaveFixedLoad2 (u32 version,
     sysSaveFixedCallback fixedCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data)
 {
   return sysSaveFixedLoad2Ex (version,
@@ -160,7 +160,7 @@ s32 sysSaveFixedSave2 (u32 version,
     sysSaveFixedCallback fixedCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data)
 {
   return sysSaveFixedSave2Ex (version,
@@ -177,7 +177,7 @@ s32 sysSaveAutoLoad2 (s32 version,
     sysSaveBufferSettings *bufferSettings,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data)
 {
   return sysSaveAutoLoad2Ex (version,
@@ -193,7 +193,7 @@ s32 sysSaveAutoSave2 (s32 version,
     sysSaveBufferSettings *bufferSettings,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data)
 {
   return sysSaveAutoSave2Ex (version,
