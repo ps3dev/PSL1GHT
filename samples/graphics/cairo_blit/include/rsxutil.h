@@ -1,6 +1,5 @@
 /*
  * Copyright (C) Youness Alaoui (KaKaRoTo)
- *
  */
 
 #ifndef __RSXUTIL_H__

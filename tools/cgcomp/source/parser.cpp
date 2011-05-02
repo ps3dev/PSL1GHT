@@ -270,6 +270,7 @@ const char* CParser::ParseRegSwizzle(const char *token,struct nvfx_src *reg)
 				else if(*token=='w')
 					reg->swz[k] = NVFX_SWZ_W;
 			}
+
 			if(k && k<4) {
 				u8 lastswz = reg->swz[k - 1];
 				while(k<4) {

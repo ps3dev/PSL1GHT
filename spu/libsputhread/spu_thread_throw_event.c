@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <spu_intrinsics.h>
+#include <spu_event.h>
 
 #include <sys/spu_event.h>
 

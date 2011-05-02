@@ -25,6 +25,9 @@
 #define RSX_METHOD_COUNT_SHIFT					(18)
 #define RSX_METHOD(method,count)				(((count)<<RSX_METHOD_COUNT_SHIFT)|(method))
 
+#define RSX_SUBCHANNEL_SHIFT                                 (13)
+#define RSX_SUBCHANNEL_METHOD(channel,method,count)                (((count)<<RSX_METHOD_COUNT_SHIFT)|((channel)<<RSX_SUBCHANNEL_SHIFT)|(method))
+
 s32 rsxContextCallback(gcmContextData *context,u32 count);
 
 #endif

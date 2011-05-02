@@ -7,6 +7,18 @@
 
 #include <ppu-types.h>
 
+static inline
+s32 rsxGetFixedSint32(const float f)
+{
+  return (int32_t)(f * 1048576.0f);
+}
+
+static inline
+u16 rsxGetFixedUint16(const float f)
+{
+  return (uint16_t)(f * 16.0f);
+}
+
 /*! \brief true boolean value */
 #define GCM_TRUE								1
 /*! \brief false boolean value */
@@ -24,6 +36,11 @@
 
 #define GCM_DMA_MEMORY_FRAME_BUFFER				(0xFEED0000)
 #define GCM_DMA_MEMORY_HOST_BUFFER				(0xFEED0001)
+
+#define GCM_TRANSFER_LOCAL_TO_LOCAL        0
+#define GCM_TRANSFER_MAIN_TO_LOCAL         1
+#define GCM_TRANSFER_LOCAL_TO_MAIN         2
+#define GCM_TRANSFER_MAIN_TO_MAIN          3
 
 #define GCM_TF_COLOR_R5G5B5						3
 #define GCM_TF_COLOR_X8R8G8B8					5
@@ -517,6 +534,151 @@ typedef struct _gcmTexture
 	/*! \brief Offset of texture data. */
 	u32 offset;
 } gcmTexture;
+
+#define GCM_TRANSFER_SURFACE 0
+#define GCM_TRANSFER_SWIZZLE 1
+
+#define GCM_TRANSFER_CONVERSION_DITHER 0
+#define GCM_TRANSFER_CONVERSION_TRUNCATE 1
+#define GCM_TRANSFER_CONVERSION_SUBTRACT_TRUNCATE 2
+
+#define GCM_TRANSFER_SCALE_FORMAT_A1R5G5B5 1
+#define GCM_TRANSFER_SCALE_FORMAT_X1R5G5B5 2
+#define GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8 3
+#define GCM_TRANSFER_SCALE_FORMAT_X8R8G8B8 4
+#define GCM_TRANSFER_SCALE_FORMAT_CR8YB8CB8YA8 5
+#define GCM_TRANSFER_SCALE_FORMAT_YB8CR8YA8CB8 6
+#define GCM_TRANSFER_SCALE_FORMAT_R5G6B5 7
+#define GCM_TRANSFER_SCALE_FORMAT_Y8 8
+#define GCM_TRANSFER_SCALE_FORMAT_AY8 9
+#define GCM_TRANSFER_SCALE_FORMAT_EYB8ECR8EYA8ECB8 0xa
+#define GCM_TRANSFER_SCALE_FORMAT_ECR8EYB8ECB8EYA8 0xb
+#define GCM_TRANSFER_SCALE_FORMAT_A8B8G8R8 0xc
+#define GCM_TRANSFER_SCALE_FORMAT_X8B8G8R8 0xd
+
+#define GCM_TRANSFER_OPERATION_SRCCOPY_AND 0
+#define GCM_TRANSFER_OPERATION_ROP_AND 1
+#define GCM_TRANSFER_OPERATION_BLEND_AND 2
+#define GCM_TRANSFER_OPERATION_SRCCOPY 3
+#define GCM_TRANSFER_OPERATION_SRCCOPY_PREMULT 4
+#define GCM_TRANSFER_OPERATION_BLEND_PREMULT 5
+
+#define GCM_TRANSFER_ORIGIN_CENTER 1
+#define GCM_TRANSFER_ORIGIN_CORNER 2
+
+#define GCM_TRANSFER_INTERPOLATOR_NEAREST 0 // point sampling
+#define GCM_TRANSFER_INTERPOLATOR_LINEAR 1 // bilinear interpolation
+
+#define GCM_TRANSFER_SURFACE_FORMAT_R5G6B5 4
+#define GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8 0xa
+#define GCM_TRANSFER_SURFACE_FORMAT_Y32 0xb
+
+
+  /*! \brief Specify scaled image blit geometry and format for rsxSetTransferImage() */
+typedef struct _gcmTransferScale {
+
+  /*! \brief Not sure what this dones. Possible values:
+    - \ref GCM_TRANSFER_CONVERSION_DITHER
+    - \ref GCM_TRANSFER_CONVERSION_TRUNCATE
+    - \ref GCM_TRANSFER_CONVERSION_SUBTRACT_TRUNCATE
+   */
+  u32 conversion;
+
+  /*! \brief Format of image data. Possible values:
+    - \ref GCM_TRANSFER_SCALE_FORMAT_A1R5G5B5
+    - \ref GCM_TRANSFER_SCALE_FORMAT_X1R5G5B5
+    - \ref GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_X8R8G8B8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_CR8YB8CB8YA8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_YB8CR8YA8CB8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_R5G6B5
+    - \ref GCM_TRANSFER_SCALE_FORMAT_Y8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_AY8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_EYB8ECR8EYA8ECB8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_ECR8EYB8ECB8EYA8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_A8B8G8R8
+    - \ref GCM_TRANSFER_SCALE_FORMAT_X8B8G8R8
+   */
+  u32 format;
+
+  /*! \brief Blit operation. Possible values:
+    - \ref GCM_TRANSFER_OPERATION_SRCCOPY_AND
+    - \ref GCM_TRANSFER_OPERATION_ROP_AND
+    - \ref GCM_TRANSFER_OPERATION_BLEND_AND
+    - \ref GCM_TRANSFER_OPERATION_SRCCOPY
+    - \ref GCM_TRANSFER_OPERATION_SRCCOPY_PREMULT
+    - \ref GCM_TRANSFER_OPERATION_BLEND_PREMULT
+   */
+  u32 operation;
+
+  /*! \brief Clipping rectangle, within the destination surface. */
+  s16 clipX;
+  s16 clipY;
+  u16 clipW;
+  u16 clipH;
+
+  /*! \brief Origin of destination rectangle. */
+  s16 outX;
+  s16 outY;
+  /*! \brief Size of the destination rectangle. */
+  u16 outW;
+  u16 outH;
+
+  /*! \brief Ratios of the source rectangle size to the destination rectangle size, encoded as a 32-bit signed fixed-point number. Such a value can be obtained from a floating point number by rsxGetFixedSint32(). */
+  s32 ratioX;
+  s32 ratioY;
+
+  /*! \brief Size of the source rectangle. */
+  u16 inW;
+  u16 inH;
+
+  /*! \brief Pitch size, in bytes, of the source image data (width multiplied by the number of bytes in each pixel). */
+  u16 pitch;
+
+  /*! \brief How the origin of each pixel is determined. Possible values:
+    - \ref GCM_TRANSFER_ORIGIN_CENTER
+    - \ref GCM_TRANSFER_ORIGIN_CORNER
+   */
+  u8 origin;
+
+  /*! \brief Sampling for scaled blits. Possible values:
+    - \ref GCM_TRANSFER_INTERPOLATOR_NEAREST: no interpolation
+    - \ref GCM_TRANSFER_INTERPOLATOR_LINEAR: bilinear interpolation
+   */
+  u8 interp;
+  
+  /*! \brief Image data offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory(). */
+  u32 offset;
+
+  /*! \brief Origin of destination rectangle. */
+  u16 inX;
+  u16 inY;
+} gcmTransferScale;
+
+  /*! \brief Specify destination surface characteristics for rsxSetTransferImage(). */
+typedef struct _gcmTransferSurface {
+
+  /*! \brief Format of destination surface. Possible values are:
+    - \ref GCM_TRANSFER_SURFACE_FORMAT_R5G6B5
+    - \ref GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8
+    - \ref GCM_TRANSFER_SURFACE_FORMAT_Y32
+   */
+  u32 format;
+
+  /*! \brief Pitch for destination surface (width multipied by the number of bytes per pixel). */
+  u16 pitch;
+  u16 _padding;
+
+  /*! \brief Destination suface memory offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory(). */
+  u32 offset;
+} gcmTransferSurface;
+
+typedef struct _gcmTransferSwizzle {
+  u16 format;
+  u8 width;
+  u8 height;
+  u32 offset;
+} gcmTransferSwizzle;
 
 typedef s32 (*gcmContextCallback)(gcmContextData *context,u32 count);
 

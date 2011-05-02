@@ -851,3 +851,196 @@ void rsxSetTransformBranchBits(gcmContextData *context,u32 branchBits)
 
 	RSX_CONTEXT_CURRENT_END(2);
 }
+
+void
+rsxSetTransferData(gcmContextData * context,uint8_t mode,uint32_t dst,uint32_t outpitch,uint32_t src,uint32_t inpitch,uint32_t linelength,uint32_t linecount)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(12);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(1,0x184,2);
+  RSX_CONTEXT_CURRENTP[1] = (mode & 0x1) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+  RSX_CONTEXT_CURRENTP[2] = (mode & 0x2) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+
+  RSX_CONTEXT_CURRENTP[3] = RSX_SUBCHANNEL_METHOD(1,0x30c,8);
+  RSX_CONTEXT_CURRENTP[4] = src;
+  RSX_CONTEXT_CURRENTP[5] = dst;
+  RSX_CONTEXT_CURRENTP[6] = inpitch;
+  RSX_CONTEXT_CURRENTP[7] = outpitch;
+  RSX_CONTEXT_CURRENTP[8] = linelength;
+  RSX_CONTEXT_CURRENTP[9] = linecount;
+  RSX_CONTEXT_CURRENTP[10] = ((u32)1 << 8) | 1;
+  RSX_CONTEXT_CURRENTP[11] = 0;
+
+  RSX_CONTEXT_CURRENT_END(12);
+}
+
+void
+rsxSetTransferDataMode(gcmContextData * context,u8 mode)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(3);
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(1,0x184,2);
+  RSX_CONTEXT_CURRENTP[1] = (mode & 0x1) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+  RSX_CONTEXT_CURRENTP[2] = (mode & 0x2) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+  RSX_CONTEXT_CURRENT_END(3);
+}
+
+void
+rsxSetTransferDataFormat(gcmContextData * context,s32 inpitch,s32 outpitch,u32 linelength,u32 linecount,u8 inbytes,u8 outbytes)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(6);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(1,0x314,5);
+  RSX_CONTEXT_CURRENTP[1] = inpitch;
+  RSX_CONTEXT_CURRENTP[2] = outpitch;
+  RSX_CONTEXT_CURRENTP[3] = linelength;
+  RSX_CONTEXT_CURRENTP[4] = linecount;
+  RSX_CONTEXT_CURRENTP[5] = ((u32)outbytes << 8) | inbytes;
+
+  RSX_CONTEXT_CURRENT_END(6);
+}
+
+void
+rsxSetTransferDataOffset(gcmContextData *context,u32 dst,u32 src)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(5);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(1,0x30c,2);
+  RSX_CONTEXT_CURRENTP[1] = src;
+  RSX_CONTEXT_CURRENTP[2] = dst;
+  RSX_CONTEXT_CURRENTP[3] = RSX_SUBCHANNEL_METHOD(1,0x328,1);
+  RSX_CONTEXT_CURRENTP[4] = 0;
+
+  RSX_CONTEXT_CURRENT_END(5);
+}
+
+void
+rsxSetTransferImage(gcmContextData *context,const u8 mode,const u32 dstOffset,const u32 dstPitch,const u32 dstX,const u32 dstY,const u32 srcOffset,const u32 srcPitch,const u32 srcX,const u32 srcY,const u32 width,const u32 height,const u32 bytesPerPixel)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(26);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(6,0x184,1);
+  RSX_CONTEXT_CURRENTP[1] = (mode & 0x1) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+
+  RSX_CONTEXT_CURRENTP[2] = RSX_SUBCHANNEL_METHOD(3,0x188,1);
+  RSX_CONTEXT_CURRENTP[3] = (mode & 0x2) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+
+  RSX_CONTEXT_CURRENTP[4] = RSX_SUBCHANNEL_METHOD(6,0x198,1);
+  RSX_CONTEXT_CURRENTP[5] = 0x313371c3;
+
+  RSX_CONTEXT_CURRENTP[6] = RSX_SUBCHANNEL_METHOD(3,0x30c,1);
+  RSX_CONTEXT_CURRENTP[7] = dstOffset;
+
+  RSX_CONTEXT_CURRENTP[8] = RSX_SUBCHANNEL_METHOD(3,0x300,2);
+  RSX_CONTEXT_CURRENTP[9] = (bytesPerPixel == 4) ? GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8 : (bytesPerPixel == 2) ? GCM_TRANSFER_SURFACE_FORMAT_R5G6B5 : 0;
+  RSX_CONTEXT_CURRENTP[10] = (dstPitch << 16) | dstPitch;
+
+  RSX_CONTEXT_CURRENTP[11] = RSX_SUBCHANNEL_METHOD(6,0x2fc,9);
+  RSX_CONTEXT_CURRENTP[12] = GCM_TRANSFER_CONVERSION_TRUNCATE;
+  RSX_CONTEXT_CURRENTP[13] = (bytesPerPixel == 4) ? GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8 : (bytesPerPixel == 2) ? GCM_TRANSFER_SCALE_FORMAT_R5G6B5 : 0;
+  RSX_CONTEXT_CURRENTP[14] = GCM_TRANSFER_OPERATION_SRCCOPY;
+  RSX_CONTEXT_CURRENTP[15] = (dstY << 16) | dstX;
+  RSX_CONTEXT_CURRENTP[16] = (height << 16) | width;
+  RSX_CONTEXT_CURRENTP[17] = (dstY << 16) | dstX;
+  RSX_CONTEXT_CURRENTP[18] = (height << 16) | width;
+  RSX_CONTEXT_CURRENTP[19] = 16 << 16;
+  RSX_CONTEXT_CURRENTP[20] = 16 << 16;
+
+  RSX_CONTEXT_CURRENTP[21] = RSX_SUBCHANNEL_METHOD(6,0x400,4);
+  RSX_CONTEXT_CURRENTP[22] = (height << 16) | width;
+  RSX_CONTEXT_CURRENTP[23] = srcPitch | (GCM_TRANSFER_ORIGIN_CORNER << 16) | (GCM_TRANSFER_INTERPOLATOR_NEAREST << 24);
+  RSX_CONTEXT_CURRENTP[24] = srcOffset;
+  RSX_CONTEXT_CURRENTP[25] = 0;
+
+  RSX_CONTEXT_CURRENT_END(26);
+}
+
+void
+rsxSetTransferScaleMode(gcmContextData *context,const u8 mode,const u8 surface)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(6);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(6,0x184,1);
+  RSX_CONTEXT_CURRENTP[1] = (mode & 0x1) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+
+  RSX_CONTEXT_CURRENTP[2] = RSX_SUBCHANNEL_METHOD(6,0x198,1);
+  RSX_CONTEXT_CURRENTP[3] = (surface == GCM_TRANSFER_SWIZZLE) ? 0x31337a73 : 0x313371c3;
+
+  RSX_CONTEXT_CURRENTP[4] = (surface == GCM_TRANSFER_SWIZZLE) ? RSX_SUBCHANNEL_METHOD(4,0x184,1) : RSX_SUBCHANNEL_METHOD(3,0x188,1);
+  RSX_CONTEXT_CURRENTP[5] = (mode & 0x2) ? GCM_DMA_MEMORY_HOST_BUFFER : GCM_DMA_MEMORY_FRAME_BUFFER;
+
+  RSX_CONTEXT_CURRENT_END(6);
+}
+
+void
+rsxSetTransferScaleSurface(gcmContextData *context,const gcmTransferScale *scale,const gcmTransferSurface *surface)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(20);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(3,0x300,4);
+  RSX_CONTEXT_CURRENTP[1] = surface -> format;
+  RSX_CONTEXT_CURRENTP[2] = (surface -> pitch << 16) | 0x40; // or'ing with 64 - why?
+  RSX_CONTEXT_CURRENTP[3] = 0;
+  RSX_CONTEXT_CURRENTP[4] = surface -> offset;
+
+  RSX_CONTEXT_CURRENTP[5] = RSX_SUBCHANNEL_METHOD(6,0x2fc,9);
+  RSX_CONTEXT_CURRENTP[6] = scale -> conversion;
+  RSX_CONTEXT_CURRENTP[7] = scale -> format;
+  RSX_CONTEXT_CURRENTP[8] = scale -> operation;
+  RSX_CONTEXT_CURRENTP[9] = (scale -> clipY << 16) | scale -> clipX;
+  RSX_CONTEXT_CURRENTP[10] = (scale -> clipH << 16) | scale -> clipW;
+  RSX_CONTEXT_CURRENTP[11] = (scale -> outY << 16) | scale -> outX;
+  RSX_CONTEXT_CURRENTP[12] = (scale -> outH << 16) | scale -> outW;
+  RSX_CONTEXT_CURRENTP[13] = scale -> ratioX;
+  RSX_CONTEXT_CURRENTP[14] = scale -> ratioY;
+
+  RSX_CONTEXT_CURRENTP[15] = RSX_SUBCHANNEL_METHOD(6,0x400,4);
+  RSX_CONTEXT_CURRENTP[16] = (scale -> inH << 16) | scale -> inW;
+  RSX_CONTEXT_CURRENTP[17] = (scale -> pitch) | (scale -> origin << 16) | (scale -> interp << 24);
+  RSX_CONTEXT_CURRENTP[18] = scale -> offset;
+  RSX_CONTEXT_CURRENTP[19] = (scale -> inY << 16) | scale -> inX;
+
+  RSX_CONTEXT_CURRENT_END(20);
+}
+
+#if 0
+// This is unfinished.
+void
+rsxSetTransferScaleSwizzle(gcmContextData *context,const gcmTransferScale *scale,const gcmTransferSwizzle *swizzle)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(18);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(4,0x300,2);
+  RSX_CONTEXT_CURRENTP[1] = swizzle -> format | (swizzle -> width << 16) | (swizzle -> height << 24);
+  RSX_CONTEXT_CURRENTP[2] = swizzle -> offset;
+
+  RSX_CONTEXT_CURRENTP[3] = RSX_SUBCHANNEL_METHOD(6,0x2fc,9);
+  RSX_CONTEXT_CURRENTP[4] = GCM_TRANSFER_CONVERSION_TRUNCATE;
+  RSX_CONTEXT_CURRENTP[5] = scale -> format;
+  RSX_CONTEXT_CURRENTP[6] = GCM_TRANSFER_OPERATION_SRCCOPY;
+  RSX_CONTEXT_CURRENTP[7] = (scale -> clipY << 16) | scale -> clipX;
+  RSX_CONTEXT_CURRENTP[8] = (scale -> clipH << 16) | scale -> clipW;
+  RSX_CONTEXT_CURRENTP[9] = (scale -> outY << 16) | scale -> outX;
+  RSX_CONTEXT_CURRENTP[10] = (scale -> outH << 16) | scale -> outW;
+  RSX_CONTEXT_CURRENTP[11] = scale -> ratioX;
+  RSX_CONTEXT_CURRENTP[12] = scale -> ratioY;
+
+  RSX_CONTEXT_CURRENTP[13] = RSX_SUBCHANNEL_METHOD(6,0x400,4);
+  RSX_CONTEXT_CURRENTP[14] = (scale -> inH << 16) | scale -> inW;
+  RSX_CONTEXT_CURRENTP[15] = (scale -> pitch) | (scale -> origin << 16) | (scale -> interp << 24);
+  RSX_CONTEXT_CURRENTP[16] = scale -> offset;
+  RSX_CONTEXT_CURRENTP[17] = (scale -> inY << 16) | scale -> inX;
+
+  RSX_CONTEXT_CURRENT_END(18);
+}
+#endif
+
+void
+rsxSetTimeStamp(gcmContextData * context,u32 index)
+{
+  RSX_CONTEXT_CURRENT_BEGIN(2);
+
+  RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(0x1800,1);
+  RSX_CONTEXT_CURRENTP[1] = ((index << 4) & 0xFFFFFFF) | (0x1000000);
+
+  RSX_CONTEXT_CURRENT_END(2);
+}
