@@ -22,19 +22,19 @@ typedef struct _region_list_entry
 	void *top_allocated;
 	void *top_reserved;
 	u32 reserve_size;
-	mem_id_t mem_id;
+	sys_mem_id_t mem_id;
 	struct _region_list_entry *previous;
 } region_list_entry;
 
 static s32 __sbrk_spinlock = 0;
 static heap_cntrl __region_heap;
-static mem_addr_t __sbrk_baseaddr = 0;
+static sys_mem_addr_t __sbrk_baseaddr = 0;
 static region_list_entry *__sbrk_curr_regionentry = NULL;
 static char __region_list_entries[sizeof(region_list_entry)*(MEM_NUM_PAGES + 1)] __attribute__((aligned(64)));
 
 extern void dbg_printf(const char *fmt,...);
 
-static int region_list_append(region_list_entry **last,void *base_reserved,u32 reserve_size,mem_id_t mem_id)
+static int region_list_append(region_list_entry **last,void *base_reserved,u32 reserve_size,sys_mem_id_t mem_id)
 {
 	region_list_entry *next = (region_list_entry*)heapAllocate(&__region_heap,sizeof(region_list_entry));
 	if(!next) return 0;
@@ -79,9 +79,9 @@ static void sbrk_deinit() __attribute__((destructor(103)));
 static void sbrk_deinit()
 {
 	while(__sbrk_curr_regionentry) {
-		mem_id_t ret_id;
+		sys_mem_id_t ret_id;
 		s32 release_size = __sbrk_curr_regionentry->reserve_size;
-		mem_addr_t base_reserved = (mem_addr_t)((u64)__sbrk_curr_regionentry->top_reserved - release_size);
+		sys_mem_addr_t base_reserved = (sys_mem_addr_t)((u64)__sbrk_curr_regionentry->top_reserved - release_size);
 		
 		sysMMapperUnmapMemory(base_reserved,&ret_id);
 		sysMMapperFreeMemory(ret_id);
@@ -105,8 +105,8 @@ caddr_t _DEFUN(__librt_sbrk_r, (ptr,incr),
 		s32 to_reserve = (char*)__sbrk_curr_regionentry->top_allocated + allocate_size - (char*)__sbrk_curr_regionentry->top_reserved;
 
 		if(to_reserve>0) {
-			mem_id_t mem_id;
-			mem_addr_t base_reserved;
+			sys_mem_id_t mem_id;
+			sys_mem_addr_t base_reserved;
 			s32 reserve_size = CEIL(to_reserve,MEM_PAGE_SIZE);
 
 			ret = sysMMapperAllocateMemory(reserve_size,SYS_MEMORY_PAGE_SIZE_1M,&mem_id);
@@ -140,9 +140,9 @@ caddr_t _DEFUN(__librt_sbrk_r, (ptr,incr),
 		s32 deallocate_size = -incr;
 
 		while((char*)__sbrk_curr_regionentry->top_allocated - deallocate_size < (char*)__sbrk_curr_regionentry->top_reserved - __sbrk_curr_regionentry->reserve_size) {
-			mem_id_t ret_id;
+			sys_mem_id_t ret_id;
 			s32 release_size = __sbrk_curr_regionentry->reserve_size;
-			mem_addr_t base_reserved = (mem_addr_t)((u64)__sbrk_curr_regionentry->top_reserved - release_size);
+			sys_mem_addr_t base_reserved = (sys_mem_addr_t)((u64)__sbrk_curr_regionentry->top_reserved - release_size);
 
 			ret = sysMMapperUnmapMemory(base_reserved,&ret_id);
 			if(ret) {

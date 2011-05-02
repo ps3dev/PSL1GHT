@@ -287,16 +287,19 @@
 extern "C" {
 #endif
 
+struct _gcmCtxData;
+typedef s32 (*gcmContextCallback)(struct _gcmCtxData *context,u32 count);
+
 /*! \brief RSX Context data structure.
 
 This structure is used for managing and controlling the command buffer.
 */
 typedef struct _gcmCtxData
 {
-	u32 begin;					/*!< \brief Start address of command buffer */
-	u32 end;					/*!< \brief End address of command buffer */
-	u32 current;				/*!< \brief Current address of command buffer */
-	u32 callback;				/*!< \brief Callback function that is called when <i>current</i> reaches <i>end</i> */
+	u32 *__restrict begin ATTRIBUTE_PRXPTR;					/*!< \brief Start address of command buffer */
+	u32 *__restrict end ATTRIBUTE_PRXPTR;					/*!< \brief End address of command buffer */
+	u32 *__restrict current ATTRIBUTE_PRXPTR;				/*!< \brief Current address of command buffer */
+	gcmContextCallback callback ATTRIBUTE_PRXPTR;			/*!< \brief Callback function that is called when <i>current</i> reaches <i>end</i> */
 } gcmContextData;
 
 /*! \brief RSX control data structure.
@@ -316,12 +319,12 @@ This structure holds system informations of RSX.
 */
 typedef struct _gcmCfg
 {
-	u32 localAddress;			/*!< \brief effective start address of RSX memory */
-	u32 ioAddress;				/*!< \brief effective start address of I/O mapped main memory to be used by RSX */
-	s32 localSize;				/*!< \brief maximum available size of RSX memory */
-	s32 ioSize;					/*!< \brief maximum available size of I/O mapped main memory to be used by RSX */
-	s32 memoryFreq;				/*!< \brief RSX memory clock frequency. */
-	s32 coreFreq;				/*!< \brief Core clock frequency of RSX */
+	void *localAddress ATTRIBUTE_PRXPTR;			/*!< \brief effective start address of RSX memory */
+	void *ioAddress ATTRIBUTE_PRXPTR;				/*!< \brief effective start address of I/O mapped main memory to be used by RSX */
+	u32 localSize;									/*!< \brief maximum available size of RSX memory */
+	u32 ioSize;										/*!< \brief maximum available size of I/O mapped main memory to be used by RSX */
+	u32 memoryFreq;									/*!< \brief RSX memory clock frequency. */
+	u32 coreFreq;									/*!< \brief Core clock frequency of RSX */
 } gcmConfiguration;
 
 /*! \brief RSX target surface data structure.
@@ -518,8 +521,6 @@ typedef struct _gcmTexture
 	u32 offset;
 } gcmTexture;
 
-typedef s32 (*gcmContextCallback)(gcmContextData *context,u32 count);
-
 /*! \brief Initialize the RSX context.
 
 \param ctx Pointer to where the effective address of the allocated context
@@ -529,14 +530,14 @@ typedef s32 (*gcmContextCallback)(gcmContextData *context,u32 count);
 \param ioAddress Pointer to an allocated buffer of \p ioSize bytes.
 \return zero if no error occured, nonzero otherwise.
 */
-s32 gcmInitBody(u32 *ctx,const u32 cmdSize,const u32 ioSize,const void *ioAddress);
+s32 gcmInitBody(gcmContextData* ATTRIBUTE_PRXPTR *ctx,const u32 cmdSize,const u32 ioSize,const void *ioAddress);
 
 /*! \brief Converts an effective address in RSX memory to an offset.
 \param address The effective address to be converted.
 \param offset A pointer to the returned offset value.
 \return zero if no error occured, nonzero otherwise.
 */
-s32 gcmAddressToOffset(u32 address,u32 *offset);
+s32 gcmAddressToOffset(void *address,u32 *offset);
 
 /*! \brief Converts an offset to an effective address in RSX memory.
 \param offset The offset to be converted.

@@ -35,6 +35,33 @@ typedef double			f64;
 typedef volatile f32	vf32;
 typedef volatile f64	vf64;
 
+typedef u32 sys_mem_id_t;
+typedef u32 sys_mem_addr_t;
+typedef u32 sys_mem_container_t;
+
+typedef u32 sys_raw_spu_t;
+typedef u32 sys_spu_group_t;
+typedef u32 sys_spu_thread_t;
+
+/*! \brief PPU thread identifier. */
+typedef u64 sys_ppu_thread_t;
+
+typedef u32 sys_cond_t;
+
+/*! \brief Mutex identifier. */
+typedef s32 sys_mutex_t;
+
+/*! \brief Event queue id */
+typedef u32 sys_event_queue_t;
+
+/*! \brief Event port id */
+typedef u32 sys_event_port_t;
+
+/*! \brief IPC key id */
+typedef u64 sys_ipc_key_t;
+
+typedef u32 sys_sem_t;
+
 typedef struct _opd64
 {
 	void *func;
@@ -68,6 +95,8 @@ typedef union _ieee32
 
 #define SPU_ALIGNMENT				128
 #define SPU_ALIGNSIZE(x)			(((x) + 127)&~127)
+
+#define ATTRIBUTE_PRXPTR			__attribute__((mode(SI)))
 
 // courtesy of Marcan
 #define STACK_ALIGN(type, name, cnt, alignment)		u8 _al__##name[((sizeof(type)*(cnt)) + (alignment) + (((sizeof(type)*(cnt))%(alignment)) > 0 ? ((alignment) - ((sizeof(type)*(cnt))%(alignment))) : 0))]; \

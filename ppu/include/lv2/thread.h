@@ -11,9 +11,6 @@
 extern "C" {
 #endif
 
-/*! \brief PPU thread identifier. */
-typedef u64 sys_ppu_thread_t;
-
 /*! \brief Terminate the running PPU thread.
 \param ret_val Thread return value.
 */

@@ -16,8 +16,6 @@
 	extern "C" {
 #endif
 
-typedef u32 sys_sem_t;
-
 /*! \brief Semaphore sttributes data structure. */
 typedef struct sys_sem_attr
 {

@@ -32,15 +32,6 @@
 	extern "C" {
 #endif
 
-/*! \brief Event queue id */
-typedef u32 sys_event_queue_t;
-
-/*! \brief Event port id */
-typedef u32 sys_event_port_t;
-
-/*! \brief IPC key id */
-typedef u64 sys_ipc_key_t;
-
 /*! \brief Data structure for create attributes for an event queue */
 typedef struct sys_event_queue_attr
 {

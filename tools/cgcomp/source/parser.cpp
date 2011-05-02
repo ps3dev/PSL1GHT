@@ -260,17 +260,15 @@ const char* CParser::ParseRegSwizzle(const char *token,struct nvfx_src *reg)
 			token++;
 
 			reg->swz[0] = reg->swz[1] = reg->swz[2] = reg->swz[3] = 0;
-			for(k=0;*token!='\0' && k<4;k++) {
-				if(token[k]=='x')
+			for(k=0;*token!='\0' && k<4;k++,token++) {
+				if(*token=='x')
 					reg->swz[k] = NVFX_SWZ_X;
-				else if(token[k]=='y')
+				else if(*token=='y')
 					reg->swz[k] = NVFX_SWZ_Y;
-				else if(token[k]=='z')
+				else if(*token=='z')
 					reg->swz[k] = NVFX_SWZ_Z;
-				else if(token[k]=='w')
+				else if(*token=='w')
 					reg->swz[k] = NVFX_SWZ_W;
-
-				token++;
 			}
 			if(k && k<4) {
 				u8 lastswz = reg->swz[k - 1];

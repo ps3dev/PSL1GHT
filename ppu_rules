@@ -21,10 +21,12 @@ include $(PSL1GHT)/base_rules
 
 PKG			:=	pkg.py
 SFO			:=	sfo.py
-SFOXML		:=	sfo.xml
+SFOXML		:=	$(PSL1GHT)/bin/sfo.xml
+ICON0		:=	$(PSL1GHT)/bin/ICON0.PNG
 
 SPRX		:=	sprxlinker$(POSTFIX)
 CGCOMP		:=	cgcomp$(POSTFIX)
+PS3LOAD		:=	ps3load$(POSTFIX)
 
 FSELF		:=	fself.py
 FSELF_NPDRM	:=	$(FSELF) -n
@@ -37,9 +39,9 @@ PACKAGE_FINALIZE := package_finalize
 #---------------------------------------------------------------------------------
 %.self: %.elf
 	@echo output ... $(notdir $@)
-	$(VERB) $(STRIP) $< -o $<
-	$(VERB) $(SPRX) $<
-	$(VERB) $(FSELF) $< $@
+	$(VERB) $(STRIP) $< -o $(BUILDDIR)/$(notdir $<)
+	$(VERB) $(SPRX) $(BUILDDIR)/$(notdir $<)
+	$(VERB) $(FSELF) $(BUILDDIR)/$(notdir $<) $@
 
 %.vpo: %.vcg
 	@echo $(notdir $<)
@@ -51,3 +53,12 @@ PACKAGE_FINALIZE := package_finalize
 
 %.pkg: %.self
 	@echo building pkg ... $(notdir $@)
+	$(VERB) mkdir -p $(BUILDDIR)/pkg
+	$(VERB) mkdir -p $(BUILDDIR)/pkg/USRDIR
+	$(VERB) cp $(ICON0) $(BUILDDIR)/pkg/
+	$(VERB) $(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
+	$(VERB) $(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
+	$(VERB) if test -n "$(PKGFILES)" -a -d "$(PKGFILES)"; then cp -rf $(PKGFILES)/* $(BUILDDIR)/pkg/; fi
+	$(VERB) $(PKG) --contentid $(CONTENTID) $(BUILDDIR)/pkg/ $@ >> /dev/null
+	$(VERB) cp $@ $(basename $@).geohot.pkg
+	$(VERB) $(PACKAGE_FINALIZE) $(basename $@).geohot.pkg

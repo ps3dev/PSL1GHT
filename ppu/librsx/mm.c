@@ -11,15 +11,8 @@ static u64 __rsxheap_initialized = 0;
 s64 rsxHeapInit()
 {
 	if(!__rsxheap_initialized) {
-		void *start;
-		u32 size;
-
 		gcmGetConfiguration(&__rsx_config);
-
-		start = (void*)((u64)__rsx_config.localAddress);
-		size =  __rsx_config.localSize;
-
-		heapInit(&__rsx_heap,start,size);
+		heapInit(&__rsx_heap,__rsx_config.localAddress,__rsx_config.localSize);
 		__rsxheap_initialized = 1;
 	}
 

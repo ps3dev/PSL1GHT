@@ -141,6 +141,8 @@ typedef struct rsx_attrib
 {
 	u32 name_off;
 	u32 index;
+	u8 type;
+	u8 _pad0[3];
 } rsxProgramAttrib;
 
 #endif

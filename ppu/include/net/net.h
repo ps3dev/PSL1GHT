@@ -147,6 +147,9 @@ s32* netHErrnoLoc();
 
 s32 netInitializeNetworkEx(netInitParam* param);
 s32 netFinalizeNetwork();
+s32 netShowIfConfig();
+s32 netShowNameServer();
+s32 netShowRoute();
 
 s32 netAccept(s32 socket,const struct sockaddr* address,socklen_t* address_len);
 s32 netBind(s32 socket,const struct sockaddr* address,socklen_t address_len);
@@ -167,6 +170,9 @@ s32 netPoll(struct pollfd *fds,nfds_t nfds,s32 timeout);
 s32 netSelect(s32 nfds,fd_set *readfds,fd_set *writefds,fd_set *errorfds,struct timeval *timeout);
 s32 netGetSockName(s32 socket,struct sockaddr *address,socklen_t *address_len);
 s32 netGetPeerName(s32 socket,struct sockaddr *address,socklen_t *address_len);
+
+s32 netGetSockOpt(s32 socket,s32 level,s32 option_name,void *option_value,socklen_t *option_len);
+s32 netSetSockOpt(s32 socket,s32 level,s32 option_name,const void *option_value,socklen_t option_len);
 
 struct net_hostent* netGetHostByAddr(const char *addr,socklen_t len,s32 type);
 struct net_hostent* netGetHostByName(const char *name);

@@ -32,9 +32,6 @@
 	extern "C" {
 #endif
 
-/*! \brief Mutex identifier. */
-typedef s32 sys_mutex_t;
-
 /*! \brief Mutex attributes data structure.*/
 typedef struct sys_mutex_attr
 {

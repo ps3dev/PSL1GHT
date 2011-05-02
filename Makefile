@@ -10,7 +10,7 @@ endif
 
 .PHONY: samples
 
-all: install-ctrl
+all:
 	@$(MAKE) -C common --no-print-directory
 	@$(MAKE) -C ppu --no-print-directory
 	@$(MAKE) -C spu --no-print-directory
@@ -24,9 +24,9 @@ doc:
 
 install-ctrl:
 	@[ -d $(PSL1GHT) ] || mkdir -p $(PSL1GHT)
-	@[ -f $(PSL1GHT)/base_rules ] || cp -frv base_rules $(PSL1GHT)
-	@[ -f $(PSL1GHT)/ppu_rules ]  || cp -frv ppu_rules  $(PSL1GHT)
-	@[ -f $(PSL1GHT)/spu_rules ]  || cp -frv spu_rules  $(PSL1GHT)
+	@cp -frv base_rules $(PSL1GHT)
+	@cp -frv ppu_rules  $(PSL1GHT)
+	@cp -frv spu_rules  $(PSL1GHT)
 
 install-socat:
 	@$(MAKE) -C tools install-socat --no-print-directory

@@ -74,7 +74,7 @@ s32 sysSpuElfGetSegments(const void *elf,sysSpuSegment *segments,u32 segmentCoun
  \return
  zero if no error occured, nonzero otherwise.
 */
-s32 sysSpuRawLoad(u32 spu,const char *path,u32 *entryPoint);
+s32 sysSpuRawLoad(sys_raw_spu_t spu,const char *path,u32 *entryPoint);
 
 /*! \brief Load a SPU image into a raw SPU's local store.
  \param spu
@@ -84,7 +84,7 @@ s32 sysSpuRawLoad(u32 spu,const char *path,u32 *entryPoint);
  \return
  zero if no error occured, nonzero otherwise.
 */
-s32 sysSpuRawImageLoad(u32 spu,sysSpuImage *image);
+s32 sysSpuRawImageLoad(sys_raw_spu_t spu,sysSpuImage *image);
 
 /*! \brief Close an opened SPU image file.
  \param image

@@ -6,7 +6,6 @@
 #define __SYS_COND_H__
 
 #include <lv2/cond.h>
-#include <sys/mutex.h>
 
 /*! \brief Pshared attribute for condition variables. */
 #define SYS_COND_ATTR_PSHARED			0x0200
@@ -14,9 +13,6 @@
 #ifdef __cplusplus
 	extern "C" {
 #endif
-
-/*! \brief Condition variable identifier. */
-typedef u32 sys_cond_t;
 
 /*! \brief Condition variable attributes data structure */
 typedef struct sys_cond_attr

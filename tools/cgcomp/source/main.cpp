@@ -220,6 +220,7 @@ int compileVP()
 				it->user = lastoff + (n*sizeof(rsxProgramAttrib));
 				attribs[n].index = SWAP32(it->index);
 				attribs[n].name_off = SWAP32(0);
+				attribs[n].type = it->type;
 				n++;
 			}
 		}
@@ -350,6 +351,7 @@ int compileFP()
 				it->user = lastoff + (n*sizeof(rsxProgramAttrib));
 				attribs[n].index = SWAP32(it->index);
 				attribs[n].name_off = SWAP32(0);
+				attribs[n].type = it->type;
 				n++;
 			}
 		}

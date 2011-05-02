@@ -145,7 +145,7 @@ For the default display, just use 0 for \p videoOut and \p deviceIndex.
 \return zero if no error, nonzero otherwise.
 \todo verify the parameters signification.
 */
-int videoGetState(int videoOut,int deviceIndex,videoState *state);
+s32 videoGetState(s32 videoOut,s32 deviceIndex,videoState *state);
 
 /*! \brief Get video resolution from resolution id.
 \param resolutionId The input resolution id. The possible values are:
@@ -156,7 +156,7 @@ int videoGetState(int videoOut,int deviceIndex,videoState *state);
 \param resolution Pointer to the video resolution structure to be updated.
 \return zero if no error, nonzero otherwise.
 */
-int videoGetResolution(int resolutionId,videoResolution *resolution);
+s32 videoGetResolution(s32 resolutionId,videoResolution *resolution);
 
 /*! \brief Configure the video output.
 \param videoOut Video output id.
@@ -166,7 +166,7 @@ int videoGetResolution(int resolutionId,videoResolution *resolution);
 \return zero if no error, nonzero otherwise.
 \todo verify the parameters signification.
 */
-int videoConfigure(int videoOut,videoConfiguration *config,void *option,int blocking);
+s32 videoConfigure(s32 videoOut,videoConfiguration *config,void *option,s32 blocking);
 
 #ifdef __cplusplus
 	}

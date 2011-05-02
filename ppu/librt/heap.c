@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <ppu-asm.h>
+#include <lv2/spinlock.h>
 
 #include "heap.h"
 #include "heap.inl"

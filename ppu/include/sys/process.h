@@ -1,4 +1,4 @@
-/*! \file process.h
+/*! \file sys/process.h
  \brief Process management.
 */
 
@@ -8,12 +8,19 @@
 #include <ppu-lv2.h>
 #include <lv2/process.h>
 
+/*! \brief set stack size to 32 kilobytes. */
 #define SYS_PROCESS_SPAWN_STACK_SIZE_32K	0x10
+/*! \brief set stack size to 64 kilobytes. */
 #define SYS_PROCESS_SPAWN_STACK_SIZE_64K	0x20
+/*! \brief set stack size to 96 kilobytes. */
 #define SYS_PROCESS_SPAWN_STACK_SIZE_96K	0x30
+/*! \brief set stack size to 128 kilobytes. */
 #define SYS_PROCESS_SPAWN_STACK_SIZE_128K	0x40
+/*! \brief set stack size to 256 kilobytes. */
 #define SYS_PROCESS_SPAWN_STACK_SIZE_256K	0x50
+/*! \brief set stack size to 512 kilobytes. */
 #define SYS_PROCESS_SPAWN_STACK_SIZE_512K	0x60
+/*! \brief set stack size to 1 megabyte. */
 #define SYS_PROCESS_SPAWN_STACK_SIZE_1M		0x70
 
 #define SYS_PROCESS_PARAM(prio,stacksize) \

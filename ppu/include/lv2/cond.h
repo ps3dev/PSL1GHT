@@ -7,7 +7,6 @@
 
 #include <ppu-types.h>
 #include <lv2/mutex.h>
-#include <lv2/thread.h>
 
 #ifdef __cplusplus
 extern "C" {

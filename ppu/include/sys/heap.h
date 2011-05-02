@@ -6,7 +6,6 @@
 #define __SYS_HEAP_H__
 
 #include <ppu-types.h>
-#include <lv2/spinlock.h>
 
 #define HEAP_PREV_USED				1
 #define HEAP_MIN_BLOCK_SIZE			(sizeof(heap_block))

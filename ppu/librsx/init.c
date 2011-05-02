@@ -5,12 +5,12 @@
 gcmContextData* rsxInit(const u32 cmdSize,const u32 ioSize,const void *ioAddress)
 {
 	s32 ret = -1;
-	u32 context = 0;
+	gcmContextData *context ATTRIBUTE_PRXPTR;
 
 	ret = gcmInitBody(&context,cmdSize,ioSize,ioAddress);
 	if(ret==0) {
-		rsxHeapInit(cmdSize,ioSize);
-		return (gcmContextData*)((u64)context);
+		rsxHeapInit();
+		return context;
 	}
 	return NULL;
 }
@@ -19,8 +19,8 @@ void rsxSetupContextData(gcmContextData *context,const u32 *addr,const u32 size,
 {
 	u32 alignedSize = size&~0x3;
 
-	context->begin = __get_addr32(addr);
-	context->current = __get_addr32(addr);
-	context->end = __get_addr32(addr + alignedSize - 4);
-	context->callback = __get_addr32(__get_opd32(cb));
+	context->begin = (u32*)addr;
+	context->current = (u32*)addr;
+	context->end = (u32*)(addr + alignedSize - 4);
+	context->callback = (gcmContextCallback)__get_opd32(cb);
 }

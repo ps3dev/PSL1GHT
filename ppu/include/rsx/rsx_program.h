@@ -103,6 +103,8 @@ typedef struct rsx_attrib
 {
 	u32 name_off;	/*!< \brief offset of attribute name. */
 	u32 index;		/*!< \brief attribute index. */
+	u8 type;		/*!< \brief attribute type. */
+	u8 _pad0[3];
 } rsxProgramAttrib;
 
 /*! \brief Get Ucode from RSX vertex program.
