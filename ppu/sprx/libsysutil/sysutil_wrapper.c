@@ -5,6 +5,7 @@
 #include <sysutil/msg.h>
 #include <sysutil/sysutil.h>
 #include <sysutil/save.h>
+#include <sysutil/disc.h>
 
 /* sysUtil functions */
 extern s32 sysUtilRegisterCallbackEx(s32 slot,opd32 *opd,void *usrdata);
@@ -43,6 +44,10 @@ extern s32 sysSaveAutoSave2Ex (s32 version, const char *directoryName,
     sysSaveErrorDialogMode errorDialogMode,
     sysSaveBufferSettings *bufferSettings,
     opd32 *statusCb, opd32 *fileCb, sys_mem_container_t container, void *user_data);
+
+
+/* Disc utility support */
+extern s32 sysDiscRegisterDiscChangeCallbackEx(opd32 *cbEject,opd32 *cbInsert);
 
 // sysUtil wrapper functions
 s32 sysUtilRegisterCallback(s32 slot,sysutilCallback cb,void *usrdata)
@@ -202,3 +207,11 @@ s32 sysSaveAutoSave2 (s32 version,
       (opd32*) __get_opd32(fileCb),
       container, user_data);
 }
+
+
+/* Disc utility support */
+s32 sysDiscRegisterDiscChangeCallback(sysDiscEjectCallback *cbEject,sysDiscInsertCallback cbInsert)
+{
+	return sysDiscRegisterDiscChangeCallbackEx((opd32*)__get_opd32(cbEject),(opd32*)__get_opd32(cbInsert));
+}
+

@@ -14,22 +14,38 @@ ifeq ($(strip $(PS3DEV)),)
   endif
 endif
 
+CFLAGS		:= $(DEBUGFLAGS) -O2 -Wall --std=gnu99
+LDFLAGS		:= $(DEBUGFLAGS)
+
 ifneq (,$(findstring MINGW,$(UNAME)))
 	POSTFIX	:= .exe
+	CFLAGS	+= -mno-cygwin
+	LDFLAGS += -mno-cygwin -s -lelf
+	OS		:= win32
 endif
 
 ifneq (,$(findstring CYGWIN,$(UNAME)))
 	POSTFIX	:= .exe
+	LDFLAGS += -s -lelf
+	OS		:= win32
+endif
+
+ifneq (,$(findstring Darwin,$(UNAME)))
+	CFLAGS	+= -I/opt/local/include
+	LDFLAGS	+= -L/opt/local/lib -lelf
+	OS		:= Mac
+endif
+
+ifneq (,$(findstring Linux,$(UNAME)))
+	LDFLAGS += -lelf
+	OS		:= Linux
 endif
 
 TARGET		:= sprxlinker$(POSTFIX)
 SOURCE		:= .
 INCLUDE		:= .
 
-CFLAGS		:= -O2 -Wall --std=gnu99
-LDFLAGS		:= -lelf
-
-CC		:= gcc
+CC			:= gcc
 
 CFILES		:= $(foreach dir,$(SOURCE),$(wildcard $(dir)/*.c))
 INCLUDES	:= $(foreach dir,$(INCLUDE),-I$(dir))

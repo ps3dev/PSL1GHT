@@ -245,6 +245,98 @@ void rsxSetBlendColor(gcmContextData *context,u16 color0,u16 color1);
 void rsxSetBlendEnable(gcmContextData *context,u32 enable);
 void rsxSetTransformBranchBits(gcmContextData *context,u32 branchBits);
 
+/*! \brief Configuration the mode for an upcoming asynchronous RSX DMA transfer.
+\param context Pointer to the context object
+\param mode Specify source and destination memory areas. Possible values are:
+- \ref GCM_TRANSFER_LOCAL_TO_LOCAL
+- \ref GCM_TRANSFER_MAIN_TO_LOCAL
+- \ref GCM_TRANSFER_LOCAL_TO_MAIN
+- \ref GCM_TRANSFER_MAIN_TO_MAIN
+*/
+void rsxSetTransferDataMode(gcmContextData *context,u8 mode);
+
+/*! \brief Specify the memory locations for an RSX DMA transfer. This function should be called after rsxSetTransferDataMode() and rsxSetTransferDataFormat().
+\param context Pointer to the context object
+\param dst Destination memory offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory().
+\param src Source memory offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory().
+*/
+void rsxSetTransferDataOffset(gcmContextData *context,u32 dst,u32 src);
+
+/*! \brief Format an upcoming asynchronous RSX DMA transfer.
+\param context Pointer to the context object
+\param inpitch Pitch size, in bytes, of the source buffer (e.g., for a buffer that represents a rectangular image, this would be the width multiplied by the number of bytes in each pixel).
+\param outpitch Pitch size, in bytes, of the destination buffer (e.g., for a buffer that represents a rectangular image, this would be the width multiplied by the number of bytes in each pixel).
+\param linelength Size, in bytes, of each line of data that will be transfered.
+\param linecount Number of lines of data to transfer.
+\param inbytes Number of bytes for each block (e.g., pixel) of data to be transfered: 1, 2, or 4. Will perform scatter-gather transfer if different from outbytes.
+\param outbytes Number of bytes for each block (e.g., pixel) of data to be transfered: 1, 2, or 4. Will perform scatter-gather transfer if different from inbytes.
+*/
+void rsxSetTransferDataFormat(gcmContextData *context,s32 inpitch,s32 outpitch,u32 linelength,u32 linecount,u8 inbytes,u8 outbytes);
+
+/*! \brief Initiate an asynchronous RSX DMA transfer.
+\param context Pointer to the context object
+\param mode Specify source and destination memory areas. Possible values are:
+- \ref GCM_TRANSFER_LOCAL_TO_LOCAL
+- \ref GCM_TRANSFER_MAIN_TO_LOCAL
+- \ref GCM_TRANSFER_LOCAL_TO_MAIN
+- \ref GCM_TRANSFER_MAIN_TO_MAIN
+\param dst Destination memory offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory().
+\param outpitch Pitch size, in bytes, of the destination buffer (e.g., for a buffer that represents a rectangular image, this would be the width multiplied by the number of bytes in each pixel).
+\param src Source memory offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory().
+\param inpitch Pitch size, in bytes, of the source buffer (e.g., for a buffer that represents a rectangular image, this would be the width multiplied by the number of bytes in each pixel).
+\param linelength Size, in bytes, of each line of data that will be transfered.
+\param linecount Number of lines of data to transfer.
+*/
+void rsxSetTransferData(gcmContextData *context,u8 mode,u32 dst,u32 outpitch,u32 src,u32 inpitch,u32 linelength,u32 linecount);
+
+/*! \brief Configure an upcoming asynchronous RSX blit.
+\param context Pointer to the context object
+\param mode Specify source and destination memory areas. Possible values are:
+- \ref GCM_TRANSFER_LOCAL_TO_LOCAL
+- \ref GCM_TRANSFER_MAIN_TO_LOCAL
+- \ref GCM_TRANSFER_LOCAL_TO_MAIN
+- \ref GCM_TRANSFER_MAIN_TO_MAIN
+\param surface Transfer surface mode. Possible values are:
+- \ref GCM_TRANSFER_SURFACE
+- \ref GCM_TRANSFER_SWIZZLE
+*/
+void rsxSetTransferScaleMode(gcmContextData *context,const u8 mode,const u8 surface);
+
+/*! \brief Initiate an asynchronous RSX blit.
+\param context Pointer to the context object
+\param scale Specify the transfer geometry & parameters.
+\param surface Specify the surface to blit to.
+*/
+void rsxSetTransferScaleSurface(gcmContextData *context,const gcmTransferScale *scale,const gcmTransferSurface *surface);
+
+/*! \brief Initialiate an asynchronous transfer of a rectangular image from one area of memory to another.
+\param context Pointer to the context object
+\param mode Specify source and destination memory areas. Possible values are:
+- \ref GCM_TRANSFER_LOCAL_TO_LOCAL
+- \ref GCM_TRANSFER_MAIN_TO_LOCAL
+- \ref GCM_TRANSFER_LOCAL_TO_MAIN
+- \ref GCM_TRANSFER_MAIN_TO_MAIN
+\param dstOffset Destination memory offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory().
+\param dstPitch Pitch size, in bytes, of the destination image data (width multiplied by the number of bytes in each pixel).
+\param dstX Origin of the destination data, relative to the beginning of the destination buffer.
+\param dstY Origin of the destination data, relative to the beginning of the destination buffer.
+\param srcOffset Source memory offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory().
+\param srcPitch Pitch size, in bytes, of the source image data (width multiplied by the number of bytes in each pixel).
+\param srcX Origin of the source rectangle, relative to the beginning of the source buffer.
+\param srcY Origin of the source rectangle, relative to the beginning of the source buffer.
+\param width Width of the transfer rectangle.
+\param height Height of the transfer rectangle.
+\param bytesPerPixel Number of bytes per pixel to transfer: 2 or 4.
+*/
+void rsxSetTransferImage(gcmContextData *context,const u8 mode,const u32 dstOffset,const u32 dstPitch,const u32 dstX,const u32 dstY,const u32 srcOffset,const u32 srcPitch,const u32 srcX,const u32 srcY,const u32 width,const u32 height,const u32 bytesPerPixel);
+void rsxSetTimeStamp(gcmContextData *context,u32 index);
+
+#if 0
+/*! \brief Unfinished 
+*/
+void rsxSetTransferScaleSwizzle(gcmContextData *context,const gcmTransferScale *scale,const gcmTransferSwizzle *swizzle);
+#endif
+
 #ifdef __cplusplus
 	}
 #endif

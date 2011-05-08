@@ -48,13 +48,6 @@ dynamic memory allocation using \ref rsxMalloc, \ref rsxMemalign and
 */
 gcmContextData* rsxInit(const u32 cmdSize,const u32 ioSize,const void *ioAddress);
 
-/*! \brief Converts a pointer value in RSX memory to an offset.
-\param ptr The pointer whose value is to be converted.
-\param offset A pointer to the returned offset value.
-\return zero if no error occured, nonzero otherwise.
-*/
-s32 rsxAddressToOffset(void *ptr,u32 *offset);
-
 /*! \brief Flushes the RSX command buffer.
 
 This ensures all remaining commands in the command buffer are executed, and
@@ -65,6 +58,26 @@ void rsxFlushBuffer(gcmContextData *context);
 void rsxResetCommandBuffer(gcmContextData *context);
 void rsxFinish(gcmContextData *context,u32 ref_value);
 void rsxSetupContextData(gcmContextData *context,const u32 *addr,const u32 size,gcmContextCallback cb);
+
+/*! \brief Converts a pointer value in RSX memory to an offset.
+\param ptr The pointer whose value is to be converted.
+\param offset A pointer to the returned offset value.
+\return zero if no error occured, nonzero otherwise.
+*/
+static inline s32 rsxAddressToOffset(void *ptr,u32 *offset)
+{
+	return gcmAddressToOffset(ptr,offset);
+}
+
+static inline s32 rsxGetFixedSint32(const f32 f)
+{
+	return (s32)(f*1048576.0f);
+}
+
+static inline u16 rsxGetFixedUint16(const f32 f)
+{
+	return (u16)(f*16.0f);
+}
 
 #ifdef __cplusplus
 	}

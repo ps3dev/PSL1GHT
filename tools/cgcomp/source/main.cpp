@@ -63,7 +63,7 @@ static bool InitCompiler()
 #if defined(WIN32)
 	HMODULE libcgc=LoadLibrary("cg.dll");
 #elif defined(__APPLE__)
-    void *libcgc=dlopen("cg.dylib", RTLD_LAZY);
+    void *libcgc=dlopen("Cg", RTLD_LAZY);
 #else
     void *libcgc=dlopen("libCg.so", RTLD_LAZY);
 #endif

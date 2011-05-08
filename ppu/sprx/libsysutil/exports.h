@@ -55,5 +55,8 @@ EXPORT(sysSaveAutoLoad2Ex, 0xfbd5c856);
 EXPORT(sysSaveAutoSave2Ex, 0x8b7ed64b);
 EXPORT(sysSaveDelete2, 0xedadd797);
 
+/* Disc utility support */
+EXPORT(sysDiscRegisterDiscChangeCallbackEx, 0xdfdd302e);
+EXPORT(sysDiscUnregisterDiscChangeCallback, 0xedc34e1a);
 
 #endif
