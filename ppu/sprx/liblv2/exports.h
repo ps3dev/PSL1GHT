@@ -52,4 +52,7 @@ EXPORT(sysSpinlockLock, 0xa285139d);
 EXPORT(sysSpinlockTryLock, 0x722a0254);
 EXPORT(sysSpinlockUnlock, 0x5267cb35);
 
+/* thread interupt handling */
+EXPORT(sysInterruptThreadDisestablish, 0x4a071d98);
+
 #endif

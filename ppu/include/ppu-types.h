@@ -42,6 +42,7 @@ typedef u32 sys_mem_container_t;
 typedef u32 sys_raw_spu_t;
 typedef u32 sys_spu_group_t;
 typedef u32 sys_spu_thread_t;
+typedef u32 sys_interrupt_tag_t;
 
 /*! \brief PPU thread identifier. */
 typedef u64 sys_ppu_thread_t;
