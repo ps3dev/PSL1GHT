@@ -183,9 +183,7 @@ SECTIONS
 	.toc.sceStub  : { KEEP (*(.toc.sceStub)) KEEP (*(SORT(.toc.sceStub.*))) }
 	
 	/* Thread Local Storage sections  */
-	.tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*)
-		      . = ALIGN(16);
-		    } : hdr_data : hdr_tls
+	.tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*)} : hdr_data : hdr_tls
 	.tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) } : hdr_data : hdr_tls
 	
 	. = ALIGN(256M);
