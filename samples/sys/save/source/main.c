@@ -349,7 +349,7 @@ saveload_game_thread(void *user_data)
 {
   sysSaveListSettings listSettings;
   sysSaveBufferSettings bufferSettings;
-  mem_container_t container;
+  sys_mem_container_t container;
   char *prefix = save_data->prefix;
   char filename[256];
   s32 ret;

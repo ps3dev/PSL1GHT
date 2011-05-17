@@ -13,6 +13,9 @@
 #define SYSUTIL_DRAW_END			0x0122
 #define SYSUTIL_MENU_OPEN			0x0131
 #define SYSUTIL_MENU_CLOSE			0x0132
+#define SYSUTIL_OSK_LOADED                      0x0502
+#define SYSUTIL_OSK_DONE                        0x0503
+#define SYSUTIL_OSK_UNLOADED                    0x0504
 
 #ifdef __cplusplus
 extern "C" {

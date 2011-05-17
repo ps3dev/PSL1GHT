@@ -278,7 +278,7 @@ s32 main(s32 argc, const char* argv[])
 	int i, j, ret;
 	int running = 1, cameraSetup = 0;
 	
-	mem_container_t container;
+	sys_mem_container_t container;
 	
 	ret = lv2MemContinerCreate(&container, 0x200000);
 	printf("lv2MemContinerCreate() returned %d\n", ret);

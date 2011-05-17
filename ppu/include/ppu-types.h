@@ -46,6 +46,12 @@ typedef u32 sys_spu_thread_t;
 /*! \brief PPU thread identifier. */
 typedef u64 sys_ppu_thread_t;
 
+typedef u32 sys_interrupt_tag_t;
+typedef u64 sys_irqoutlet_id_t;
+typedef u32 sys_hw_thread_t;
+typedef u32 sys_interrupt_thread_handle_t;
+typedef u32 sys_interrupt_handler_handle_t;
+
 typedef u32 sys_cond_t;
 
 /*! \brief Mutex identifier. */

@@ -51,8 +51,8 @@ CameraReadEx readex;
 CameraType type;
 CameraInfoEx cameraInfo;
 
-mem_container_t container;
-mem_container_t container1;
+sys_mem_container_t container;
+sys_mem_container_t container1;
 
 
 GemAttribute gem_attr;

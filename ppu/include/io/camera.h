@@ -120,7 +120,7 @@ typedef struct _camera_info
 	s32 dev_num;
 	s32 guid;
 	s32 info_ver;
-	mem_container_t container;
+	sys_mem_container_t container;
 } cameraInfo;
 
 typedef struct _camera_info_ex
@@ -136,7 +136,7 @@ typedef struct _camera_info_ex
 	s32 guid;
 
 	s32 info_ver;
-	mem_container_t container;
+	sys_mem_container_t container;
 
 	s32 readmode;
 	u32 pbuf[2];

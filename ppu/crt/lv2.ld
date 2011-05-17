@@ -19,47 +19,51 @@ SECTIONS
 {
 	PROVIDE (__executable_start = 0x10000); . = 0x10000 + SIZEOF_HEADERS;
 	.interp         : { *(.interp) } : hdr_text
-	.note.gnu.build-id : { *(.note.gnu.build-id) }
 	.hash           : { *(.hash) }
-	.gnu.hash       : { *(.gnu.hash) }
 	.dynsym         : { *(.dynsym) }
 	.dynstr         : { *(.dynstr) }
 	.gnu.version    : { *(.gnu.version) }
 	.gnu.version_d  : { *(.gnu.version_d) }
 	.gnu.version_r  : { *(.gnu.version_r) }
-	.rel.init       : { *(.rel.init) }
-	.rela.init      : { *(.rela.init) }
-	.rel.text       : { *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*) }
-	.rela.text      : { *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*) }
-	.rel.fini       : { *(.rel.fini) }
-	.rela.fini      : { *(.rela.fini) }
-	.rel.rodata     : { *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*) }
-	.rela.rodata    : { *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*) }
-	.rel.data.rel.ro   : { *(.rel.data.rel.ro* .rel.gnu.linkonce.d.rel.ro.*) }
-	.rela.data.rel.ro  : { *(.rela.data.rel.ro* .rela.gnu.linkonce.d.rel.ro.*) }
-	.rel.data       : { *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*) }
-	.rela.data      : { *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*) }
-	.rel.tdata      : { *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*) }
-	.rela.tdata     : { *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*) }
-	.rel.tbss       : { *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*) }
-	.rela.tbss      : { *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*) }
-	.rel.ctors      : { *(.rel.ctors) }
-	.rela.ctors     : { *(.rela.ctors) }
-	.rel.dtors      : { *(.rel.dtors) }
-	.rela.dtors     : { *(.rela.dtors) }
-	.rel.got        : { *(.rel.got) }
-	.rela.got       : { *(.rela.got) }
-	.rela.toc       : { *(.rela.toc) }
-	.rel.sdata      : { *(.rel.sdata .rel.sdata.* .rel.gnu.linkonce.s.*) }
-	.rela.sdata     : { *(.rela.sdata .rela.sdata.* .rela.gnu.linkonce.s.*) }
-	.rel.sbss       : { *(.rel.sbss .rel.sbss.* .rel.gnu.linkonce.sb.*) }
-	.rela.sbss      : { *(.rela.sbss .rela.sbss.* .rela.gnu.linkonce.sb.*) }
-	.rel.sdata2     : { *(.rel.sdata2 .rel.sdata2.* .rel.gnu.linkonce.s2.*) }
-	.rela.sdata2    : { *(.rela.sdata2 .rela.sdata2.* .rela.gnu.linkonce.s2.*) }
-	.rel.sbss2      : { *(.rel.sbss2 .rel.sbss2.* .rel.gnu.linkonce.sb2.*) }
-	.rela.sbss2     : { *(.rela.sbss2 .rela.sbss2.* .rela.gnu.linkonce.sb2.*) }
-	.rel.bss        : { *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*) }
-	.rela.bss       : { *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*) }
+	.rel.dyn		:
+	  {
+	    *(.rel.init)
+	    *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
+	    *(.rel.fini)
+	    *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*)
+	    *(.rel.data.rel.ro*)
+	    *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*)
+	    *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*)
+	    *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*)
+	    *(.rel.ctors)
+	    *(.rel.dtors)
+	    *(.rel.got)
+	    *(.rel.sdata .rel.sdata.* .rel.gnu.linkonce.s.*)
+	    *(.rel.sbss .rel.sbss.* .rel.gnu.linkonce.sb.*)
+	    *(.rel.sdata2 .rel.sdata2.* .rel.gnu.linkonce.s2.*)
+	    *(.rel.sbss2 .rel.sbss2.* .rel.gnu.linkonce.sb2.*)
+	    *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*)
+	  }
+
+	.rela.dyn		:
+	  {
+	    *(.rela.init)
+	    *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*)
+	    *(.rela.fini)
+	    *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*)
+	    *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*)
+	    *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*)
+	    *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*)
+	    *(.rela.ctors)
+	    *(.rela.dtors)
+	    *(.rela.got)
+	    *(.rela.toc)
+	    *(.rela.sdata .rela.sdata.* .rela.gnu.linkonce.s.*)
+	    *(.rela.sbss .rela.sbss.* .rela.gnu.linkonce.sb.*)
+	    *(.rela.sdata2 .rela.sdata2.* .rela.gnu.linkonce.s2.*)
+	    *(.rela.sbss2 .rela.sbss2.* .rela.gnu.linkonce.sb2.*)
+	    *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
+	  }
 	.rel.plt        : { *(.rel.plt) }
 	.rela.plt       : { *(.rela.plt) }
 	.rela.tocbss    : { *(.rela.tocbss) }
@@ -68,6 +72,7 @@ SECTIONS
 	} = 0x60000000
 	.text           : {
 		*(.text .stub .text.* .gnu.linkonce.t.*)
+		KEEP (*(.text.*personality*))
 		/* .gnu.warning sections are handled specially by elf32.em.  */
 		*(.gnu.warning)
 		*(.sfpr .glink)
@@ -83,17 +88,26 @@ SECTIONS
 	PROVIDE (_etext = .);
 	PROVIDE (etext = .);
 
-	. = ALIGN(64K);
+	.eh_frame_hdr : { *(.eh_frame_hdr) }
+	.eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) }
+	.gcc_except_table   : ONLY_IF_RO { *(.gcc_except_table .gcc_except_table.*) }
 
 	.rodata.sceResident : { KEEP (*(.rodata.sceResident)) }
 	.rodata.sceFNID     : { KEEP (*(.rodata.sceFNID .rodata.sceFNID.*)) }
+	.rodata.sceVNID     : { KEEP (*(.rodata.sceVNID .rodata.sceVNID.*)) }
+	.rodata.sceTNID     : { KEEP (*(.rodata.sceTNID .rodata.sceTNID.*)) }
+	.rodata.sceVStub    : { KEEP (*(.rodata.sceVStub)) KEEP (*(SORT(.rodata.sceVStub.*))) }
 
 	PROVIDE (__libentstart = .);
-	.lib.ent : { KEEP (*(.lib.ent)) }
+	.lib.ent.top : { KEEP (*(.lib.ent.top)) }
+	.lib.ent	 : { KEEP (*(.lib.ent)) }
+	.lib.ent.btm : { KEEP (*(.lib.ent.btm)) }
 	PROVIDE (__libentend = .);
 
 	PROVIDE (__libstubstart = .);
-	.lib.stub : { KEEP (*(.lib.stub)) }
+	.lib.stub.top : { KEEP (*(.lib.stub.top)) }
+	.lib.stub	  : { KEEP (*(.lib.stub)) }
+	.lib.stub.btm : { KEEP (*(.lib.stub.btm)) }
 	PROVIDE (__libstubend = .);
 
 	.ppu_rodata         : { *(.ppu_rodata .ppu_rodata.*) }
@@ -101,26 +115,17 @@ SECTIONS
 	.sys_proc_prx_param : { KEEP (*(.sys_proc_prx_param)) } : hdr_text : hdr_prx
 
 	. = ALIGN(64K);
-	.ppu_data           : { *(.ppu_data .ppu_data.*) } : hdr_data
-	.data.sceFStub      : { KEEP (*(.data.sceFStub)) KEEP (*(SORT(.data.sceFStub.*))) } : hdr_data
-	.sdata2             : {
-		*(.sdata2 .sdata2.* .gnu.linkonce.s2.*)
-	}
-	.sbss2              : { *(.sbss2 .sbss2.* .gnu.linkonce.sb2.*) }
-/* Thread Local Storage sections  */
-	.tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) } : hdr_data : hdr_tls
-	.tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) } : hdr_data : hdr_tls
 	
-	. = ALIGN(64K);
-	. = DATA_SEGMENT_ALIGN(64K, 64K);
+	.ppu_data           : { *(.ppu_data .ppu_data.*) } : hdr_data
+	.sdata2             : { *(.sdata2 .sdata2.* .gnu.linkonce.s2.*) }
+	.sbss2              : { *(.sbss2 .sbss2.* .gnu.linkonce.sb2.*) }
 
-	.eh_frame_hdr : { *(.eh_frame_hdr) }
-	.eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) }
-	.gcc_except_table   : ONLY_IF_RO { *(.gcc_except_table .gcc_except_table.*) }
-
-/* Exception handling  */
+	/* Exception handling  */
 	.eh_frame       : ONLY_IF_RW { KEEP (*(.eh_frame)) }
 	.gcc_except_table   : ONLY_IF_RW { *(.gcc_except_table .gcc_except_table.*) }
+	
+	. = ALIGN(64 / 8);
+	
 	.preinit_array     : {
 		PROVIDE_HIDDEN (__preinit_array_start = .);
 		KEEP (*(.preinit_array))
@@ -166,26 +171,34 @@ SECTIONS
 		KEEP (*(.dtors))
 	}
 	.jcr            : { KEEP (*(.jcr)) }
-	.data.rel.ro : { *(.data.rel.ro.local* .gnu.linkonce.d.rel.ro.local.*) *(.data.rel.ro* .gnu.linkonce.d.rel.ro.*) }
+	.data.rel.ro : { *(.data.rel.ro.local*) *(.data.rel.ro*) }
 	.dynamic        : { *(.dynamic) }
 
+	.data.sceFStub      : { KEEP (*(.data.sceFStub)) KEEP (*(SORT(.data.sceFStub.*))) }
+	
 	.toc1		  : ALIGN(8) { *(.toc1) }
 	.opd		  : ALIGN(8) { KEEP (*(.opd)) }
 	.branch_lt	  : ALIGN(8) { *(.branch_lt) }
-	.got		: ALIGN(8) { *(.got .toc) }
-
-	. = DATA_SEGMENT_RELRO_END (0, .);
+	.got		  : ALIGN(8) { *(.got .toc) }
+	.toc.sceStub  : { KEEP (*(.toc.sceStub)) KEEP (*(SORT(.toc.sceStub.*))) }
+	
+	/* Thread Local Storage sections  */
+	.tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) } : hdr_data : hdr_tls
+	.tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) } : hdr_data : hdr_tls
 	
 	. = ALIGN(256M);
 
 	.rodata         : { *(.rodata .rodata.* .gnu.linkonce.r.*) } : hdr_srodata
 	.rodata1        : { *(.rodata1) } : hdr_srodata
 
+	.spu_image		: { *(.spu_image .spu_image.*) } : hdr_srodata
+	
 	. = ALIGN(64K);
 
 	.data           :
 	{
 		*(.data .data.* .gnu.linkonce.d.*)
+		KEEP (*(.gnu.linkonce.d.*personality*))
 		SORT(CONSTRUCTORS)
 	} : hdr_sdata
 	.data1          : { *(.data1) }
@@ -196,14 +209,20 @@ SECTIONS
 	.sdata          : {
 		*(.sdata .sdata.* .gnu.linkonce.s.*)
 	}
-	_edata = .; PROVIDE (edata = .);
+	_edata = .;
+	PROVIDE (edata = .);
+
 	__bss_start = .;
 	.tocbss	  : ALIGN(8) { *(.tocbss)}
 	.sbss           :
 	{
+		PROVIDE (__sbss_start = .);
+		PROVIDE (___sbss_start = .);
 		*(.dynsbss)
 		*(.sbss .sbss.* .gnu.linkonce.sb.*)
 		*(.scommon)
+		PROVIDE (__sbss_end = .);
+		PROVIDE (___sbss_end = .);
 	}
 	.plt            : { *(.plt) }
 	.bss            :
@@ -216,12 +235,19 @@ SECTIONS
 		   .bss section disappears because there are no input sections.
 		   FIXME: Why do we need it? When there is no .bss section, we don't
 		   pad the .data section.  */
-		. = ALIGN(. != 0 ? 64 / 8 : 1);
+		. = ALIGN(64 / 8);
 	}
-	. = ALIGN(64 / 8);
-	. = ALIGN(64 / 8);
-	_end = .; PROVIDE (end = .);
-	. = DATA_SEGMENT_END (.);
+	
+	. = ALIGN(256M);
+
+	.rsx_image	: { *(.rsx_*) } : hdr_rsx
+		
+	_end = .;
+	__end = .;
+	PROVIDE (end = .);
+	
+	. = ALIGN(8);
+	
 	/* Stabs debugging sections.  */
 	.stab          0 : { *(.stab) }
 	.stabstr       0 : { *(.stabstr) }
