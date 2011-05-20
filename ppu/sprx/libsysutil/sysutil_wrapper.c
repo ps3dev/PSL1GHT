@@ -210,7 +210,7 @@ s32 sysSaveAutoSave2 (s32 version,
 
 
 /* Disc utility support */
-s32 sysDiscRegisterDiscChangeCallback(sysDiscEjectCallback *cbEject,sysDiscInsertCallback cbInsert)
+s32 sysDiscRegisterDiscChangeCallback(sysDiscEjectCallback cbEject,sysDiscInsertCallback cbInsert)
 {
 	return sysDiscRegisterDiscChangeCallbackEx((opd32*)__get_opd32(cbEject),(opd32*)__get_opd32(cbInsert));
 }

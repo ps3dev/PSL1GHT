@@ -11,6 +11,9 @@
 /*! \brief The thread is joinable */
 #define THREAD_JOINABLE			1
 
+/*! \brief The thread is triggered by an intterupt */
+#define THREAD_INTERRUPT		2
+
 #ifdef __cplusplus
 	extern "C" {
 #endif

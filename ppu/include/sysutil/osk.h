@@ -54,12 +54,12 @@
 #define OSK_PROHIBIT_RETURN 					0x00000002
 #define OSK_PROHIBIT_INPUT_ANALOG 				0x00000008 
 
-#define OSK_LAYOUTMODE_HORIZONTAL_ALIGN_LEFT 	0x00000200
+#define OSK_LAYOUTMODE_HORIZONTAL_ALIGN_RIGHT 	0x00000200
 #define OSK_LAYOUTMODE_HORIZONTAL_ALIGN_CENTER 	0x00000400
-#define OSK_LAYOUTMODE_HORIZONTAL_ALIGN_RIGHT 	0x00000800
-#define OSK_LAYOUTMODE_VERTICAL_ALIGN_TOP 		0x00001000
+#define OSK_LAYOUTMODE_HORIZONTAL_ALIGN_LEFT 	0x00000800
+#define OSK_LAYOUTMODE_VERTICAL_ALIGN_BOTTOM	0x00001000
 #define OSK_LAYOUTMODE_VERTICAL_ALIGN_CENTER 	0x00002000
-#define OSK_LAYOUTMODE_VERTICAL_ALIGN_BOTTOM 	0x00004000
+#define OSK_LAYOUTMODE_VERTICAL_ALIGN_TOP 	0x00004000
 
 #ifdef __cplusplus
 extern "C" {
@@ -341,7 +341,7 @@ s32 oskAddSupportLanguage(u32 lang);
 \param[in] inputInfo Input information.
 \return zero if no error occured, nonzero otherwise.
 */
-s32 oskLoadAsync(mem_container_t container, const oskParam *param, const oskInputFieldInfo *inputInfo);
+s32 oskLoadAsync(sys_mem_container_t container, const oskParam *param, const oskInputFieldInfo *inputInfo);
 
 /*! \brief Set the on-screen keyboard initial key layout.
 \param[in] layout Initial key layout.
