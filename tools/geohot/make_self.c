@@ -384,15 +384,15 @@ int main(int argc, char* argv[]) {
   memset(zero_padding, 0, sizeof(zero_padding));
 
 #ifdef NPDRM
-  if(argc < 3) {
+  if(argc < 4) {
     printf("usage: %s input.elf output.self <content_id>\n", argv[0]);
     printf("  warning NPDRM cares about the output file name, do not rename\n");
-    return -1;
+    return 1;
   }
 #else
-  if(argc < 2) {
+  if(argc < 3) {
     printf("usage: %s input.elf output.self\n", argv[0]);
-    return -1;
+    return 1;
   }
 #endif
 
@@ -586,4 +586,5 @@ int main(int argc, char* argv[]) {
   FILE *output_self_file = fopen(argv[2], "wb");
   fwrite(output_self_data, 1, running_size, output_self_file);
   fclose(output_self_file);
+  return 0;
 }

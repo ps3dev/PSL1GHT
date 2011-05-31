@@ -6,7 +6,7 @@ ifeq ($(strip $(PS3DEV)),)
   endif
 endif
 
-export PATH	:=	$(PSL1GHT)/bin:$(PSL1GHT)/spu/bin:$(PATH)
+export PATH	:=	$(PS3DEV)/bin:$(PS3DEV)/spu/bin:$(PATH)
 
 export PORTLIBS	:=	$(PS3DEV)/portlibs/spu
 
