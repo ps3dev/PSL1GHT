@@ -16,6 +16,9 @@
 #define SYS_O_APPEND		002000
 #define SYS_O_MSELF			010000
 
+#define SYS_FS_IO_BUFFER_PAGE_SIZE_64KB 2
+#define SYS_FS_IO_BUFFER_PAGE_SIZE_1MB  4
+
 #ifdef __cplusplus
 	extern "C" {
 #endif
@@ -81,9 +84,12 @@ s32 sysFsAioWrite(sysFSAio *aio, s32 *id, sysFsAioCallback cb);
 
 s32 sysFsGetFreeSize(const char *path, u32 *blockSize, u64 *freeBlocks);
 
+s32 sysFsSetIoBuffer(s32 fd, size_t bufferSizeLimit, s32 pageType, sys_mem_container_t container);
+s32 sysFsSetDefaultContainer(sys_mem_container_t container, size_t totalLimit);
+s32 sysFsSetIoBufferFromDefaultContainer(s32 fd, size_t bufferSizeLimit, s32 pageType);
+
 #ifdef __cplusplus
 	}
 #endif
 
 #endif
-

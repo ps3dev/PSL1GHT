@@ -6,7 +6,7 @@ ifeq ($(strip $(PS3DEV)),)
   endif
 endif
 
-export PATH	:=	$(PSL1GHT)/bin:$(PSL1GHT)/ppu/bin:$(PATH)
+export PATH	:=	$(PS3DEV)/bin:$(PS3DEV)/ppu/bin:$(PATH)
 
 export PORTLIBS	:=	$(PS3DEV)/portlibs/ppu
 
@@ -21,6 +21,8 @@ include $(PSL1GHT)/base_rules
 
 PKG		:=	pkg.py
 SFO		:=	sfo.py
+SFOXML		:=	$(PS3DEV)/bin/sfo.xml
+ICON0		:=	$(PS3DEV)/bin/ICON0.PNG
 
 SPRX		:=	sprxlinker$(POSTFIX)
 CGCOMP		:=	cgcomp$(POSTFIX)

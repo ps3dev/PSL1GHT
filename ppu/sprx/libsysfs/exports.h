@@ -21,5 +21,8 @@ EXPORT(sysFsAioWriteEx, 0x4CEF342E);
 EXPORT(sysFsAioCancel, 0x7F13FC8C);
 EXPORT(sysFsAioFinish, 0x9F951810);
 EXPORT(sysFsGetFreeSize, 0xAA3B4BCD);
+EXPORT(sysFsSetIoBuffer, 0x3140F6E1);
+EXPORT(sysFsSetDefaultContainer, 0x02671310);
+EXPORT(sysFsSetIoBufferFromDefaultContainer, 0x75F16DC5);
 
 #endif

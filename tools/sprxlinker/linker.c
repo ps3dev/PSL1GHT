@@ -7,6 +7,8 @@
 
 #include <libelf.h>
 
+#define ELFOSABI_CELLLV2				102
+
 #if defined(_WIN32)
 #define OFLAGS		(O_RDWR|O_BINARY)
 #else
@@ -67,6 +69,32 @@ Elf_Scn* getSection(Elf *elf,const char *name)
 	return NULL;
 }
 
+void set_ehdr(int fd,Elf64_Ehdr *ehdr)
+{
+	Elf64_Ehdr new_hdr;
+
+	memcpy(&new_hdr,ehdr,sizeof(Elf64_Ehdr));
+
+	new_hdr.e_type		= BE16(new_hdr.e_type);
+	new_hdr.e_machine	= BE16(new_hdr.e_machine);
+	new_hdr.e_version	= BE32(new_hdr.e_version);
+	new_hdr.e_entry		= BE64(new_hdr.e_entry);
+	new_hdr.e_phoff		= BE64(new_hdr.e_phoff);
+	new_hdr.e_shoff		= BE64(new_hdr.e_shoff);
+	new_hdr.e_flags		= BE32(new_hdr.e_flags);
+	new_hdr.e_ehsize	= BE16(new_hdr.e_ehsize);
+	new_hdr.e_phentsize	= BE16(new_hdr.e_phentsize);
+	new_hdr.e_phnum		= BE16(new_hdr.e_phnum);
+	new_hdr.e_shentsize	= BE16(new_hdr.e_shentsize);
+	new_hdr.e_shnum		= BE16(new_hdr.e_shnum);
+	new_hdr.e_shstrndx	= BE16(new_hdr.e_shstrndx);
+
+	lseek(fd,0,SEEK_SET);
+	if(write(fd,&new_hdr,sizeof(Elf64_Ehdr))!=sizeof(Elf64_Ehdr)) {
+		printf("Error occurred during write in %s:%d\n",__FILE__,__LINE__);
+	}
+}
+
 int main(int argc,char *argv[])
 {
 	if(argc<2) {
@@ -86,6 +114,13 @@ int main(int argc,char *argv[])
 	if(!elf) {
 		fprintf(stderr,"libelf could not read elf file: %s\n",elf_errmsg(elf_errno()));
 		return 1;
+	}
+
+	Elf64_Ehdr *ehdr = elf64_getehdr(elf);
+	if(ehdr) {
+		ehdr->e_ident[EI_OSABI] = ELFOSABI_CELLLV2;
+
+		set_ehdr(fd,ehdr);
 	}
 
 	Elf_Scn *prx = getSection(elf,".sys_proc_prx_param");
