@@ -113,7 +113,7 @@ typedef struct _sys_dbg_spu_thread_context
 	u32 spu_mb[SYS_DBG_SPU_NUM_MB];         /*!< \brief inbound MB queue */
 	u32 decrementer;                        /*!< \brief Decrementer register */
 	u64 mfc_cq_sr[SYS_DBG_SPU_NUM_MFC_CQ_SR]; /*!< \brief MFC CQ SR registers */
-} sys_dbg_ppu_thread_context_t;
+} sys_dbg_spu_thread_context_t;
 
 /*! \brief Function pointer to a PPU exception handler. */
 typedef void (*dbg_exception_handler_t)(u64 cause,sys_ppu_thread_t tid,u64 dar);
