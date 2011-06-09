@@ -21,6 +21,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 
+TITLE		:=	SPU Parallel sample - PSL1GHT
+APPID		:=	SPUPARA01
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------

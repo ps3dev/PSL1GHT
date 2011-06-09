@@ -21,6 +21,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=
 
+TITLE		:=	SPU Threading sample - PSL1GHT
+APPID		:=	SPUTHREAD
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------

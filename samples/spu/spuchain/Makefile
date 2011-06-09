@@ -21,6 +21,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 
+TITLE		:=	SPU Chain sample - PSL1GHT
+APPID		:=	SPUCHAIN1
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------

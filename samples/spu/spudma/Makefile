@@ -21,6 +21,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=
 
+TITLE		:=	SPU DMA sample - PSL1GHT
+APPID		:=	SPUDMA001
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------

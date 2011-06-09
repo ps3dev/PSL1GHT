@@ -21,6 +21,10 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 
+TITLE		:=	Audiosync sample - PSL1GHT
+APPID		:=	AUDIO0001
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
+
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
