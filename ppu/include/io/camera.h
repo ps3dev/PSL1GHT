@@ -155,7 +155,7 @@ s32 cameraInit();
 s32 cameraEnd();
 s32 cameraStart(s32 num);
 s32 cameraStop(s32 num);
-s32 cameraOpenEx(s32 num,cameraInofEx *info);
+s32 cameraOpenEx(s32 num,cameraInfoEx *info);
 s32 cameraClose(s32 num);
 
 s32 cameraRead(s32 num,u32 *frame,u32 *readcount);
