@@ -18,10 +18,14 @@ export AS		:=	$(PREFIX)as
 export CC		:=	$(PREFIX)gcc
 export CXX		:=	$(PREFIX)g++
 export AR		:=	$(PREFIX)ar
-export STRIP	:=	$(PREFIX)strip
-export OBJCOPY	:=	$(PREFIX)objcopy
+export LD		:=	$(PREFIX)gcc
+export STRIP		:=	$(PREFIX)strip
+export OBJCOPY		:=	$(PREFIX)objcopy
 
-DEPSOPT			=	-MMD -MP -MF $(DEPSDIR)/$*.d
+#use dependencies when user has defined a place to put them into
+ifneq (,$(DEPSDIR))
+	DEPSOPT		=	-MMD -MP -MF $(DEPSDIR)/$*.d
+endif
 
 UNAME			:=	$(shell uname -s)
 
@@ -47,7 +51,7 @@ endif
 	$(VERB) $(AR) -rc $@ $^
 
 #---------------------------------------------------------------------------------
-%.elf:
+%.elf: $(OFILES)
 	@echo linking ... $(notdir $@)
 	$(VERB) $(LD)  $^ $(LDFLAGS) $(LIBPATHS) $(LIBS) -o $@
 
