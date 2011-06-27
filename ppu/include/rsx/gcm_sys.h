@@ -382,21 +382,21 @@ typedef struct _gcmSurface
         Possible values are:
         - \ref GCM_TF_TYPE_LINEAR
         - \ref GCM_TF_TYPE_SWIZZLE
-  
+     */
     u8 type;
 
     /*! \brief Antialiasing format type.
 
         Specifies the mode of multiple samples. Possible values are:
         - \ref GCM_TF_CENTER_1
-  
+     */  
     u8 antiAlias;
 
     /*! \brief Format of the color buffer.
 
         Possible values are:
         - \ref GCM_TF_COLOR_R5G5B5
-  
+     */ 
     u8 colorFormat;
 
     /*! \brief Target of the color buffer.
@@ -408,7 +408,7 @@ typedef struct _gcmSurface
         - \ref GCM_TF_TARGET_MRT1
         - \ref GCM_TF_TARGET_MRT2
         - \ref GCM_TF_TARGET_MRT3
-  
+     */ 
     u8 colorTarget;
 
     /*! \brief Location of the color buffer.
@@ -418,21 +418,21 @@ typedef struct _gcmSurface
         Possible values are:
         - \ref GCM_LOCATION_RSX
         - \ref GCM_LOCATION_CELL
-  
+     */ 
     u8 colorLocation[GCM_MAX_MRT_COUNT];
 
     /*! \brief Offset from the base address of the color buffer.
 
         When using multiple render targets, set as many addresses as the number of color buffers specified in <i>colorTarget</i>.
         Use \ref rsxAddressToOffset to convert the effective addresses into offset values when specifying the buffer offset. <i>colorOffset</i> should be aligned on a 64 bytes boundery.
-  
+     */ 
     u32 colorOffset[GCM_MAX_MRT_COUNT];
 
     /*! \brief Size of a color buffer line in bytes.
 
         When using multiple render targets, specify as many pitch sizes as the number of color buffers specified in <i>colorTarget</i>.
         The pitch size should be 64 when rendering in the swizzle format. For all others, the pitch size should be a multiple of 64.
-  
+     */ 
     u32 colorPitch[GCM_MAX_MRT_COUNT];
 
     /*! \brief Format of the depth buffer.
@@ -440,7 +440,7 @@ typedef struct _gcmSurface
         Possible values are:
         - \ref GCM_TF_ZETA_Z16
         - \ref GCM_TF_ZETA_Z24S8
-  
+     */ 
     u8 depthFormat;
 
     /*! \brief Location of the depth buffer.
@@ -448,7 +448,7 @@ typedef struct _gcmSurface
         Possible values are:
         - \ref GCM_LOCATION_RSX
         - \ref GCM_LOCATION_CELL
-  
+     */ 
     u8 depthLocation;
 
     /*! \brief unused padding bytes. most be 0. */
@@ -457,7 +457,7 @@ typedef struct _gcmSurface
     /*! \brief Offset from the base address of the depth buffer.
 
         As in <i>colorOffset</i> use \ref rsxAddressToOffset to convert effective addresses into offset values. <i>depthOffset</i> should be aligned on a 64 bytes boundery.
-  
+     */ 
     u32 depthOffset;
 
     /*! \brief Size of a depth buffer line in bytes. */
@@ -494,7 +494,7 @@ typedef struct _gcmTexture
         - \ref GCM_TEXTURE_FORMAT_DXT3
         - \ref GCM_TEXTURE_FORMAT_DXT5
         - \ref GCM_TEXTURE_FORMAT_A8L8
-  
+     */ 
     u8 format;
 
     /*! \brief Indicates if this is a mip-mapped texture.
@@ -502,7 +502,7 @@ typedef struct _gcmTexture
         Possible values are:
         - \ref GCM_TRUE
         - \ref GCM_FALSE
-  
+     */ 
     u8 mipmap;
 
     /*! \brief Texture dimension.
@@ -511,7 +511,7 @@ typedef struct _gcmTexture
         - \ref GCM_TEXTURE_DIMS_1D
         - \ref GCM_TEXTURE_DIMS_2D
         - \ref GCM_TEXTURE_DIMS_3D
-  
+     */ 
     u8 dimension;
 
     /*! \brief Indicates if this is a cube-mapped texture.
@@ -519,7 +519,7 @@ typedef struct _gcmTexture
         Possible values are:
         - \ref GCM_TRUE
         - \ref GCM_FALSE
-  
+     */ 
     u8 cubemap;
 
         /*! \brief Color remapping bitfield.
@@ -541,7 +541,7 @@ typedef struct _gcmTexture
         | (\ref GCM_TEXTURE_REMAP_COLOR_G << \ref GCM_TEXTURE_REMAP_COLOR_G_SHIFT)\n
         | (\ref GCM_TEXTURE_REMAP_TYPE_REMAP << \ref GCM_TEXTURE_REMAP_TYPE_B_SHIFT)\n
         | (\ref GCM_TEXTURE_REMAP_COLOR_R << \ref GCM_TEXTURE_REMAP_COLOR_B_SHIFT)
-  
+     */ 
     u32 remap;
 
     /*! \brief Texture width in pixels. */
@@ -554,7 +554,7 @@ typedef struct _gcmTexture
         Possible values are:
         - \ref GCM_LOCATION_RSX
         - \ref GCM_LOCATION_CELL
-  
+     */ 
     u8 location;
     /*! \brief unused padding byte. */
     u8 _pad;
@@ -571,7 +571,7 @@ typedef struct _gcmTransferScale
          - \ref GCM_TRANSFER_CONVERSION_DITHER
          - \ref GCM_TRANSFER_CONVERSION_TRUNCATE
          - \ref GCM_TRANSFER_CONVERSION_SUBTRACT_TRUNCATE
-           
+     */ 
     u32 conversion;
 
     /*! \brief Format of image data. Possible values:
@@ -588,7 +588,7 @@ typedef struct _gcmTransferScale
          - \ref GCM_TRANSFER_SCALE_FORMAT_ECR8EYB8ECB8EYA8
          - \ref GCM_TRANSFER_SCALE_FORMAT_A8B8G8R8
          - \ref GCM_TRANSFER_SCALE_FORMAT_X8B8G8R8
-   
+     */ 
     u32 format;
 
     /*! \brief Blit operation. Possible values:
@@ -598,7 +598,7 @@ typedef struct _gcmTransferScale
          - \ref GCM_TRANSFER_OPERATION_SRCCOPY
          - \ref GCM_TRANSFER_OPERATION_SRCCOPY_PREMULT
          - \ref GCM_TRANSFER_OPERATION_BLEND_PREMULT
-   
+     */ 
     u32 operation;
 
     /*! \brief X origin of clipping rectangle, within the destination surface. */
@@ -643,13 +643,13 @@ typedef struct _gcmTransferScale
     /*! \brief How the origin of each pixel is determined. Possible values:
         - \ref GCM_TRANSFER_ORIGIN_CENTER
         - \ref GCM_TRANSFER_ORIGIN_CORNER
-  
+     */ 
     u8 origin;
 
     /*! \brief Sampling for scaled blits. Possible values:
         - \ref GCM_TRANSFER_INTERPOLATOR_NEAREST: no interpolation
         - \ref GCM_TRANSFER_INTERPOLATOR_LINEAR: bilinear interpolation
-  
+     */ 
     u8 interp;
 
     /*! \brief Image data offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory(). */
@@ -669,7 +669,7 @@ typedef struct _gcmTransferSurface
         - \ref GCM_TRANSFER_SURFACE_FORMAT_R5G6B5
         - \ref GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8
         - \ref GCM_TRANSFER_SURFACE_FORMAT_Y32
-  
+     */ 
     u32 format;
 
     /*! \brief Pitch for destination surface (width multipied by the number of bytes per pixel). */
