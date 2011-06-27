@@ -10,6 +10,7 @@ all:
 	@$(MAKE) -C libpngdec --no-print-directory
 	@$(MAKE) -C libjpgdec --no-print-directory
 	@$(MAKE) -C libgcm_sys --no-print-directory
+	@$(MAKE) -C libresc --no-print-directory
 	@$(MAKE) -C libhttp --no-print-directory
 	@$(MAKE) -C libhttputil --no-print-directory
 	@$(MAKE) -C libsysfs --no-print-directory
@@ -29,6 +30,7 @@ install:
 	@$(MAKE) -C libpngdec install --no-print-directory
 	@$(MAKE) -C libjpgdec install --no-print-directory
 	@$(MAKE) -C libgcm_sys install --no-print-directory
+	@$(MAKE) -C libresc install --no-print-directory
 	@$(MAKE) -C libhttp install --no-print-directory
 	@$(MAKE) -C libhttputil install --no-print-directory
 	@$(MAKE) -C libsysfs install --no-print-directory
@@ -48,6 +50,7 @@ clean:
 	@$(MAKE) -C libpngdec clean --no-print-directory
 	@$(MAKE) -C libjpgdec clean --no-print-directory
 	@$(MAKE) -C libgcm_sys clean --no-print-directory
+	@$(MAKE) -C libresc clean --no-print-directory
 	@$(MAKE) -C libhttp clean --no-print-directory
 	@$(MAKE) -C libhttputil clean --no-print-directory
 	@$(MAKE) -C libsysfs clean --no-print-directory
