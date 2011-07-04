@@ -21,8 +21,6 @@ include $(PSL1GHT)/base_rules
 
 PKG			:=	pkg.py
 SFO			:=	sfo.py
-SFOXML		:=	$(PS3DEV)/bin/sfo.xml
-ICON0		:=	$(PS3DEV)/bin/ICON0.PNG
 
 SPRX		:=	sprxlinker$(POSTFIX)
 CGCOMP		:=	cgcomp$(POSTFIX)
@@ -36,9 +34,19 @@ SELF		:=	make_self
 SELF_NPDRM	:=	make_self_npdrm
 PACKAGE_FINALIZE := package_finalize
 
+#Package settings - allow for user overrides!
+TITLE		?= Untitled PSL1GHT homebrew by $(USER)
+APPID		?= UNTITLED1
+SFOXML		?= $(PSL1GHT)/bin/sfo.xml
+ICON0		?= $(PSL1GHT)/bin/ICON0.PNG
+CONTENTID	?= UP0001-$(APPID)_00-0000000000000000
+TARGET		?= $(notdir $(CURDIR))
+
+
 #---------------------------------------------------------------------------------
 %.self: %.elf
 	@echo output ... $(notdir $@)
+	$(VERB) mkdir -p $(BUILDDIR)
 	$(VERB) $(STRIP) $< -o $(BUILDDIR)/$(notdir $<)
 	$(VERB) $(SPRX) $(BUILDDIR)/$(notdir $<)
 	$(VERB) $(FSELF) $(BUILDDIR)/$(notdir $<) $@
@@ -50,6 +58,12 @@ PACKAGE_FINALIZE := package_finalize
 %.fpo: %.fcg
 	@echo $(notdir $<)
 	$(VERB) $(CGCOMP) -f $^ $@
+
+.eboot: $(TARGET).self
+	@echo building EBOOT.BIN ...
+	$(VERB) mkdir -p $(BUILDDIR)/pkg
+	$(VERB) mkdir -p $(BUILDDIR)/pkg/USRDIR
+	$(VERB) $(SELF_NPDRM) $(BUILDDIR)/$(TARGET).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
 
 %.pkg: %.self
 	@echo building pkg ... $(notdir $@)
