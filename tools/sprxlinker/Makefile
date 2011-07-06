@@ -36,6 +36,10 @@ ifneq (,$(findstring Darwin,$(UNAME)))
 	OS		:= Mac
 endif
 
+ifneq (,$(findstring BSD,$(UNAME)))
+	LDFLAGS += -lelf
+endif
+
 ifneq (,$(findstring Linux,$(UNAME)))
 	LDFLAGS += -lelf
 	OS		:= Linux

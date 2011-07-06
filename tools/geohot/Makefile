@@ -40,6 +40,11 @@ ifneq (,$(findstring Darwin,$(UNAME)))
 	LDFLAGS		+= -mmacosx-version-min=10.4 -arch i386 -Wl,-syslibroot,$(SDK) -L/opt/local/lib -lgmp -lcrypto -lz
 endif
 
+ifneq (,$(findstring BSD,$(UNAME)))
+	CFLAGS += -I/usr/local/include
+	LDFLAGS += -L/usr/local/lib -lgmp -lcrypto -lz
+endif
+
 ifneq (,$(findstring Linux,$(UNAME)))
 	LDFLAGS += -lgmp -lcrypto -lz
 	OS		:= Linux
