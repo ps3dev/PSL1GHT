@@ -69,7 +69,7 @@ TARGET		?= $(notdir $(CURDIR))
 	@echo building pkg ... $(notdir $@)
 	$(VERB) mkdir -p $(BUILDDIR)/pkg
 	$(VERB) mkdir -p $(BUILDDIR)/pkg/USRDIR
-	$(VERB) cp $(ICON0) $(BUILDDIR)/pkg/
+	$(VERB) cp $(ICON0) $(BUILDDIR)/pkg/ICON0.PNG
 	$(VERB) $(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
 	$(VERB) $(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
 	$(VERB) if test -n "$(PKGFILES)" -a -d "$(PKGFILES)"; then cp -rf $(PKGFILES)/* $(BUILDDIR)/pkg/; fi

@@ -20,6 +20,11 @@ LDFLAGS=
 # Destination where the .pkg is built
 BUILDDIR=build
 
+# Put your user data into this directory - all will be added to the .pkg
+# add /dev_hdd0/game/$APPID/ to the relative path of the file inside $PKGFILES
+# e.g. $PKGFILES/foo.jpg -> /dev_hdd0/game/MY_APP_ID/foo.jpg
+PKGFILES=data
+
 # If you want to use dependancy checking, define a directory for .d files
 # DEPSDIR=
 
@@ -29,7 +34,7 @@ BUILDDIR=build
 #TITLE=Sample
 
 # Icon that appears in XMB. Needs to be of certain properties.
-#ICON=file.png
+#ICON0=file.png
 
 # ID of your application. Also the installation directory
 # (/dev_hdd0/game/$APPID/)
