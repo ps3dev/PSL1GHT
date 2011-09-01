@@ -853,16 +853,6 @@ LV2_SYSCALL sysSpuThreadGroupDisonnectEventAllThreads(sys_spu_group_t group,u8 s
 	return_to_user_prog(s32);
 }
 
-/*! \brief Get a SPU thread group's priority.
-
- \param group
- SPU thread group identifier.
- \param prio
- Pointer to returned priority value.
- \return
- zero if no error occured, nonzero otherwise.
-*/
-
 static inline void sysSpuRawWriteProblemStorage(sys_raw_spu_t spu,u32 reg,u32 value)
 {
 	__write32(SPU_RAW_GET_PROBLEM_STORAGE(spu,reg),value);
