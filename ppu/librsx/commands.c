@@ -946,7 +946,7 @@ void rsxSetTransferImage(gcmContextData *context,const u8 mode,const u32 dstOffs
 	RSX_CONTEXT_CURRENTP[21] = RSX_SUBCHANNEL_METHOD(6,NV03_SCALED_IMAGE_FROM_MEMORY_IMAGE_IN_SIZE,4);
 	RSX_CONTEXT_CURRENTP[22] = ((height << 16) | width);
 	RSX_CONTEXT_CURRENTP[23] = (srcPitch | (GCM_TRANSFER_ORIGIN_CORNER << 16) | (GCM_TRANSFER_INTERPOLATOR_NEAREST << 24));
-	RSX_CONTEXT_CURRENTP[24] = srcOffset;
+	RSX_CONTEXT_CURRENTP[24] = srcOffset + (srcY * srcPitch) + (srcX * bytesPerPixel);
 	RSX_CONTEXT_CURRENTP[25] = 0;
 
 	RSX_CONTEXT_CURRENT_END(26);
@@ -970,6 +970,23 @@ void rsxSetTransferScaleMode(gcmContextData *context,const u8 mode,const u8 surf
 
 void rsxSetTransferScaleSurface(gcmContextData *context,const gcmTransferScale *scale,const gcmTransferSurface *surface)
 {
+  static uint8_t bytesPerPixel[] = {
+    0,
+    2, /* GCM_TRANSFER_SCALE_FORMAT_A1R5G5B5 */
+    2, /* GCM_TRANSFER_SCALE_FORMAT_X1R5G5B5 */
+    4, /* GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8 */
+    4, /* GCM_TRANSFER_SCALE_FORMAT_X8R8G8B8 */
+    4, /* GCM_TRANSFER_SCALE_FORMAT_CR8YB8CB8YA8 */
+    4, /* GCM_TRANSFER_SCALE_FORMAT_YB8CR8YA8CB8 */
+    2, /* GCM_TRANSFER_SCALE_FORMAT_R5G6B5 */
+    1, /* GCM_TRANSFER_SCALE_FORMAT_Y8 */
+    2, /* GCM_TRANSFER_SCALE_FORMAT_AY8 */
+    4, /* GCM_TRANSFER_SCALE_FORMAT_EYB8ECR8EYA8ECB8 */
+    4, /* GCM_TRANSFER_SCALE_FORMAT_ECR8EYB8ECB8EYA8 */
+    4, /* GCM_TRANSFER_SCALE_FORMAT_A8B8G8R8 */
+    4 /* GCM_TRANSFER_SCALE_FORMAT_X8B8G8R8 */
+  };
+
 	RSX_CONTEXT_CURRENT_BEGIN(20);
 
 	RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(3,NV04_CONTEXT_SURFACES_2D_FORMAT,4);
@@ -992,8 +1009,8 @@ void rsxSetTransferScaleSurface(gcmContextData *context,const gcmTransferScale *
 	RSX_CONTEXT_CURRENTP[15] = RSX_SUBCHANNEL_METHOD(6,NV03_SCALED_IMAGE_FROM_MEMORY_IMAGE_IN_SIZE,4);
 	RSX_CONTEXT_CURRENTP[16] = ((scale->inH << 16) | scale->inW);
 	RSX_CONTEXT_CURRENTP[17] = ((scale->pitch) | (scale->origin << 16) | (scale->interp << 24));
-	RSX_CONTEXT_CURRENTP[18] = scale->offset;
-	RSX_CONTEXT_CURRENTP[19] = ((scale->inY << 16) | scale->inX);
+	RSX_CONTEXT_CURRENTP[18] = scale->offset + (scale->pitch * scale->inY) + (bytesPerPixel[scale->format] * scale->inX);
+	RSX_CONTEXT_CURRENTP[19] = 0;
 
 	RSX_CONTEXT_CURRENT_END(20);
 }
