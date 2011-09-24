@@ -52,6 +52,8 @@ typedef u32 sys_raw_spu_t;
 typedef u32 sys_spu_group_t;
 typedef u32 sys_spu_thread_t;
 
+typedef s64 system_time_t;
+
 /*! \brief PPU thread identifier. */
 typedef u64 sys_ppu_thread_t;
 typedef u64 sys_ppu_thread_icontext_t;

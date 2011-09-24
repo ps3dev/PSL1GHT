@@ -19,6 +19,7 @@ all:
 	@$(MAKE) -C libsysmodule --no-print-directory
 	@$(MAKE) -C libvdec --no-print-directory
 	@$(MAKE) -C libusb --no-print-directory
+	@$(MAKE) -C libspurs --no-print-directory
 	
 install:
 	@$(MAKE) -C libio install --no-print-directory
@@ -41,6 +42,7 @@ install:
 	@$(MAKE) -C libsysmodule install --no-print-directory
 	@$(MAKE) -C libvdec install --no-print-directory
 	@$(MAKE) -C libusb install --no-print-directory
+	@$(MAKE) -C libspurs install --no-print-directory
 	
 clean:
 	@$(MAKE) -C libio clean --no-print-directory
@@ -63,5 +65,6 @@ clean:
 	@$(MAKE) -C libsysmodule clean --no-print-directory
 	@$(MAKE) -C libvdec clean --no-print-directory
 	@$(MAKE) -C libusb clean --no-print-directory
+	@$(MAKE) -C libspurs  clean --no-print-directory
 	
 .PHONY: all clean install

@@ -97,7 +97,7 @@ typedef struct _gem_state
     vec_float4 handle_accel;
     gemPadData paddata;
     gemExtPortData extportdata;
-    s64 time;
+    system_time_t time;
     f32 temperature;
     f32 camera_pitch_angle;
     u32 tracking;
@@ -107,8 +107,8 @@ typedef struct _gem_attribute
 {
 	u32 version;
 	u32 max;
-	u32 memory; //pointer to memory to use for gem lib, if you specify null it will automatically allocate for you
-	u32 spurs; //pointer to Spurs object
+	void * memory ATTRIBUTE_PRXPTR; //pointer to memory to use for gem lib, if you specify null it will automatically allocate for you
+	Spurs *spurs ATTRIBUTE_PRXPTR; //pointer to Spurs object
 	u8 spu_priorities[8]; 
 } gemAttribute;
 
@@ -122,8 +122,8 @@ typedef struct _gem_cam_state
 } gemCameraState;
 
 typedef struct _gem_img_state {
-	s64 frame_time;
-	s64 time;
+	system_time_t frame_time;
+	system_time_t time;
 	f32 u;
 	f32 v;
 	f32 r;
@@ -151,8 +151,8 @@ typedef struct _gem_video_convert_attribute {
 	f32 red_gain;
 	f32 green_gain;
 	f32 blue_gain;
-	u32 buffer_memory;
-	u32 video_data_out;
+	void *buffer_memory ATTRIBUTE_PRXPTR;
+	void *video_data_out ATTRIBUTE_PRXPTR;
 	u8 alpha;
 } gemVideoConvertAttribute;
 
@@ -164,13 +164,13 @@ typedef struct _gem_inertial_state
 	vec_float4 gyro_bias;
 	gemPadData pad;
 	gemExtPortData ext;
-	s64 time;
+	system_time_t  time;
 	s32 counter;
 	f32 temperature;
 } gemInertialState;
 
 s32 gemGetEnvironmentLightingColor(f32* r, f32* g, f32* b);
-s32 gemUpdateStart(const void* camera_frame, s64 timestamp);
+s32 gemUpdateStart(const void* camera_frame, system_time_t timestamp);
 s32 gemInit(const gemAttribute* attr);
 s32 gemGetTrackerHue(u32 num, u32* hue);
 s32 gemConvertVideoFinish();
@@ -187,7 +187,7 @@ s32 gemEnableCameraPitchAngleCorrection(s32 enable);
 s32 gemGetRumble(u32 num, u8* intensity);
 s32 gemSetRumble(u32 num, u8 intensity);
 
-s32	gemGetState(u32 num, u32 timeflag, s64 time, gemState* state);
+s32	gemGetState(u32 num, u32 timeflag, system_time_t  time, gemState* state);
 
 s32 gemGetAccelerometerPositionInDevice(u32 num, vec_float4* pos);
 s32 gemConvertVideoStart(const void* frame);
@@ -212,7 +212,7 @@ s32 gemGetHuePixels(const void* frame, u32 hue, u8* pixels);
 s32 gemPrepareVideoConvert(const gemVideoConvertAttribute* attr);
 s32 gemHSVtoRGB(f32 h, f32 s, f32 v, f32* r, f32* g, f32* b);
 s32 gemForceRGB(u32 num, f32 r, f32 g, f32 b);
-s32 gemGetInertialState(u32 num, u32 flag, s64 time, gemInertialState* inertial);
+s32 gemGetInertialState(u32 num, u32 flag, system_time_t time, gemInertialState* inertial);
 s32 gemReset(u32 num);
 s32 gemEnd();
 s32 gemInvalidateCalibration(u32 num);

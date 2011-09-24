@@ -105,6 +105,54 @@ s32 sysSpuImageClose(sysSpuImage *image);
  zero if no error occured, nonzero otherwise.
 */
 s32 sysSpuImageImport(sysSpuImage *image,const void *elf,u32 type);
+/*! \brief Initialize Spu printf service on ppu.
+ \param prio
+ Priority of server
+ \param entry
+ Pointer to funtion callback on ppu side
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
+s32 sysSpuPrintfInitialize(int prio, void (*entry)(void*));
+
+/*! \brief Enable Spu printf service from each of the SPU thread in the specified SPU thread group.
+ \param group
+ SPU thread group ID to be attached
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
+s32 sysSpuPrintfAttachGroup(sys_spu_group_t group);
+
+/*! \brief Disable Spu printf service from each of the SPU thread in the specified SPU thread group.
+ \param group
+ SPU thread group ID to be detached
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
+s32 sysSpuPrintfDetachGroup(sys_spu_group_t group);
+
+/*! \brief Enable Spu printf service in the specified SPU thread.
+ \param group
+ SPU thread  ID to be attached
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
+s32 sysSpuPrintfAttachThread(sys_spu_thread_t thread);
+
+/*! \brief Disable Spu printf service in the specified SPU thread.
+ \param thread
+ SPU thread  ID to be detatached
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
+s32 sysSpuPrintfDetach_Tread(sys_spu_thread_t thread);
+
+/*! \brief Terminate Spu printf service
+ \param none
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
+s32 sysSpuPrintfFinalize();
 
 #ifdef __cplusplus
 	}

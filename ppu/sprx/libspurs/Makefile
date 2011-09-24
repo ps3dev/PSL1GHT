@@ -47,7 +47,7 @@ endif
 #---------------------------------------------------------------------------------
 
 
-LIBRARY		:= $(LIBDIR)/liblv2
+LIBRARY		:= $(LIBDIR)/libspurs
 
 #---------------------------------------------------------------------------------
 LD			:=	$(PREFIX)ld
@@ -76,7 +76,7 @@ install: all
 	@cp -frv $(CURDIR)/lib/ppu/*.a $(PSL1GHT)/ppu/lib
 
 #---------------------------------------------------------------------------------
-$(LIBRARY).a: sprx.o thread_wrapper.o spu_printf_wrapper.o
+$(LIBRARY).a: sprx.o spurs_wrapper.o
 #---------------------------------------------------------------------------------
 
 .PHONY: lib ppu install
