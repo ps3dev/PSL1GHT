@@ -12,9 +12,7 @@
  * pressed on move will show image state values( u v and projection) X pressed
  * on sixaxis pad will go to xmb
  *
- * TODO add display image and play with convert image support for Augmented
- * Reality and much more but by now with this full tracking position can be
- * done
+ * TODO improve video output with rsx texture features
  *
  * Finally libgem has full support on PSL1GHT let "Move" the Scene and share
  * your samples
@@ -55,12 +53,12 @@ extern int currentBuffer;
 
 extern cameraInfoEx camInf;
 extern cameraReadInfo camread;
-
+extern u8 video_frame[640*480*4]; //added to get video output, transforamtion in spus give us a RGBA frame
 int calibrate_flag = 1;
 int tracking = 0;
 int pos_x = 0;
 int pos_y = 0;
-
+int flag_video=0;
 int
 readPad ()
 {
@@ -75,16 +73,8 @@ readPad ()
 
       if (paddata.BTN_CROSS) {
 
-	ret = 0;		// To exit it will go to XMB
+        ret = 0;		// To exit it will go to XMB
       }
-      if (paddata.BTN_CIRCLE) {
-	calibrate_flag = 0;
-	gem_flag = 1;		// To exit it will go to XMB
-      }
-      if (paddata.BTN_TRIANGLE) {
-	getImageState ();
-      }
-
     }
 
   }
@@ -187,7 +177,22 @@ initGame ()
   return ret;
 
 }
+void
+displayFrame(s32 posx,s32 posy)
+{
+  int i,j;
+  u32 pixel1;
+  int w=640;
+  int h=480;
+  u8 *pixels=(u8*)video_frame;
+  for(j=0;j<h;j++){
+    for(i=0;i<w;i++){
+	  u32 pixel1=0x80000000|pixels[j*4*640+4*i]<<16|pixels[j*4*640+4*i+1]<<8|pixels[j*4*640+4*i+2];
+      buffers[currentBuffer].ptr[(j+posy)*buffers[currentBuffer].width+i+posx]=pixel1;
+	}
 
+  }
+}
 int
 main (s32 argc, const char *argv[])
 {
@@ -208,7 +213,10 @@ main (s32 argc, const char *argv[])
 
     ret = readCamera ();
     if (ret != 0) {
-      readGem ();
+		
+      readGem ();	
+	  displayFrame(0,0);
+
     }
 
     flip (context, buffers[currentBuffer].id);	// Flip buffer onto screen

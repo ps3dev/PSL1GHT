@@ -35,6 +35,7 @@ int dy = 100;			// default step y
 gemImageState image_state;
 void *buffer_mem ATTRIBUTE_PRXPTR;
 void *video_out ATTRIBUTE_PRXPTR;
+u8 video_frame[640*480*4];
 extern int tracking;
 extern int pos_x;
 extern int pos_y;
@@ -214,7 +215,26 @@ initAttributeGem (gemAttribute * attribute, u32 max_connect, void *memory_ptr,
   for (i = 0; i < 8; ++i)
     attribute->spu_priorities[i] = spu_priorities[i];
 }
-
+int
+initGemVideoConvert()
+{
+  int ret;
+  printf("Preparing GemVideoConvert structure \n");	
+  gem_video_convert.version=2;
+  gem_video_convert.format=2; //GEM_RGBA_640x480; 
+  gem_video_convert.conversion= GEM_AUTO_WHITE_BALANCE|GEM_COMBINE_PREVIOUS_INPUT_FRAME|GEM_FILTER_OUTLIER_PIXELS|GEM_GAMMA_BOOST; 
+  gem_video_convert.gain=1.0f;
+  gem_video_convert.red_gain=1.0f;
+  gem_video_convert.green_gain=1.0f;
+  gem_video_convert.blue_gain=1.0f;	
+  buffer_mem=memalign(128,640*480);
+  video_out=(void *)video_frame;
+  gem_video_convert.buffer_memory=buffer_mem;
+  gem_video_convert.video_data_out=video_out;
+  gem_video_convert.alpha=255;		
+  ret=gemPrepareVideoConvert(&gem_video_convert); 
+  return ret;
+}
 int
 initGem ()
 {
@@ -231,9 +251,9 @@ initGem ()
 
   printf
       ("preparing GemAttribute structure with sprus and memory stuff is very important align correctly spurs structure \n");
-  u8 gem_spu_priorities[8] = { 1, 0, 0, 0, 0, 0, 0, 0 };	// execute
+  u8 gem_spu_priorities[8] = { 1, 1, 1, 1, 1, 0, 0, 0 };	// execute
 								// libgem jobs
-								// on 1 spu
+								// on 5 spu
   gemAttribute gem_attr;
 
   initAttributeGem (&gem_attr, 1, gem_memory, spurs, gem_spu_priorities);
@@ -243,7 +263,8 @@ initGem ()
       gem_attr.version, gem_attr.max, gem_attr.spurs, gem_attr.memory);
   ret = gemInit (&gem_attr);
   printf ("return from GemInit %X \n", ret);
-
+  ret= initGemVideoConvert();
+  printf ("return from initGemVideoConvert %X \n", ret);
   ret = gemPrepareCamera (128, 0.5);
   printf ("GemPrepareCamera return %d exposure set to 128 and quality to 0.5\n",
       ret);
@@ -331,9 +352,9 @@ readGem ()
 {
 
   proccessGem (0);
-
+  proccessGem (1);
   proccessGem (2);
-
+  proccessGem (3);
   readGemPad (0);		// This will read buttons from Move
   switch (newGemPad) {
     case 1:
