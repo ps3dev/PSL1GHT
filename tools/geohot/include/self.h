@@ -86,11 +86,11 @@ typedef struct {
 typedef struct {
   u64 segment_offset;
   u64 segment_size;
-  u32 segment_crypt_flag;
+  u32 segment_type;
   u32 segment_number;
-  u32 unknown2;
+  u32 segment_hashed_flag;
   u32 segment_sha1_index;
-  u32 unknown3;
+  u32 segment_encrypted_flag;
   u32 segment_erk_index;
   u32 segment_riv_index;
   u32 segment_compressed_flag;

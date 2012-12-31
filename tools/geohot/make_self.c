@@ -185,25 +185,13 @@ void enumerate_segments() {
     
     memset(segment_ptr, 0, sizeof(Self_Segment));
 
-// these are choices you can make
-    /*segment_ptr->compressed = (i<2);
-    segment_ptr->incrypt = (i<6); // **TESTING
-    segment_ptr->encrypted = (i<5);*/
+    segment_ptr->rlen = get_u64(&(elf_segment->p_filesz));
 
-#ifdef NPDRM
-    segment_ptr->encrypted = (i<5);
-    segment_ptr->compressed = (i<4);
-    segment_ptr->incrypt = (i<7);
-#else
     segment_ptr->encrypted = 1;
-    segment_ptr->compressed = 1;
+    segment_ptr->compressed = segment_ptr->rlen != 0;
     segment_ptr->incrypt = 1;
-#endif
     
     set_u32(&(segment_ptr->enc_segment.segment_number), i);
-
-    set_u32(&(segment_ptr->enc_segment.unknown2), 2);
-    set_u32(&(segment_ptr->enc_segment.unknown3), 3);
 
     mpz_urandomb(hmac, r_state, 512);
     mpz_export(segment_ptr->crypt_segment.hmac, &countp, 1, 0x40, 1, 0, hmac);
@@ -214,8 +202,6 @@ void enumerate_segments() {
       mpz_export(segment_ptr->crypt_segment.erk, &countp, 1, 0x10, 1, 0, erk);
       mpz_export(segment_ptr->crypt_segment.riv, &countp, 1, 0x10, 1, 0, riv);
     }
-
-    segment_ptr->rlen = get_u64(&(elf_segment->p_filesz));
 
     u32 in_data_offset = get_u64(&(elf_segment->p_offset));
     u8* in_data = &input_elf_data[in_data_offset];
@@ -252,7 +238,9 @@ void enumerate_segments() {
     //hexdump((u8*)elf_segment, sizeof(Elf64_Phdr));
 
     set_u64(&(segment_ptr->enc_segment.segment_size), segment_ptr->len);
-    set_u32(&(segment_ptr->enc_segment.segment_crypt_flag), 1+segment_ptr->encrypted);
+    set_u32(&(segment_ptr->enc_segment.segment_type), 2);
+    set_u32(&(segment_ptr->enc_segment.segment_hashed_flag), 2);
+    set_u32(&(segment_ptr->enc_segment.segment_encrypted_flag), segment_ptr->encrypted ? 3 : 1);
     set_u32(&(segment_ptr->enc_segment.segment_compressed_flag), 1+segment_ptr->compressed);
 
     set_u64(&(segment_ptr->pmhdr.pm_size), segment_ptr->len);
@@ -494,10 +482,6 @@ int main(int argc, char* argv[]) {
   // 0x*** -- Self_SDKversion
   set_u64(&(output_extended_self_header.e_svoff), running_size);
   add_file_section(&sdkversion, sizeof(sdkversion));
-  // 0x*** -- ???
-#ifdef NPDRM
-  add_file_section(zero_padding, 0x20);
-#endif
   // 0x*** -- Self_Cflags
   set_u64(&(output_extended_self_header.e_cfoff), running_size);
   add_file_section(&cflags, sizeof(cflags));
