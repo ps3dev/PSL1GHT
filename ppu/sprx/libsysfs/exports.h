@@ -12,6 +12,7 @@ EXPORT(sysFsChmod, 0x99406D0B);
 EXPORT(sysFsMkdir, 0xBA901FE6);
 EXPORT(sysFsRmdir, 0x2796FDF3);
 EXPORT(sysFsUnlink, 0x7F4677A8);
+EXPORT(sysFsAccess, 0x06E681ED);
 EXPORT(sysFsOpendir, 0x3F61245C);
 EXPORT(sysFsClosedir, 0xFF42DCC3);
 EXPORT(sysFsReaddir, 0x5C74903D);
