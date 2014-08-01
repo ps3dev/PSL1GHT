@@ -102,6 +102,12 @@ LV2_SYSCALL sysLv2FsUnlink(const char *path)
 	return_to_user_prog(s32);
 }
 
+LV2_SYSCALL sysLv2FsAccess(const char *path,s32 amode)
+{
+	lv2syscall2(816,(u64)path,amode);
+	return_to_user_prog(s32);
+}
+
 LV2_SYSCALL sysLv2FsFsync(s32 fd)
 {
 	lv2syscall1(820,fd);
