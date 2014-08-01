@@ -4,6 +4,7 @@
 #include <net/socket.h>
 #include <net/select.h>
 #include <net/poll.h>
+#include <netinet/in.h>
 
 #define	NET_EPERM			1
 #define	NET_ENOENT			2
@@ -139,6 +140,19 @@ typedef struct _net_init_param
 	s32 flags;
 } netInitParam;
 
+typedef struct
+{
+	s32 s;
+	s32 proto;
+	s32 recv_queue_len;
+	s32 send_queue_len;
+	struct in_addr local_adr;
+	s32 local_port;
+	struct in_addr remote_adr;
+	s32 remote_port;
+	s32 state;
+} netSocketInfo;
+
 s32 netInitialize();
 s32 netDeinitialize();
 
@@ -147,6 +161,8 @@ s32* netHErrnoLoc();
 
 s32 netInitializeNetworkEx(netInitParam* param);
 s32 netFinalizeNetwork();
+#define netInitializeNetwork netInitialize
+s32 netGetSockInfo(s32 socket, netSocketInfo* p, s32 n);
 s32 netShowIfConfig();
 s32 netShowNameServer();
 s32 netShowRoute();
