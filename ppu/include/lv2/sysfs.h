@@ -70,6 +70,7 @@ s32 sysFsChmod(const char* path, s32 mode);
 s32 sysFsMkdir(const char* path, s32 mode);
 s32 sysFsRmdir(const char *path);
 s32 sysFsUnlink(const char *path);
+s32 sysFsAccess(const char *path,s32 amode);
 
 s32 sysFsOpendir(const char *path, s32 *fd);
 s32 sysFsClosedir(s32 fd);
