@@ -4,6 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <ppu-types.h>
+#include <sys/param.h>
 
 /* Open Flags */
 #define SYS_O_RDONLY		000000
