@@ -54,27 +54,27 @@ _frexpd2 (vector double x, vector signed long long *pexp)
   vec_int4 lz, lz0, sh, ex;
   vec_double2 fr, frac = (vec_double2)zero;
 
-  //NAN: x is NaN (all-ones exponent and non-zero mantissa)
+  /* NAN: x is NaN (all-ones exponent and non-zero mantissa) */
   cmpgt = spu_cmpgt( (vec_uint4)spu_or( (vec_ullong2)x, sign ), (vec_uint4)spu_or(sign, expn) );
   cmpeq = spu_cmpeq( (vec_uint4)spu_or( (vec_ullong2)x, sign ), (vec_uint4)spu_or(sign, expn) );
   isnan = (vec_ullong2)spu_or( cmpgt, spu_and( cmpeq, spu_rlqwbyte( cmpgt, -4 ) ) );
   isnan = (vec_ullong2)spu_shuffle( isnan, isnan, even );
   frac = spu_sel( frac, (vec_double2)spu_splats(__FREXPD_DBL_NAN), isnan );
 
-  //INF: x is infinite (all-ones exponent and zero mantissa)
+  /* INF: x is infinite (all-ones exponent and zero mantissa) */
   isinf = (vec_ullong2)spu_and( cmpeq, spu_shuffle( cmpeq, cmpeq, swapEvenOdd ) );
   frac = spu_sel( frac, x , isinf );
 
-  //x is zero (zero exponent and zero mantissa)
+  /* x is zero (zero exponent and zero mantissa) */
   cmpzr = spu_cmpeq( (vec_uint4)spu_andc( (vec_ullong2)x, sign ), (vec_uint4)zero );
   iszero = (vec_ullong2)spu_and( cmpzr, spu_shuffle( cmpzr, cmpzr, swapEvenOdd ) );
 
   frac = spu_sel( frac, (vec_double2)zero , iszero );
   *pexp = spu_sel( *pexp, (vec_llong2)zero , iszero );
 
-  //Integer Exponent: if x is normal or subnormal
+  /* Integer Exponent: if x is normal or subnormal */
 
-  //...shift left to normalize fraction, zero shift if normal
+  /* ...shift left to normalize fraction, zero shift if normal */
   lz = (vec_int4)spu_cntlz( (vec_uint4)spu_andc( (vec_ullong2)x, sign) );
   lz0 = (vec_int4)spu_shuffle( lz, lz, even );
   sh = spu_sel( (vec_int4)zero, spu_sub( lz0, spu_splats((int)11) ), spu_cmpgt( lz0, (int)11 ) );

@@ -34,9 +34,10 @@
 #include <simdmath.h>
 #include <spu_intrinsics.h>
 
-// 
-// Handles no exception
-// over flow will return unspecified data
+/* 
+ * Handles no exception
+ * over flow will return unspecified data
+ */
 
 static inline llroundf4_t 
 _llrintf4 (vector float in)

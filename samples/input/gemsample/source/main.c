@@ -40,11 +40,11 @@
 #include <sys/memory.h>
 #include <io/camera.h>
 
-// PAD
+/* PAD */
 padInfo padinfo;
 padData paddata;
 
-// main bucle running
+/* main bucle running */
 int running = 1;
 int gem_flag = 0;
 extern gcmContextData *context;
@@ -53,7 +53,7 @@ extern int currentBuffer;
 
 extern cameraInfoEx camInf;
 extern cameraReadInfo camread;
-extern u8 video_frame[640*480*4]; //added to get video output, transforamtion in spus give us a RGBA frame
+extern u8 video_frame[640*480*4]; /* added to get video output, transforamtion in spus give us a RGBA frame */
 int calibrate_flag = 1;
 int tracking = 0;
 int pos_x = 0;
@@ -67,13 +67,13 @@ readPad ()
   int i;
 
   ioPadGetInfo (&padinfo);
-  for (i = 0; i < 6; i++) {	// 7 is our Move device
+  for (i = 0; i < 6; i++) {	/* 7 is our Move device */
     if (padinfo.status[i]) {
       ioPadGetData (i, &paddata);
 
       if (paddata.BTN_CROSS) {
 
-        ret = 0;		// To exit it will go to XMB
+        ret = 0;		/* To exit it will go to XMB */
       }
     }
 
@@ -137,7 +137,7 @@ eventHandler (u64 status, u64 param, void *userdata)
   }
 }
 
-// Finalize stuff
+/* Finalize stuff */
 
 void
 endGame ()
@@ -145,7 +145,7 @@ endGame ()
 
   endGem ();
 
-  // sysMemContainerDestroy(container1);
+  /* sysMemContainerDestroy(container1); */
   endCamera ();
   unLoadModules ();
 
@@ -160,18 +160,18 @@ initGame ()
 {
   int ret;
 
-  // First load modules needed
+  /* First load modules needed */
   loadModules ();
-  // When we finalize this method is called
+  /* When we finalize this method is called */
   atexit (endGame);
-  // register callback
+  /* register callback */
   sysUtilRegisterCallback (SYSUTIL_EVENT_SLOT0, eventHandler, NULL);
-  // Init screen
+  /* Init screen */
   ret = startScreen ();
-  // Init pad
+  /* Init pad */
   ioPadInit (6);
-  // Init camera
-  // printf("cameraInit() returned %d\n", cameraInit());
+  /* Init camera */
+  /* printf("cameraInit() returned %d\n", cameraInit()); */
   initGem ();
   ret = initCamera ();
   return ret;
@@ -198,18 +198,20 @@ main (s32 argc, const char *argv[])
 {
   int ret;
 
-  long frame = 0;		// To keep track of how many frames we have
-				// rendered.
+  long frame = 0;		/* To keep track of how many frames we have
+				 * rendered.
+                                 */
 
   running = initGame ();
 
-  // Ok, everything is setup. Now for the main loop.
+  /* Ok, everything is setup. Now for the main loop. */
   while (running) {
-    // Check the pads.
+    /* Check the pads. */
     running = readPad ();
 
-    waitFlip ();		// Wait for the last flip to finish, so we can
-				// draw to the old buffer
+    waitFlip ();		/* Wait for the last flip to finish, so we can
+				 * draw to the old buffer
+                                 */
 
     ret = readCamera ();
     if (ret != 0) {
@@ -219,7 +221,7 @@ main (s32 argc, const char *argv[])
 
     }
 
-    flip (context, buffers[currentBuffer].id);	// Flip buffer onto screen
+    flip (context, buffers[currentBuffer].id);	/* Flip buffer onto screen */
 
     currentBuffer++;
     if (currentBuffer >= MAX_BUFFERS)

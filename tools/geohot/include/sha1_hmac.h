@@ -1,5 +1,6 @@
-// lol, I didn't know how real HMACs worked when I reversed this
-//  released under GPLv3, see http://gplv3.fsf.org/
+/* lol, I didn't know how real HMACs worked when I reversed this
+ * released under GPLv3, see http://gplv3.fsf.org/
+ */
 
 #include <openssl/sha.h>
 

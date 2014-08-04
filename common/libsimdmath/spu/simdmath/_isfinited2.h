@@ -40,7 +40,7 @@ _isfinited2 (vector double x)
   vec_ullong2 expn = spu_splats(0x7ff0000000000000ull);
   vec_ullong2 cmpr;
 
-  //Finite unless NaN or Inf, check for 'not all-ones exponent'
+  /* Finite unless NaN or Inf, check for 'not all-ones exponent' */
    
   cmpr = (vec_ullong2)spu_cmpgt( (vec_uint4)expn, (vec_uint4)spu_and( (vec_ullong2)x, expn ) );
   cmpr = spu_shuffle( cmpr, cmpr, even);

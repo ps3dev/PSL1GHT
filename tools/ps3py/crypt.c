@@ -42,7 +42,7 @@ static PyObject* pkg_crypt(PyObject *self, PyObject *args) {
 		if (bytes_to_dump > 0x10) 
 			bytes_to_dump = 0x10;
 
-		// outhash = SHA1(listToString(key)[0:0x40])
+		/* outhash = SHA1(listToString(key)[0:0x40]) */
 		uint8_t *outHash; 
 		{
 			arglist = Py_BuildValue("(s#)", key, 0x40);
@@ -61,7 +61,7 @@ static PyObject* pkg_crypt(PyObject *self, PyObject *args) {
 		remaining -= bytes_to_dump;
 	}
 	
-	// Return the encrypted data
+	/* Return the encrypted data */
 	PyObject *py_ret = Py_BuildValue("s#", ret, length);
 	free(ret);
 	return py_ret;

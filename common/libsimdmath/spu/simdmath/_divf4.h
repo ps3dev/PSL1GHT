@@ -36,8 +36,9 @@
 static inline vector float
 _divf4 (vector float numer, vector float denom)
 {
-  // Reciprocal estimate and 1 Newton-Raphson iteration.
-  // Uses constant of 1.0 + 1 ulp to improve accuracy.
+  /* Reciprocal estimate and 1 Newton-Raphson iteration.
+   * Uses constant of 1.0 + 1 ulp to improve accuracy.
+   */
 
   vector float y0, y0numer;
   vector float oneish = (vector float)spu_splats(0x3f800001);

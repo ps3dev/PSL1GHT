@@ -37,30 +37,34 @@
 #include <simdmath/_fabsf4.h>
 #include <simdmath/_copysignf4.h>
 
-//
-// This returns an accurate result when |divf4(x,y)| < 2^20 and |x| < 2^128, and otherwise returns zero.
-// If x == 0, the result is 0.
-// If x != 0 and y == 0, the result is undefined.
+/*
+ * This returns an accurate result when |divf4(x,y)| < 2^20 and |x| < 2^128, and otherwise returns zero.
+ * If x == 0, the result is 0.
+ * If x != 0 and y == 0, the result is undefined.
+ */
 
 static inline vector float
 _fmodf4 (vector float x, vector float y)
 {
-  //vector float q, xabs, yabs, qabs, xabs2; /* removed unused xabs2 to remove warning --an0n */
+  /* removed unused xabs2 to remove warning --an0n */
+  /* vector float q, xabs, yabs, qabs, xabs2; */
   vector float q, xabs, yabs, qabs;
   vector signed int   qi0, qi1, qi2;
   vector float i0, i1, i2, r1, r2, i;
   vector unsigned int  inrange;
  
-  // Find i = truncated_integer(|x/y|)
- 
-  // If |divf4(x,y)| < 2^20, the quotient is at most off by 1.0.
-  // Thus i is either the truncated quotient, one less, or one greater.
+  /* Find i = truncated_integer(|x/y|)
+   *
+   * If |divf4(x,y)| < 2^20, the quotient is at most off by 1.0.
+   * Thus i is either the truncated quotient, one less, or one greater.
+   */
                                                                                 
   q = _divf4( x, y );
   xabs = _fabsf4( x );
   yabs = _fabsf4( y );
   qabs = _fabsf4( q );
-  //xabs2 = vec_add( xabs, xabs ); /* removed unused xabs2 to remove warning --an0n */
+  /* removed unused xabs2 to remove warning --an0n */
+  /* xabs2 = vec_add( xabs, xabs ); */
                                                                                 
   inrange = (vector unsigned int)vec_cmpgt( (vector float)(__vec_splatsu4(0x49800000)), qabs );
                                                                                 
@@ -72,7 +76,7 @@ _fmodf4 (vector float x, vector float y)
   i1 = vec_ctf( qi1, 0 );
   i2 = vec_ctf( qi2, 0 );
                                                                                                                                                           
-  // Correct i will be the largest one such that |x| - i*|y| >= 0.
+  /* Correct i will be the largest one such that |x| - i*|y| >= 0. */
                                                                                                                                                           
   r1 = vec_nmsub( i1, yabs, xabs );
   r2 = vec_nmsub( i2, yabs, xabs );

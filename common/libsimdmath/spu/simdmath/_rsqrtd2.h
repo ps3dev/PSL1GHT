@@ -37,14 +37,15 @@
 #include <simdmath/_signbitd2.h>
 #include <simdmath/_is0denormd2.h>
 
-// 
-// Handles exceptional values as follows:
-// NaN -> NaN
-// (+,-)0 -> (+,-)Inf
-// +Inf -> +0
-// -Inf -> Nan
-// -Finite -> Nan
-// Denormal inputs are treated as zero.
+/* 
+ * Handles exceptional values as follows:
+ * NaN -> NaN
+ * (+,-)0 -> (+,-)Inf
+ * +Inf -> +0
+ * -Inf -> Nan
+ * -Finite -> Nan
+ * Denormal inputs are treated as zero.
+ */
 
 static inline vector double
 _rsqrtd2 (vector double x)
@@ -61,15 +62,16 @@ _rsqrtd2 (vector double x)
   halff = spu_splats(0.5f);
   half = spu_extend( halff );
 
-  // Factor input ( mantissa x 2^exponent ) into ( mantissa x 2^(-i) ) and ( 2^(exponent+i) )
-  // where i = 0 when exponent is even and i = 1 when exponent is odd.
-  // 
-  // Compute reciprocal-square-root of second factor by finding -(exponent+i)/2:
-  // 
-  // biased_exp = 1023 + exponent
-  // new_biased_exp = 1023 - (exponent+i)/2 
-  //                = 1023 - (biased_exp-1023+i)/2
-  //                = (3069 - (biased_exp+i)) / 2
+  /* Factor input ( mantissa x 2^exponent ) into ( mantissa x 2^(-i) ) and ( 2^(exponent+i) )
+   * where i = 0 when exponent is even and i = 1 when exponent is odd.
+   * 
+   * Compute reciprocal-square-root of second factor by finding -(exponent+i)/2:
+   * 
+   * biased_exp = 1023 + exponent
+   * new_biased_exp = 1023 - (exponent+i)/2 
+   *                = 1023 - (biased_exp-1023+i)/2
+   *                = (3069 - (biased_exp+i)) / 2
+   */
 
   evenexp = spu_and( (vec_ullong2)x, onemask );
   man = spu_sel( x, (vec_double2)spu_add( spu_splats(0x3fe00000u), (vec_uint4)evenexp ), expmask );
@@ -78,10 +80,10 @@ _rsqrtd2 (vector double x)
   nexp = spu_or( exp, (vec_double2)onemask );
   nexp = (vec_double2)spu_rlmask( spu_sub( (vec_uint4)spu_splats(0xbfd0000000000000ull), (vec_uint4)nexp ), -1 );
 
-  // Compute mantissa part in single precision.
-  // Convert back to double and multiply with 2^(-(exponent+i)/2), then
-  // do two Newton-Raphson steps for full precision.
-
+  /* Compute mantissa part in single precision.
+   * Convert back to double and multiply with 2^(-(exponent+i)/2), then
+   * do two Newton-Raphson steps for full precision.
+   */
   manf = spu_roundtf( man );
   y0f = spu_rsqrte( manf );
   y1f = spu_madd( spu_mul( y0f, halff ), spu_nmsub( y0f, spu_mul( y0f, manf ), onef ), y0f );
@@ -89,7 +91,7 @@ _rsqrtd2 (vector double x)
   y2 = spu_madd( spu_mul( y1, half ), spu_nmsub( y1, spu_mul( y1, x ), one ), y1 );
   y3 = spu_madd( spu_mul( y2, half ), spu_nmsub( y2, spu_mul( y2, x ), one ), y2 );
 
-  // Choose iterated result or special value.
+  /* Choose iterated result or special value. */
 
   zero = spu_and( x, (vec_double2)signmask );
   inf = spu_sel( (vec_double2)expmask, x, signmask );

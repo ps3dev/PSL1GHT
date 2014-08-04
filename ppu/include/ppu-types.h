@@ -117,7 +117,7 @@ typedef union _ieee32
 
 #define ATTRIBUTE_PRXPTR			__attribute__((mode(SI)))
 
-// courtesy of Marcan
+/* courtesy of Marcan */
 #define STACK_ALIGN(type, name, cnt, alignment)		u8 _al__##name[((sizeof(type)*(cnt)) + (alignment) + (((sizeof(type)*(cnt))%(alignment)) > 0 ? ((alignment) - ((sizeof(type)*(cnt))%(alignment))) : 0))]; \
 													type *name = (type*)(((u64)(_al__##name)) + ((alignment) - (((u64)(_al__##name))&((alignment)-1))))
 

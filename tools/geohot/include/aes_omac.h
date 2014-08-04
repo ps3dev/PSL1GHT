@@ -1,5 +1,6 @@
-// I mean if OpenSSL doesn't include it...
-//  released under GPLv3, see http://gplv3.fsf.org/
+/* I mean if OpenSSL doesn't include it...
+ * released under GPLv3, see http://gplv3.fsf.org/
+ */
 
 void rol1(u8* worthless) {
   int i;

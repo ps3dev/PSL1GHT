@@ -6,7 +6,7 @@
 #include <net/net.h>
 #include <sysmodule/sysmodule.h>
 
-#define LIBNET_MEMORY_SIZE			0x20000 // 128KB
+#define LIBNET_MEMORY_SIZE			0x20000 /* 128KB */
 
 void* __netMemory = NULL;
 

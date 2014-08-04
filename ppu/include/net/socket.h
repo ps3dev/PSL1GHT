@@ -1,7 +1,7 @@
 #ifndef __SOCKET_H__
 #define __SOCKET_H__
 
-#include <unistd.h> // for ssize_t
+#include <unistd.h> /* for ssize_t */
 #include <ppu-types.h>
 
 typedef u32 socklen_t;

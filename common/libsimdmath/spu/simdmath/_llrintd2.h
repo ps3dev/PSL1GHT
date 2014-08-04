@@ -34,9 +34,10 @@
 #include <simdmath.h>
 #include <spu_intrinsics.h>
 
-// 
-// Handles no exception
-// over flow will return unspecified data
+/* 
+ * Handles no exception
+ * over flow will return unspecified data
+ */
 
 static inline vector signed long long
 _llrintd2 (vector double in)
@@ -50,12 +51,12 @@ _llrintd2 (vector double in)
   vec_double2 bias;
 
   vec_uint4 vec_zero = ((vec_uint4){0,0,0,0});
-  // check denormalized
+  /* check denormalized */
   vec_uint4 exp_in = spu_and( (vec_uint4)in, 0x7FF00000 );
   vec_uint4 is_denorm = spu_cmpeq( exp_in, 0 );
   vec_uint4 ofs = spu_and( ((vec_uint4){0x00100000,0,0x00100000,0}), is_denorm);
 
-  // check zero
+  /* check zero */
   vec_uint4 abs_x = spu_and((vec_uint4)in, ((vec_uint4){0x7FFFFFFF,-1,0x7FFFFFFF,-1}));
   vec_uint4 is_zerox = spu_cmpeq( abs_x, vec_zero);
   is_zerox = spu_and( is_zerox, spu_shuffle(is_zerox,is_zerox, ((vec_uchar16){4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11})));
@@ -70,8 +71,9 @@ _llrintd2 (vector double in)
   bias = spu_sel((vec_double2)((vec_ullong2){0x4330000000000000ULL,0x4330000000000000ULL}), ((vec_double2){0.0,0.0}), (vec_ullong2)is_large);
   bias = spu_sel(bias, xx, (vec_ullong2)spu_splats(0x8000000000000000ULL));
 
-  //  bias = spu_sel((vec_double2)((vec_ullong2)spu_splats(0x4330000000000000ULL)), xx, 
-  //         (vec_ullong2)spu_splats(0x8000000000000000ULL));
+  /*  bias = spu_sel((vec_double2)((vec_ullong2)spu_splats(0x4330000000000000ULL)), xx, 
+   *         (vec_ullong2)spu_splats(0x8000000000000000ULL));
+   */
   mant = (vec_uint4)(spu_sub(spu_add(xx, bias), bias));
 
   /* Determine how many bits to shift the mantissa to correctly

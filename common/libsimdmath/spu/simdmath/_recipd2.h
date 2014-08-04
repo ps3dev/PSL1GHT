@@ -37,11 +37,12 @@
 #include <simdmath/_is0denormd2.h>
 #include <simdmath/_isnand2.h>
 
-// Handles exceptional values as follows:
-// NaN -> NaN
-// (+,-)Inf -> (+,-)0
-// (+,-)0 -> (+,-)Inf
-// Denormal inputs are treated as zero.
+/* Handles exceptional values as follows:
+ * NaN -> NaN
+ * (+,-)Inf -> (+,-)0
+ * (+,-)0 -> (+,-)Inf
+ * Denormal inputs are treated as zero.
+ */
 
 static inline vector double
 _recipd2 (vector double x)
@@ -55,15 +56,17 @@ _recipd2 (vector double x)
   onef = spu_splats(1.0f);
   one = spu_extend( onef );
 
-  // Factor ( mantissa x 2^exponent ) into ( mantissa x 2 ) and ( 2^(exponent-1) ).
-  // Invert exponent part with subtraction.
+  /* Factor ( mantissa x 2^exponent ) into ( mantissa x 2 ) and ( 2^(exponent-1) ).
+   * Invert exponent part with subtraction.
+   */
 
   exp = spu_and( x, (vec_double2)expmask );
   nexp = (vec_double2)spu_sub( (vec_uint4)expmask, (vec_uint4)exp );
   man = spu_sel( x, (vec_double2)spu_splats(0x40000000), expmask );
 
-  // Compute mantissa part with single and double precision Newton-Raphson steps.
-  // Then multiply with 2^(1-exponent).
+  /* Compute mantissa part with single and double precision Newton-Raphson steps.
+   * Then multiply with 2^(1-exponent).
+   */
 
   manf = spu_roundtf( man );
   y0f = spu_re( manf );
@@ -73,7 +76,7 @@ _recipd2 (vector double x)
   y3 = spu_madd( spu_nmsub( man, y2, one ), y2, y2 );
   y3 = spu_mul( y3, nexp );
 
-  // Choose iterated result or special value.
+  /* Choose iterated result or special value. */
 
   zero = spu_and( x, (vec_double2)signmask );
   inf = spu_sel( (vec_double2)expmask, x, signmask );

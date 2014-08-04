@@ -27,7 +27,7 @@
    POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Undefined if input < 0.
+/* Undefined if input < 0. */
 
 #ifndef ___SIMD_MATH_SQRTF4_H___
 #define ___SIMD_MATH_SQRTF4_H___
@@ -38,7 +38,7 @@
 static inline vector float
 _sqrtf4 (vector float x)
 {
-  // Reciprocal square root estimate and 1 Newton-Raphson iteration.
+  /* Reciprocal square root estimate and 1 Newton-Raphson iteration. */
 
   vec_float4 y0, y0x, y0xhalf;
   vec_float4 oneish = (vec_float4)spu_splats(0x3f800001);

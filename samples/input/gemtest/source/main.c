@@ -23,7 +23,7 @@
 #include <io/camera.h>
 #include <io/move.h>
 #include <sys/thread.h>
-// #include <libgem/libgem.h>
+/* #include <libgem/libgem.h> */
 
 #include <stdarg.h>
 #include <unistd.h>
@@ -32,14 +32,14 @@ typedef struct {
   int height;
   int width;
   uint32_t *ptr;
-  // Internal stuff
+  /* Internal stuff */
   uint32_t offset;
 } buffer;
 
-buffer *buffers[2];             // The buffer we will be drawing into
-gcmContextData *context;        // Context to keep track of the RSX buffer.
+buffer *buffers[2];             /* The buffer we will be drawing into */
+gcmContextData *context;        /* Context to keep track of the RSX buffer. */
 
-videoResolution res;            // Screen Resolution
+videoResolution res;            /* Screen Resolution */
 
 int currentBuffer = 0;
 
@@ -62,8 +62,8 @@ int tracking = 0;
 float rx, ry;
 int pos_x = 0;
 int pos_y = 0;
-int dx = 200;                   // default step x
-int dy = 100;                   // default step y
+int dx = 200;                   /* default step x */
+int dy = 100;                   /* default step y */
 gemImageState image_state;
 void *buffer_mem;
 void *video_out;
@@ -80,7 +80,7 @@ makeBuffer (int id, int size)
   assert (buf->ptr != NULL);
 
   assert (rsxAddressToOffset (buf->ptr, &buf->offset) == 0);
-  // Register the display buffer with the RSX
+  /* Register the display buffer with the RSX */
   assert (gcmSetDisplayBuffer (id, buf->offset, res.width * 4, res.width,
           res.height) == 0);
 
@@ -91,8 +91,8 @@ makeBuffer (int id, int size)
 
 void
 waitFlip ()
-{                               // Block the PPU thread untill the previous
-  // flip operation has finished.
+{                               /* Block the PPU thread untill the previous */
+  /* flip operation has finished. */
   while (gcmGetFlipStatus () != 0)
     usleep (200);
   gcmResetFlipStatus ();
@@ -103,8 +103,9 @@ flip (s32 buffer)
 {
   assert (gcmSetFlip (context, buffer) == 0);
   rsxFlushBuffer (context);
-  gcmSetWaitFlip (context);     // Prevent the RSX from continuing until the
-  // flip has finished.
+  gcmSetWaitFlip (context);     /* Prevent the RSX from continuing until the
+                                 * flip has finished.
+                                 */
 }
 
 
@@ -133,29 +134,30 @@ waitRSXIdle()
   waitFinish(sLabelVal++);
 }
 
-// Initilize everything. You can probally skip over this function.
+/* Initilize everything. You can probally skip over this function. */
 void
 init_screen ()
 {
-  // Allocate a 1Mb buffer, alligned to a 1Mb boundary to be our shared IO
-  // memory with the RSX.
+  /* Allocate a 1Mb buffer, alligned to a 1Mb boundary to be our shared IO
+   * memory with the RSX.
+   */
   void *host_addr = memalign (1024 * 1024, 1024 * 1024);
 
   assert (host_addr != NULL);
 
-  // Initilise RSX, which sets up the command buffer and shared IO memory
+  /* Initilise RSX, which sets up the command buffer and shared IO memory */
   context = rsxInit (0x10000, 1024 * 1024, host_addr);
   assert (context != NULL);
 
   videoState state;
 
-  assert (videoGetState (0, 0, &state) == 0);   // Get the state of the display
-  assert (state.state == 0);    // Make sure display is enabled
+  assert (videoGetState (0, 0, &state) == 0);   /* Get the state of the display
+  assert (state.state == 0);       /* Make sure display is enabled */
 
-  // Get the current resolution
+  /* Get the current resolution */
   assert (videoGetResolution (VIDEO_RESOLUTION_1080, &res) == 0);
 
-  // Configure the buffer format to xRGB
+  /* Configure the buffer format to xRGB */
   videoConfiguration vconfig;
 
   memset (&vconfig, 0, sizeof (videoConfiguration));
@@ -169,11 +171,11 @@ init_screen ()
   assert (videoConfigure (0, &vconfig, NULL, 0) == 0);
   assert (videoGetState (0, 0, &state) == 0);
 
-  s32 buffer_size = 4 * res.width * res.height; // each pixel is 4 bytes
+  s32 buffer_size = 4 * res.width * res.height; /* each pixel is 4 bytes */
 
-  gcmSetFlipMode (GCM_FLIP_VSYNC);      // Wait for VSYNC to flip
+  gcmSetFlipMode (GCM_FLIP_VSYNC);      /* Wait for VSYNC to flip */
 
-  // Allocate two buffers for the RSX to draw to the screen (double buffering)
+  /* Allocate two buffers for the RSX to draw to the screen (double buffering) */
   makeBuffer (0, buffer_size);
   makeBuffer (1, buffer_size);
 
@@ -229,12 +231,12 @@ YUV_to_RGB (int y, int u, int v)
 
   v -= 128;
   u -= 128;
-  // Conversion
+  /* Conversion */
   r = y + u;
   g = y - u / 2 - v / 8;
   b = y + v;
 
-  // Clamp to 0..1
+  /* Clamp to 0..1 */
   if (r < 0)
     r = 0;
   if (g < 0)
@@ -256,13 +258,13 @@ Convert422 (u8 * yuv, u32 * rgb1, u32 * rgb2)
 {
   int y1, y2, u, v;
 
-  // Extract yuv components
+  /* Extract yuv components */
   y1 = yuv[0];
   v = yuv[1];
   y2 = yuv[2];
   u = yuv[3];
 
-  // yuv to rgb
+  /* yuv to rgb */
   *rgb1 = YUV_to_RGB (y1, u, v);
   *rgb2 = YUV_to_RGB (y2, u, v);
 }
@@ -288,13 +290,13 @@ readPad ()
   int i;
 
   ioPadGetInfo (&padinfo);
-  for (i = 0; i < 6; i++) {     // 7 is our Move device
+  for (i = 0; i < 6; i++) {     /* 7 is our Move device */
     if (padinfo.status[i]) {
       ioPadGetData (i, &paddata);
 
       if (paddata.BTN_CROSS) {
 
-        ret = 0;                // To exit it will go to XMB
+        ret = 0;                /* To exit it will go to XMB */
       }
 
     }
@@ -373,9 +375,9 @@ displayCameraFrame (buffer * buffer, u8 * img, s32 posx, s32 posy, s32 w, s32 h)
 
       img += 4;
       (buffer->ptr)[(j + posy) * res.width + i + posx] = pixel1;
-      // framex[j*640+i]=pixel1;
+      /* framex[j*640+i]=pixel1; */
       (buffer->ptr)[(j + posy) * res.width + i + 1 + posx] = pixel2;
-      // framex[j*640+i+1]=pixel2;
+      /* framex[j*640+i+1]=pixel2; */
     }
 
   }
@@ -471,8 +473,9 @@ calibrateGem (int numgem)
   int error = 0;
   u32 hues[4];
 
-  hues[0] = 4 << 24;            // to leave Sony choose the best hue value when
-  // it is calibrating internally
+  hues[0] = 4 << 24;            /* to leave Sony choose the best hue value when
+                                 * it is calibrating internally.
+                                 */
   hues[1] = 4 << 24;
   hues[2] = 4 << 24;
   hues[3] = 4 << 24;
@@ -534,8 +537,9 @@ calibrateGem (int numgem)
 
     }
 
-    // flip(currentBuffer); // Flip buffer onto screen
-    // currentBuffer = !currentBuffer;
+    /* Flip buffer onto screen */
+    /* flip(currentBuffer); */
+    /* currentBuffer = !currentBuffer; */
 
   }
   if (padflag == 0) {
@@ -583,15 +587,17 @@ initGem ()
   gem_video_convert.green_gain = 1.0f;
   gem_video_convert.blue_gain = 1.0f;
   buffer_mem = (void *) memalign (128, 640 * 480);
-  video_out = (void *) malloc (640 * 480 * 4);  // TODO always is empty i don't
-  // know why
+  video_out = (void *) malloc (640 * 480 * 4);  /* TODO always is empty i don't
+                                                 * know why
+                                                 */
   gem_video_convert.buffer_memory = (u64) buffer_mem;
   gem_video_convert.video_data_out = (u64) video_out;
   gem_video_convert.alpha = 255;
 
-  ret = gemPrepareVideoConvert (&gem_video_convert);    // return 0 but it does
-  // not work like i want
-  // TODO
+  ret = gemPrepareVideoConvert (&gem_video_convert);    /* return 0 but it does
+                                                         * not work like i want
+                                                         */
+  /* TODO */
   printf ("GemPrepareVideoConvert return %X  \n", ret);
 
   ret = gemPrepareCamera (500, 0.5);
@@ -712,83 +718,95 @@ main (s32 argc, const char *argv[])
 
   initGem ();
 
-  // Ok, everything is setup. Now for the main loop.
+  /* Ok, everything is setup. Now for the main loop. */
   while (running) {
-    // Check the pads.
+    /* Check the pads. */
     running = readPad ();
 
-    waitFlip ();                // Wait for the last flip to finish, so we can
-    // draw to the old buffer
-    fillFrame (buffers[currentBuffer]->ptr, 0x00FFFFFF);        // Draw into
-    // the unused
-    // buffer
+    waitFlip ();                /* Wait for the last flip to finish, so we can
+                                 * draw to the old buffer
+                                 */
+    fillFrame (buffers[currentBuffer]->ptr, 0x00FFFFFF);        /* Draw into
+                                                                 * the unused
+                                                                 * buffer
+                                                                 */
 
-    if (!cameraSetup) {         // If camera is not setup already setup is done
-      // here
+    if (!cameraSetup) {         /* If camera is not setup already setup is done
+                                 * here
+                                 */
 
       cameraSetup = setupCamera ();
       if (!cameraSetup) {
-        running = 0;            // If there is not a PlayStation Eye exit and
-        // we will go to XMB
+        running = 0;            /* If there is not a PlayStation Eye exit and
+                                 * we will go to XMB
+                                 */
       }
     } else {
-      if (readCamera () != 0) { // we read frame and begin to proccess with
-        // libgem if all was fine with Eye
-
+      if (readCamera () != 0) { /* we read frame and begin to proccess with
+                                 * libgem if all was fine with Eye
+                                 */
         proccessGem (0);
 
         proccessGem (2);
 
-        proccessGem (1);        // about gemConvertVideoStart and
-        // gemConvertVideoFinish i am not sure,
-        // output_buffer is always empty in 3.41 more
-        // tests are needed, however both return ok
-
+        proccessGem (1);        /* about gemConvertVideoStart and
+                                 * gemConvertVideoFinish i am not sure,
+                                 * output_buffer is always empty in 3.41 more
+                                 * tests are needed, however both return ok
+                                 */
         proccessGem (3);
 
-        if (calibrate == 0)     // If calibrate is not done already here we
-          // make calibration. Point your move control to
-          // Eye and press Move Button
+        if (calibrate == 0)     /* If calibrate is not done already here we
+                                 * make calibration. Point your move control to
+                                 * Eye and press Move Button
+                                 */
           {
             ret = gemGetState (0, 0, 0, &gem_state);
-            // printf("GemGetState return %d\n",ret);
-            // printf("GemGetState return %d\n",gem_state.paddata.buttons);
+            /* printf("GemGetState return %d\n",ret); */
+            /* printf("GemGetState return %d\n",gem_state.paddata.buttons); */
             if (gem_state.paddata.buttons == 4) {
               printf ("Move button pressed, time to make calibration\n");
               ret = calibrateGem (0);
-              if (ret == 0)     // all was fine calibrate done!!! now you will
-                // have your Move sphere iluminated
+              if (ret == 0)     /* all was fine calibrate done!!! now you will
+                                 * have your Move sphere iluminated
+                                 */
                 {
                   calibrate = 1;
 
                   printf ("Calibrating proccess finalized\n");
-                } else {                // Control error is done in calibrateGem and
-                // showed in debug output so if something was
-                // wrong exit and we will go to xmb
+                } else {                /* Control error is done in calibrateGem and
+                                         * showed in debug output so if something was
+                                         * wrong exit and we will go to xmb
+                                         */
                 printf ("return %d \n", ret);
                 running = 0;
 
               }
             }
-          } else                        // calibrating is done and now we will play
-          // with Move
+          } else                        /* calibrating is done and now we will play
+                                         * with Move
+                                         */
           {
-            readGemPad (0);     // This will read buttons from Move
-            switch (newGemPad)  // Buttons stuff i don't need to explain it.
-              // Don't you? :P.
-              {                 // Press Triangle in Move and gyro on x and y
-                // axis will be tracked to move camera frame.
-                // Move your control to see it.
-                // Press Circle in Move and tracking gyro is stopped
-                // Press Select in Move to decrement step on image in display
-                case 1:         // Press Trigger to show world coordinate
-                  // postion of sphere. TODO
-                  printf ("Select pressed \n"); // Press Move button in Move to
-                  // increment step on image
-                  // display
-                  dx = dx - 1;  // Press Cross to get accelerometer postion in
-                  // device coordinates alwasys fixed
-                  dy = dy - 1;  // Press Square to get inertial sensor state
+            readGemPad (0);     /* This will read buttons from Move */
+            switch (newGemPad)  /* Buttons stuff i don't need to explain it. */
+              /* Don't you? :P. */
+              {                 /* Press Triangle in Move and gyro on x and y
+                                 * axis will be tracked to move camera frame.
+                                 * Move your control to see it.
+                                 * Press Circle in Move and tracking gyro is stopped
+                                 * Press Select in Move to decrement step on image in display
+                                 */
+                case 1:         /* Press Trigger to show world coordinate
+                                 * postion of sphere. TODO
+                                 */
+                  printf ("Select pressed \n"); /* Press Move button in Move to
+                                                 * increment step on image
+                                                 * display
+                                                 */
+                  dx = dx - 1;  /* Press Cross to get accelerometer postion in
+                                 * device coordinates alwasys fixed
+                                 */
+                  dy = dy - 1;  /* Press Square to get inertial sensor state */
                   if (dx < 1) {
                     dx = 1;
 
@@ -805,8 +823,9 @@ main (s32 argc, const char *argv[])
                       ("Frame %d center of the sphere in world coordinates %f %f %f %f \n",
                           readex.frame, vec_array(gem_state.pos, 0), vec_array(gem_state.pos, 1),
                           vec_array(gem_state.pos, 2), vec_array(gem_state.pos, 3));
-                  // many times positions return nan values or cero TODO learn how
-                  // to work with this to accurate tracking position.
+                  /* many times positions return nan values or cero TODO learn how
+                   * to work with this to accurate tracking position.
+                   */
                   break;
                 case 4:
                   printf ("Move pressed \n");
@@ -855,10 +874,12 @@ main (s32 argc, const char *argv[])
                   (vec_array(gem_inertial_state.gyro_bias, 1) != 0.00000) &&
                   (vec_array(gem_inertial_state.gyro_bias, 2) != 0.00000)) {
 
-                rx = vec_array(gem_inertial_state.gyro, 1);  // x rotation negative
-                // right, postive left
-                ry = vec_array(gem_inertial_state.gyro, 0);  // y rotation negative
-                // down, positive up
+                rx = vec_array(gem_inertial_state.gyro, 1);  /* x rotation negative
+                                                              * right, postive left
+                                                              */
+                ry = vec_array(gem_inertial_state.gyro, 0);  /* y rotation negative
+                                                              * down, positive up
+                                                              */
                 pos_x = pos_x - (int) (rx * dx);
                 pos_y = pos_y - (int) (ry * dy);
                 if (pos_x < 0) {
@@ -875,7 +896,7 @@ main (s32 argc, const char *argv[])
                 }
 
               }
-              //printf ("Axis is %f,%f. Position is %d,%d\n", rx, ry, pos_x, pos_y);
+              /* printf ("Axis is %f,%f. Position is %d,%d\n", rx, ry, pos_x, pos_y); */
             }
           }
 
@@ -888,7 +909,7 @@ main (s32 argc, const char *argv[])
       }
     }
 
-    flip (currentBuffer);       // Flip buffer onto screen
+    flip (currentBuffer);       /* Flip buffer onto screen */
     currentBuffer = !currentBuffer;
     sysUtilCheckCallback ();
 

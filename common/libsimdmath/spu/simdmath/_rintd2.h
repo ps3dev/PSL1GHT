@@ -48,7 +48,7 @@ _rintd2(vector double in)
 
   abs_x     = spu_andc((vec_uint4)in, (vec_uint4)sign);
 
-  // check denormalized
+  /* check denormalized */
   is_zerox  = spu_cmpeq( abs_x, 0);
   is_denorm = spu_cmpgt( vec_norm, abs_x );
   is_zerox  = spu_and( is_zerox, spu_shuffle(is_zerox,is_zerox, ((vec_uchar16){4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11})));

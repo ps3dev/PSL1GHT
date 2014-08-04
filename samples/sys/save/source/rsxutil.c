@@ -37,7 +37,7 @@ flipBuffer (gcmContextData *context, s32 buffer)
 {
   if (gcmSetFlip (context, buffer) == 0) {
     rsxFlushBuffer (context);
-    // Prevent the RSX from continuing until the flip has finished.
+    /* Prevent the RSX from continuing until the flip has finished. */
     gcmSetWaitFlip (context);
 
     return TRUE;
@@ -137,7 +137,7 @@ initScreen (void *host_addr, u32 size)
   if (videoGetState (0, 0, &state) != 0)
     goto error;
 
-  gcmSetFlipMode (GCM_FLIP_VSYNC); // Wait for VSYNC to flip
+  gcmSetFlipMode (GCM_FLIP_VSYNC); /* Wait for VSYNC to flip */
 
   depth_pitch = res.width * sizeof(u32);
   depth_buffer = (u32 *) rsxMemalign (64, (res.height * depth_pitch)* 2);

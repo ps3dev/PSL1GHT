@@ -51,7 +51,7 @@ _logbd2 (vector double x)
   vec_uint4 cmpgt, cmpeq, cmpzr;
   vec_int4 lz, lz0, lz1;
 
-  //NAN: x is NaN (all-ones exponent and non-zero mantissa)
+  /* NAN: x is NaN (all-ones exponent and non-zero mantissa) */
   cmpgt = spu_cmpgt( (vec_uint4)spu_or( (vec_ullong2)x, sign ), (vec_uint4)spu_or(sign, expn) );
   cmpeq = spu_cmpeq( (vec_uint4)spu_or( (vec_ullong2)x, sign ), (vec_uint4)spu_or(sign, expn) );
   isnan = (vec_ullong2)spu_or( spu_shuffle( cmpgt, cmpgt, even ),
@@ -59,16 +59,16 @@ _logbd2 (vector double x)
                               spu_shuffle( cmpgt, cmpgt, odd ) ) );
   logb = spu_sel( logb, (vec_double2)spu_splats(0x7FF8000000000000ll), isnan );
 
-  //INF: x is infinite (all-ones exponent and zero mantissa)
+  /* INF: x is infinite (all-ones exponent and zero mantissa) */
   isinf = (vec_ullong2)spu_and( cmpeq, spu_shuffle( cmpeq, cmpeq, swapEvenOdd ) );
   logb = spu_sel( logb, (vec_double2)spu_splats(__builtin_huge_val()), isinf );
 
-  //HUGE_VAL: x is zero (zero exponent and zero mantissa)
+  /* HUGE_VAL: x is zero (zero exponent and zero mantissa) */
   cmpzr = spu_cmpeq( (vec_uint4)spu_andc( (vec_ullong2)x, sign ), (vec_uint4)zero );
   iszero = (vec_ullong2)spu_and( cmpzr, spu_shuffle( cmpzr, cmpzr, swapEvenOdd ) );
   logb = spu_sel( logb, (vec_double2)spu_splats(-__builtin_huge_val()), iszero );
 
-  //Integer Exponent: if x is normal or subnormal, return unbiased exponent of normalized double x
+  /* Integer Exponent: if x is normal or subnormal, return unbiased exponent of normalized double x */
   e1 = (vec_llong2)spu_and( (vec_llong2)x, (vec_llong2)expn );
   e2 = (vec_llong2)spu_rlmask((vec_uint4)e1, -20);
 

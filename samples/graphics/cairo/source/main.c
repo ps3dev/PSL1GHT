@@ -15,7 +15,7 @@
 
 #define DEBUG(...)
 
-// Draw a single frame, do all your drawing/animation from in here.
+/* Draw a single frame, do all your drawing/animation from in here. */
 void
 drawFrame (rsxBuffer *buffer, int frame)
 {
@@ -38,8 +38,8 @@ drawFrame (rsxBuffer *buffer, int frame)
   if (surface != NULL) {
     cr = cairo_create (surface);
     if (cr != NULL) {
-      // Lets start by clearing everything
-      cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); // White
+      /* Lets start by clearing everything */
+      cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); /* White */
       cairo_paint (cr);
 
       /* Draw what needs tobe drawn */
@@ -91,11 +91,11 @@ drawFrame (rsxBuffer *buffer, int frame)
         cairo_show_text (cr, buf);
       }
 
-      cairo_destroy (cr); // Realease Surface
+      cairo_destroy (cr); /* Realease Surface */
     }
 
     cairo_surface_finish (surface);
-    cairo_surface_destroy (surface); // Flush and destroy the cairo surface
+    cairo_surface_destroy (surface); /* Flush and destroy the cairo surface */
   }
 
 }
@@ -143,8 +143,8 @@ main (s32 argc, const char* argv[])
 
     DEBUG ("Drawing frame %d\n", frame);
     waitFlip ();
-    drawFrame (&buffers[currentBuffer], frame++); // Draw into the unused buffer
-    flip (context, buffers[currentBuffer].id); // Flip buffer onto screen
+    drawFrame (&buffers[currentBuffer], frame++); /* Draw into the unused buffer */
+    flip (context, buffers[currentBuffer].id); /* Flip buffer onto screen */
 
     currentBuffer++;
     if (currentBuffer >= MAX_BUFFERS)

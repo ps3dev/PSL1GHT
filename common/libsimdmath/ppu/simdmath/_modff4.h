@@ -35,8 +35,9 @@
 
 #include <simdmath/_truncf4.h>
 
-// modff4 - for each of four float slots, compute fractional and integral parts.
-// Returns fractional part and stores integral part in *iptr.
+/* modff4 - for each of four float slots, compute fractional and integral parts.
+ * Returns fractional part and stores integral part in *iptr.
+ */
 
 static inline vector float
 _modff4 (vector float x, vector float *iptr)

@@ -43,7 +43,7 @@ _isunorderedd2 (vector double x, vector double y)
   vec_ullong2 expn = (vec_ullong2)spu_splats(0xfff0000000000000ull);
   vec_ullong2 sign = (vec_ullong2)spu_splats(0x8000000000000000ull);
 
-  //Check if x is nan
+  /* Check if x is nan */
   neg = (vec_double2)spu_or( (vec_ullong2)x, sign );
   cmpgt = (vec_ullong2)spu_cmpgt( (vec_uint4)neg, (vec_uint4)expn );
   cmpeq = (vec_ullong2)spu_cmpeq( (vec_uint4)neg, (vec_uint4)expn );
@@ -52,7 +52,7 @@ _isunorderedd2 (vector double x, vector double y)
                     spu_and( spu_shuffle( cmpeq, cmpeq, even ), 
                              spu_shuffle( cmpgt, cmpgt, odd ) ) );
 
-  //Check if y is nan
+  /* Check if y is nan */
   neg = (vec_double2)spu_or( (vec_ullong2)y, sign );
   cmpgt = (vec_ullong2)spu_cmpgt( (vec_uint4)neg, (vec_uint4)expn );
   cmpeq = (vec_ullong2)spu_cmpeq( (vec_uint4)neg, (vec_uint4)expn );

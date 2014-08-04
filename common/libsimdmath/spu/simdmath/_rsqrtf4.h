@@ -26,7 +26,7 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
  */
-// Undefined if input < 0.
+/* Undefined if input < 0. */
 
 #ifndef ___SIMD_MATH_RSQRTF4_H___
 #define ___SIMD_MATH_RSQRTF4_H___
@@ -37,7 +37,7 @@
 static inline vector float
 _rsqrtf4 (vector float x)
 {
-  // Reciprocal square root estimate and 1 Newton-Raphson iteration.   
+  /* Reciprocal square root estimate and 1 Newton-Raphson iteration. */
 
   vec_float4 y0, y0x, y0half;
   vec_float4 oneish = (vec_float4)spu_splats(0x3f800001);

@@ -101,22 +101,22 @@ typedef enum
 /*! \brief On-screen keyboard type values. */
 typedef enum
 {
-	OSK_SINGLELINE,						//!< Single line panel.
-	OSK_MULTILINE,						//!< Multiline panel.
-	OSK_FULLKB_SINGLELINE,				//!< Single line panel with full keyboard.
-	OSK_FULLKB_MULTILINE,				//!< Multiline panel with full keyboard.
-	OSK_SEPARATE_SINGLELINE_WINDOWED,	//!< Separated single line panel.
-	OSK_SEPARATE_MULTILINE_WINDOWED,	//!< Separated multiline panel.
-	OSK_SEPARATE_INPUT_PANEL_WINDOWED,	//!< Separated single line panel with 10-key keypad.
-	OSK_SEPARATE_FULLKB_INPUT_PANEL_WINDOWED,	//!< Separated single line panel with full keyboard.
-	OSK_SEPARATE_CANDIDATE_WINDOWED		//!< Separated panel with candidate selector (for keyboard input)
+	OSK_SINGLELINE,						/* !< Single line panel. */
+	OSK_MULTILINE,						/* !< Multiline panel. */
+	OSK_FULLKB_SINGLELINE,				/* !< Single line panel with full keyboard. */
+	OSK_FULLKB_MULTILINE,				/* !< Multiline panel with full keyboard. */
+	OSK_SEPARATE_SINGLELINE_WINDOWED,	/* !< Separated single line panel. */
+	OSK_SEPARATE_MULTILINE_WINDOWED,	/* !< Separated multiline panel. */
+	OSK_SEPARATE_INPUT_PANEL_WINDOWED,	/* !< Separated single line panel with 10-key keypad. */
+	OSK_SEPARATE_FULLKB_INPUT_PANEL_WINDOWED,	/* !< Separated single line panel with full keyboard. */
+	OSK_SEPARATE_CANDIDATE_WINDOWED		/* !< Separated panel with candidate selector (for keyboard input) */
 } oskType;
 
 /*! \brief Point structure for on-screen keyboard management. */
 typedef struct _osk_pnt
 {
-	f32 x;		//!< Horizontal coordinate.
-	f32 y;		//!< Vertical coordinate.
+	f32 x;		/* !< Horizontal coordinate. */
+	f32 y;		/* !< Vertical coordinate. */
 } oskPoint;
 
 /*! \brief On-screen keyboard manager parameters. */
@@ -220,29 +220,29 @@ typedef struct _osk_layout_info
 /*! \brief On-screen keyboard input field information data structure. */
 typedef struct _osk_input_field_info
 {
-	u16 *message ATTRIBUTE_PRXPTR;			//!< Buffer for message
-	u16 *startText ATTRIBUTE_PRXPTR;		//!< Initial message.
-	s32 maxLength;							//!< Maximum number of characters.
+	u16 *message ATTRIBUTE_PRXPTR;			/* !< Buffer for message */
+	u16 *startText ATTRIBUTE_PRXPTR;		/* !< Initial message. */
+	s32 maxLength;							/* !< Maximum number of characters. */
 } oskInputFieldInfo;
 
 /*! \brief On-screen keyboard return parameters data structure. */
 typedef struct _osk_cb_return_param
 {
-	oskInputFieldResult res;				//!< Result status.
-	s32 len;								//!< Number of characters entered.
-	u16 *str ATTRIBUTE_PRXPTR;				//!< Array of characters entered.
+	oskInputFieldResult res;				/* !< Result status. */
+	s32 len;								/* !< Number of characters entered. */
+	u16 *str ATTRIBUTE_PRXPTR;				/* !< Array of characters entered. */
 } oskCallbackReturnParam;
 
 /*! \brief  On-screen keyboard separate window options data structure. */
 typedef struct _osk_separate_window_option
 {
-	oskContinuousMode continuous;							//!< Continuous mode.
-	s32 mask;												//!< Devices mask. Either \c 0 or \ref OSK_DEVICE_MASK_PAD.
-	s32 inputWidth;											//!< Input field width.
-	f32 inputFieldTransparency;								//!< Input field transparency.
-	oskLayoutInfo *inputFieldLayoutInfo ATTRIBUTE_PRXPTR;	//!< Input field layout info.
-	oskLayoutInfo *inputPanelLayoutInfo ATTRIBUTE_PRXPTR;	//!< Input panel layout info.
-	u32 reserved;											//!< Reserved.
+	oskContinuousMode continuous;							/* !< Continuous mode. */
+	s32 mask;												/* !< Devices mask. Either \c 0 or \ref OSK_DEVICE_MASK_PAD. */
+	s32 inputWidth;											/* !< Input field width. */
+	f32 inputFieldTransparency;								/* !< Input field transparency. */
+	oskLayoutInfo *inputFieldLayoutInfo ATTRIBUTE_PRXPTR;	/* !< Input field layout info. */
+	oskLayoutInfo *inputPanelLayoutInfo ATTRIBUTE_PRXPTR;	/* !< Input panel layout info. */
+	u32 reserved;											/* !< Reserved. */
 } oskSeparateWindowOption;
 
 /*! \brief Set initial input device.

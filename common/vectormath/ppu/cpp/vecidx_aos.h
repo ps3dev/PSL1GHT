@@ -35,11 +35,11 @@
 namespace Vectormath {
 namespace Aos {
 
-//-----------------------------------------------------------------------------
-// VecIdx 
-// Used in setting elements of Vector3, Vector4, Point3, or Quat with the 
-// subscripting operator.
-//
+/* -----------------------------------------------------------------------------
+ * VecIdx 
+ * Used in setting elements of Vector3, Vector4, Point3, or Quat with the 
+ * subscripting operator.
+ */
 
 class VecIdx
 {
@@ -50,10 +50,10 @@ private:
 public:
     inline VecIdx( vec_float4_t& vec, int idx ): ref(vec) { i = idx; }
 
-    // implicitly casts to float unless _VECTORMATH_NO_SCALAR_CAST defined
-    // in which case, implicitly casts to floatInVec, and one must call
-    // getAsFloat to convert to float.
-    //
+    /* implicitly casts to float unless _VECTORMATH_NO_SCALAR_CAST defined
+     * in which case, implicitly casts to floatInVec, and one must call
+     * getAsFloat to convert to float.
+     */
 #ifdef _VECTORMATH_NO_SCALAR_CAST
     inline operator floatInVec() const;
     inline float getAsFloat() const;
@@ -74,7 +74,7 @@ public:
     inline floatInVec operator -=( floatInVec scalar );
 };
 
-} // namespace Aos
-} // namespace Vectormath
+} /* namespace Aos */
+} /* namespace Vectormath */
 
 #endif

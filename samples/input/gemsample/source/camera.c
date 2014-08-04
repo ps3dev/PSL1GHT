@@ -6,7 +6,7 @@
 
 sys_mem_container_t container;
 
-// extern
+/* extern */
 u8 *buf;
 extern u16 width;
 extern u16 height;
@@ -134,7 +134,7 @@ readCamera ()
       ret = 1;
       break;
   }
-  // printf("despues de start return %d \n",ret);
+  /* printf("despues de start return %d \n",ret); */
   if (ret == 0 && camread.readcount != 0) {
     return camread.readcount;
   } else {
@@ -150,12 +150,12 @@ YUV_to_RGB (int y, int u, int v)
 
   v -= 128;
   u -= 128;
-  // Conversion
+  /* Conversion */
   r = y + u;
   g = y - u / 2 - v / 8;
   b = y + v;
 
-  // Clamp to 0..1
+  /* Clamp to 0..1 */
   if (r < 0)
     r = 0;
   if (g < 0)
@@ -177,13 +177,13 @@ Convert422 (u8 * yuv, u32 * rgb1, u32 * rgb2)
 {
   int y1, y2, u, v;
 
-  // Extract yuv components
+  /* Extract yuv components */
   y1 = yuv[0];
   v = yuv[1];
   y2 = yuv[2];
   u = yuv[3];
 
-  // yuv to rgb
+  /* yuv to rgb */
   *rgb1 = YUV_to_RGB (y1, u, v);
   *rgb2 = YUV_to_RGB (y2, u, v);
 }

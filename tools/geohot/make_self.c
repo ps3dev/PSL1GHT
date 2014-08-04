@@ -1,6 +1,7 @@
-// make_self_npdrm by geohot
-// part of geohot's awesome tools for the PS3
-//  released under GPLv3, see http://gplv3.fsf.org/
+/* make_self_npdrm by geohot
+ * part of geohot's awesome tools for the PS3
+ *  released under GPLv3, see http://gplv3.fsf.org/
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,9 +24,9 @@
 
 #include "include/aes_omac.h"
 
-//#define NO_CRYPT
-//#define NPDRM
-//#define SPRX
+/* #define NO_CRYPT */
+/* #define NPDRM    */
+/* #define SPRX     */
 
 #ifdef NPDRM
 #define KEY(SUFFIX) npdrm_##SUFFIX
@@ -40,15 +41,15 @@ u8 nubpadding_static[] = {
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x7B,0x00,0x00,0x00,0x01,0x00,0x02,0x00,0x00
 #else
 #ifdef NPDRM
-// this broke lv2diag.self
+/* this broke lv2diag.self */
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x3B,0x00,0x00,0x00,0x01,0x00,0x00,0x20,0x00
 #else
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x3B,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x00
 #endif
 #endif
 };
-  // 0x1B in retail
-  // 0x3B in lv2diag
+  /* 0x1B in retail  */
+  /* 0x3B in lv2diag */
 
 u8 cflags_static[] = {
   0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,
@@ -69,7 +70,7 @@ u8 cflags_static[] = {
 
 u8 sdkversion_static[] = {
   0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x10,0x00,0x00,0x00,0x00
-  //0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x30,0x00,0x00,0x00,0x00
+  /* 0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x30,0x00,0x00,0x00,0x00 */
 };
 
 
@@ -109,9 +110,9 @@ void init_Self_Shdr(Self_Shdr* hdr) {
   set_u32(&(hdr->s_magic), 0x53434500);
   set_u32(&(hdr->s_hdrversion), 2);
 #ifdef SPRX
-  // on 3.41
-  //set_u16(&(hdr->s_flags), 4);
-  // on 3.55
+  /* on 3.41 */
+  /* set_u16(&(hdr->s_flags), 4); */
+  /* on 3.55 */
   set_u16(&(hdr->s_flags), 7);
 #else
   set_u16(&(hdr->s_flags), 1);
@@ -127,19 +128,19 @@ void init_Self_Ihdr(Self_Ihdr* hdr) {
 #ifdef SPRX
   set_u64(&(hdr->i_authid), 0x1070000052000001LL);
 #else
-  //set_u64(&(hdr->i_authid), 0x10700003FD000001LL);
-  //set_u64(&(hdr->i_authid), 0x10700003FF000001LL);
+  /* set_u64(&(hdr->i_authid), 0x10700003FD000001LL); */
+  /* set_u64(&(hdr->i_authid), 0x10700003FF000001LL); */
   set_u64(&(hdr->i_authid), 0x1010000001000003LL);
 #endif
   set_u32(&(hdr->i_apptype), 4);
 #endif
-  //set_u64(&(hdr->i_authid), 0x1070000500000001LL);
+  /* set_u64(&(hdr->i_authid), 0x1070000500000001LL); */
 
   set_u32(&(hdr->i_magic), 0x01000002);
-  //set_u64(&(hdr->i_version), 0x0003005500000000LL);
-  //set_u64(&(hdr->i_version), 0x0003004000000000LL);
-  //set_u64(&(hdr->i_version), 0x0003000000000000LL);
-  //set_u64(&(hdr->i_version), 0x0001004000001000LL);
+  /* set_u64(&(hdr->i_version), 0x0003005500000000LL); */
+  /* set_u64(&(hdr->i_version), 0x0003004000000000LL); */
+  /* set_u64(&(hdr->i_version), 0x0003000000000000LL); */
+  /* set_u64(&(hdr->i_version), 0x0001004000001000LL); */
   set_u64(&(hdr->i_version), 0x0001000000000000LL);
 }
 
@@ -228,14 +229,14 @@ void enumerate_segments() {
 
     segment_ptr->padding = (0x10-(segment_ptr->len&0xF))&0xF;
 
-// hacks to make it match
+/* hacks to make it match */
     /*if(segment_ptr->len == 0x14BCC8) {
       segment_ptr->padding += 0x4330;
     }*/
 
     printf("processing segment %d with rlen %x len %x offset %x...", i, segment_ptr->rlen, segment_ptr->len, in_data_offset); fflush(stdout);
 
-    //hexdump((u8*)elf_segment, sizeof(Elf64_Phdr));
+    /* hexdump((u8*)elf_segment, sizeof(Elf64_Phdr)); */
 
     set_u64(&(segment_ptr->enc_segment.segment_size), segment_ptr->len);
     set_u32(&(segment_ptr->enc_segment.segment_type), 2);
@@ -247,7 +248,7 @@ void enumerate_segments() {
     set_u32(&(segment_ptr->pmhdr.pm_compressed), 1+segment_ptr->compressed);
     set_u32(&(segment_ptr->pmhdr.pm_encrypted), segment_ptr->encrypted);
 
-// compute sha1
+/* compute sha1 */
     SHA_CTX c;
     SHA1_ghetto_init(&c, segment_ptr->crypt_segment.hmac);
     SHA1_Update(&c, segment_ptr->data, segment_ptr->len);
@@ -266,7 +267,7 @@ void enumerate_segments() {
     if(i != get_u16(&(input_elf_header->e_phnum))-1) {
       segment_ptr->next_segment = malloc(sizeof(Self_Segment));
     }
-    elf_segment += 1;  // 1 is sizeof(Elf64_Phdr)
+    elf_segment += 1;  /* 1 is sizeof(Elf64_Phdr) */
     segment_ptr = segment_ptr->next_segment;
     printf("\n");
   }
@@ -356,7 +357,7 @@ void write_self_file_in_memory() {
   file_ll_ptr = &start_file;
   u8* output_self_data_ptr = output_self_data;
   while(file_ll_ptr != NULL) {
-    //printf("adding %X\n", file_ll_ptr->len);
+    /* printf("adding %X\n", file_ll_ptr->len); */
     memcpy(output_self_data_ptr, file_ll_ptr->data, file_ll_ptr->len);
     output_self_data_ptr += file_ll_ptr->len;
     file_ll_ptr = file_ll_ptr->next;
@@ -385,11 +386,11 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
-// init randomness
+/* init randomness */
   gmp_randinit_default(r_state);
   gmp_randseed_ui(r_state, time(NULL));
 
-// read elf file
+/* read elf file */
   read_elf_file(argv[1]);
   input_elf_header = (Elf64_Ehdr*)input_elf_data;
 
@@ -397,11 +398,11 @@ int main(int argc, char* argv[]) {
   printf("%d program headers @ %llx\n", get_u16(&(input_elf_header->e_phnum)), get_u64(&(input_elf_header->e_phoff)));
   printf("%d section headers @ %llx\n", get_u16(&(input_elf_header->e_shnum)), get_u64(&(input_elf_header->e_shoff)));
 
-// loop through the segments
+/* loop through the segments */
   enumerate_segments();
   printf("segments enumerated\n");
 
-// setup self headers
+/* setup self headers */
   Self_Shdr output_self_header; memset(&output_self_header, 0, sizeof(output_self_header));
   Self_Ehdr output_extended_self_header; memset(&output_extended_self_header, 0, sizeof(output_extended_self_header));
   Self_Ihdr output_self_info_header; memset(&output_self_info_header, 0, sizeof(output_self_info_header));
@@ -412,35 +413,37 @@ int main(int argc, char* argv[]) {
 
   set_u64(&output_self_header.s_exsize, input_elf_len);
 
-// setup segment header
+/* setup segment header */
   segment_certification_header segment_header; memset(&segment_header, 0, sizeof(segment_header));
   set_u32(&(segment_header.version), 1);
 
-// NPDRM
+/* NPDRM */
 #ifdef NPDRM
   Self_NPDRM npdrm; memset(&npdrm, 0, sizeof(npdrm));
   init_Self_NPDRM(&npdrm, argv[3], argv[2]);
 #endif
-// useless bullshit
+/* useless bullshit */
   Self_SDKversion sdkversion;
   Self_Cflags cflags;
   memcpy(&sdkversion, sdkversion_static, sizeof(Self_SDKversion));
   memcpy(&cflags, cflags_static, sizeof(Self_Cflags));
 
-// generate metadata encryption keys
+/* generate metadata encryption keys */
   metadata_crypt_header md_header; memset(&md_header, 0, sizeof(md_header));
   memcpy(&md_header, KEY(keypair_d), sizeof(md_header));
 
-// can't generate random without symmetric keys
+/* can't generate random without symmetric keys */
 /*mpz_t bigriv, bigerk;
   mpz_init(bigriv); mpz_init(bigerk);
   mpz_urandomb(bigerk, r_state, 128);
   mpz_urandomb(bigriv, r_state, 128);
 
   mpz_export(md_header.erk, &countp, 1, 0x10, 1, 0, bigerk);
-  mpz_export(md_header.riv, &countp, 1, 0x10, 1, 0, bigriv);*/
+  mpz_export(md_header.riv, &countp, 1, 0x10, 1, 0, bigriv);
+*/
 
-// init signing shit
+ /* init signing shit */
+
   mpz_t n,k,da,kinv,r,cs,z;
   mpz_init(n); mpz_init(k); mpz_init(da); mpz_init(r); mpz_init(cs); mpz_init(z); mpz_init(kinv);
   mpz_import(r, 0x14, 1, 1, 0, 0, KEY(R));
@@ -451,50 +454,50 @@ int main(int argc, char* argv[]) {
   segment_certification_sign all_signed; memset(&all_signed, 0, sizeof(all_signed));
   mpz_export(all_signed.R, &countp, 1, 0x14, 1, 0, r);
 
-// **** everything here is still length independent ***
+/* **** everything here is still length independent *** */
   build_segment_crypt_data();
   set_u32(&(segment_header.crypt_len), (segment_crypt_data_len)/0x10);
-  set_u32(&(segment_header.unknown2), 0x30);    // needed??
+  set_u32(&(segment_header.unknown2), 0x30);    /* needed?? */
   printf("built crypt data\n");
 
-// start building metadata in theory, ordering is fixed now
+/* start building metadata in theory, ordering is fixed now */
   memset(&start_file, 0, sizeof(file_ll));
   running_size = 0;
-  // 0x000 -- Self_Shdr
+  /* 0x000 -- Self_Shdr */
   add_file_section(&output_self_header, sizeof(output_self_header));
-  // 0x020 -- Self_Ehdr
+  /* 0x020 -- Self_Ehdr */
   add_file_section(&output_extended_self_header, sizeof(output_extended_self_header));
-  // 0x070 -- Self_Ihdr
+  /* 0x070 -- Self_Ihdr */
   set_u64(&(output_extended_self_header.e_ihoff), running_size);
   add_file_section(&output_self_info_header, sizeof(output_self_info_header));
-  // 0x090 -- elf data
+  /* 0x090 -- elf data */
   set_u64(&(output_extended_self_header.e_ehoff), running_size);
   set_u64(&(output_extended_self_header.e_phoff), running_size+get_u64(&(input_elf_header->e_phoff)));
   add_file_section(input_elf_data, get_u64(&(input_elf_header->e_phoff)) + get_u16(&(input_elf_header->e_phnum)) * sizeof(Elf64_Phdr));
   add_file_section(zero_padding, (0x10-(running_size&0xF))&0xF);
-  // 0x*** -- all Self_PMhdr(including not in crypt)
+  /* 0x*** -- all Self_PMhdr(including not in crypt) */
   set_u64(&(output_extended_self_header.e_pmoff), running_size);
   segment_ptr = &first_segment;
   while(segment_ptr != NULL) {
     add_file_section(&(segment_ptr->pmhdr), sizeof(segment_ptr->pmhdr));
     segment_ptr = segment_ptr->next_segment;
   }
-  // 0x*** -- Self_SDKversion
+  /* 0x*** -- Self_SDKversion */
   set_u64(&(output_extended_self_header.e_svoff), running_size);
   add_file_section(&sdkversion, sizeof(sdkversion));
-  // 0x*** -- Self_Cflags
+  /* 0x*** -- Self_Cflags */
   set_u64(&(output_extended_self_header.e_cfoff), running_size);
   add_file_section(&cflags, sizeof(cflags));
 #ifdef NPDRM
-  // 0x*** -- npdrm data
+  /* 0x*** -- npdrm data */
   add_file_section(&npdrm, sizeof(npdrm));
 #endif
-  // 0x*** -- metadata_crypt_header
+  /* 0x*** -- metadata_crypt_header */
   set_u32(&(output_self_header.s_esize), running_size - sizeof(output_self_header));
   add_file_section(&md_header, sizeof(md_header));
-  // 0x*** -- segment_certification_header
+  /* 0x*** -- segment_certification_header */
   add_file_section(&segment_header, sizeof(segment_header));
-  // 0x*** -- all segment_certification_segment incrypt
+  /* 0x*** -- all segment_certification_segment incrypt */
   int incrypt_count = 0;
   segment_ptr = &first_segment;
   while(segment_ptr != NULL) {
@@ -505,20 +508,20 @@ int main(int argc, char* argv[]) {
     segment_ptr = segment_ptr->next_segment;
   }
   set_u32(&(segment_header.segment_count), incrypt_count);
-  // 0x*** -- segment_crypt_data
+  /* 0x*** -- segment_crypt_data */
   add_file_section(segment_crypt_data, segment_crypt_data_len);
-  // 0x*** -- nubpadding_static
+  /* 0x*** -- nubpadding_static */
   add_file_section(nubpadding_static, sizeof(nubpadding_static));
-  // 0x*** -- segment_certification_sign
+  /* 0x*** -- segment_certification_sign */
   set_u64(&(segment_header.signature_offset), running_size);
   add_file_section(&all_signed, sizeof(all_signed));
-  // 0x*** -- data must be 0x80 aligned
+  /* 0x*** -- data must be 0x80 aligned */
   if((running_size%0x80) != 0) {
     add_file_section(zero_padding, 0x80-(running_size%0x80));
   }
-  // 0x*** -- data
+  /* 0x*** -- data */
   set_u64(&(output_self_header.s_shsize), running_size);
-  // ...data...
+  /* ...data... */
   segment_ptr = &first_segment;
   while(segment_ptr != NULL) {
     set_u64(&(segment_ptr->enc_segment.segment_offset), running_size);
@@ -527,20 +530,20 @@ int main(int argc, char* argv[]) {
     add_file_section(zero_padding, segment_ptr->padding);
     segment_ptr = segment_ptr->next_segment;
   }
-  // 0x*** -- section table
+  /* 0x*** -- section table */
 #ifndef SPRX
   set_u64(&(output_extended_self_header.e_shoff), running_size);
   add_file_section(input_elf_data+get_u64(&(input_elf_header->e_shoff)), get_u16(&(input_elf_header->e_shnum)) * sizeof(Elf64_Shdr));
 #endif
-  // ***DONE***
+  /* ***DONE*** */
 
   printf("file built\n");
 
-// write self file in memory <-- useful comment
+/* write self file in memory <-- useful comment */
   write_self_file_in_memory();
   printf("self written in memory\n");
 
-// sign shit
+/* sign shit */
   u8 digest[0x14];
   SHA1(output_self_data, get_u64(&(segment_header.signature_offset)), digest);
 
@@ -549,10 +552,10 @@ int main(int argc, char* argv[]) {
   mpz_add(cs, cs, z); mpz_mod(cs, cs, n);
   mpz_mul(cs, cs, kinv); mpz_mod(cs, cs, n);
  
-  //mpz_export(all_signed.S, &countp, 1, 0x14, 1, 0, cs);
+  /* mpz_export(all_signed.S, &countp, 1, 0x14, 1, 0, cs); */
   mpz_export(&output_self_data[get_u64(&output_self_data[get_u32(output_self_data+0xC)+0x60])+0x16], &countp, 1, 0x14, 1, 0, cs);
 
-// encrypt metadata
+/* encrypt metadata */
   int metadata_offset = get_u32(&(output_self_header.s_esize)) + sizeof(Self_Shdr);
 
 #ifndef NO_CRYPT
@@ -567,7 +570,7 @@ int main(int argc, char* argv[]) {
   printf("NO_CRYPT is enabled...self is broken\n");
 #endif
   
-// write the output self
+/* write the output self */
   FILE *output_self_file = fopen(argv[2], "wb");
   fwrite(output_self_data, 1, running_size, output_self_file);
   fclose(output_self_file);

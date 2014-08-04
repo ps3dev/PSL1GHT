@@ -95,15 +95,16 @@ _exp2f4 (vector float x)
   frac = spu_sub(spu_convtf(ix, 0), x);
   frac = spu_mul(frac, spu_splats(__EXP2F_LN2));
 
-  // !!! HRD Changing weird un-understandable and incorrect overflow handling code
-  //overflow = spu_sel((vec_uint4)spu_splats(0x7FFFFFFF), (vec_uint4)x, (vec_uchar16)spu_splats(0x80000000));  
-  overflow = spu_cmpgt(x, (vec_float4)spu_splats(0x4300FFFFu)); // !!! Biggest possible exponent to fit in range.
+  /* !!! HRD Changing weird un-understandable and incorrect overflow handling code */
+  /* overflow = spu_sel((vec_uint4)spu_splats(0x7FFFFFFF), (vec_uint4)x, (vec_uchar16)spu_splats(0x80000000)); */
+  overflow = spu_cmpgt(x, (vec_float4)spu_splats(0x4300FFFFu)); /* !!! Biggest possible exponent to fit in range. */
   underflow = spu_cmpgt(spu_splats(-126.0f), x);
 
-  //exp_int = (vec_float4)(spu_sl(spu_add(ix, 127), 23)); // !!! HRD <- changing this to correct for
-  // !!! overflow (x >= 127.999999f)
-  exp_int = (vec_float4)(spu_sl(spu_add(ix, 126), 23));   // !!! HRD <- add with saturation
-  exp_int = spu_add(exp_int, exp_int);                    // !!! HRD
+  /* exp_int = (vec_float4)(spu_sl(spu_add(ix, 127), 23)); !!! HRD <- changing this to correct for
+   * !!! overflow (x >= 127.999999f
+   */
+  exp_int = (vec_float4)(spu_sl(spu_add(ix, 126), 23));   /* !!! HRD <- add with saturation */
+  exp_int = spu_add(exp_int, exp_int);                    /* !!! HRD */
 
   /* Instruction counts can be reduced if the polynomial was
    * computed entirely from nested (dependent) fma's. However, 
@@ -127,7 +128,7 @@ _exp2f4 (vector float x)
   /* Handle overflow */
   result = spu_sel(result, (vec_float4)spu_splats(0x7FFFFFFF), overflow); 
   result = spu_sel(result, (vec_float4)spu_splats(0), underflow);
-  //result = spu_sel(result, (vec_float4)(overflow), spu_cmpgt((vec_uint4)(ix), 255));
+  /* result = spu_sel(result, (vec_float4)(overflow), spu_cmpgt((vec_uint4)(ix), 255)); */
 
   return (result);
 }

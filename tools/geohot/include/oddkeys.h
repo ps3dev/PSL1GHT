@@ -1,7 +1,8 @@
-// The NPDRM decryption keys are not included anywhere
-// I do have them, but see no purpose in releasing them
-// Please do not blacklist the keypair I use
-// These applications give you no ability to decrypt NPDRM
+/* The NPDRM decryption keys are not included anywhere
+ * I do have them, but see no purpose in releasing them
+ * Please do not blacklist the keypair I use
+ * These applications give you no ability to decrypt NPDRM
+ */
 
 u8 retail_pkg_aes_key[] = {0x2E,0x7B,0x71,0xD7,0xC9,0xC9,0xA1,0x4E,0xA3,0x22,0x1F,0x18,0x88,0x28,0xB8,0xF8};
 

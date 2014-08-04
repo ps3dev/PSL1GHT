@@ -76,10 +76,10 @@ static void eventHandle(u64 status, u64 param, void * userdata) {
     printf("Quit game requested\n");
     exit(0);
   }else if(status == SYSUTIL_MENU_OPEN){
-    //xmb opened, should prob pause game or something :P
+    /* xmb opened, should prob pause game or something :P */
     printf("XMB opened\n");
   }else if(status == SYSUTIL_MENU_CLOSE){
-    //xmb closed, and then resume
+    /* xmb closed, and then resume */
     printf("XMB closed\n");
   }else if(status == SYSUTIL_DRAW_BEGIN){
   }else if(status == SYSUTIL_DRAW_END){
@@ -125,9 +125,9 @@ void init_screen(displayData *vdat) {
   assert(vdat->context != NULL);
 
   videoState state;
-  s32 status = videoGetState(0, 0, &state); // Get the state of the display
+  s32 status = videoGetState(0, 0, &state); /* Get the state of the display */
   assert(status == 0);
-  assert(state.state == 0); // Make sure display is enabled
+  assert(state.state == 0); /* Make sure display is enabled */
 
   /* Get the current resolution */
   status = videoGetResolution(state.displayMode.resolution, &vdat->res);

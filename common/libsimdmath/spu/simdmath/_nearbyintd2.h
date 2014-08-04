@@ -44,12 +44,12 @@ _nearbyintd2(vector double in)
 
   fpscr = spu_mffpscr();
 
-  // check denormalized
+  /* check denormalized */
   vec_uint4 exp = spu_and( (vec_uint4)in, 0x7FF00000 );
   vec_uint4 is_denorm = spu_cmpeq( exp, 0 );
   vec_uint4 ofs = spu_and( ((vec_uint4){0x00100000,0,0x00100000,0}), is_denorm);
 
-  // check zero
+  /* check zero */
   vec_uint4 abs_x = spu_and((vec_uint4)in, ((vec_uint4){0x7FFFFFFF,-1,0x7FFFFFFF,-1}));
   vec_uint4 is_zerox = spu_cmpeq( abs_x, vec_zero);
   is_zerox = spu_and( is_zerox, spu_shuffle(is_zerox,is_zerox, ((vec_uchar16){4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11})));

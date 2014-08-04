@@ -21,7 +21,7 @@ typedef struct
   int width;
   int id;
   uint32_t *ptr;
-  // Internal stuff
+  /* Internal stuff */
   uint32_t offset;
 } rsxBuffer;
 

@@ -35,9 +35,10 @@
 
 #include <simdmath/_sincosd2.h>
 
-//
-//     Computes the sine  of the each of two double slots. 
-//
+/*
+ *     Computes the sine  of the each of two double slots. 
+ */
+
 static inline vector double
 _sind2 (vector double x)
 {

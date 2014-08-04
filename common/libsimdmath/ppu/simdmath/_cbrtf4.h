@@ -57,8 +57,8 @@ __cbrtf4_calc_quot(vector signed int n)
   return quot;
 }
 
-#define __CBRTF_cbrt2 1.2599210498948731648             // 2^(1/3)
-#define __CBRTF_sqr_cbrt2 1.5874010519681994748         // 2^(2/3)
+#define __CBRTF_cbrt2 1.2599210498948731648             /* 2^(1/3) */
+#define __CBRTF_sqr_cbrt2 1.5874010519681994748         /* 2^(2/3) */
 
 static inline vector float
 _cbrtf4 (vector float x)
@@ -77,7 +77,7 @@ _cbrtf4 (vector float x)
   vector float p3 = vec_madd(p, vec_madd(p, p, zeros), zeros);
 
   vector signed int quot = __cbrtf4_calc_quot(xexp);
-  // mod = xexp - 3*quotient
+  /* mod = xexp - 3*quotient */
   vector signed int modval = vec_sub(vec_sub(xexp,quot), vec_sl(quot, __vec_splatsu4(1)));
   vector float factor =  __vec_splatsf4(1.0/__CBRTF_sqr_cbrt2);
   factor = vec_sel(factor, __vec_splatsf4(1.0/__CBRTF_cbrt2), vec_cmpeq(modval, __vec_splatsi4(-1)));

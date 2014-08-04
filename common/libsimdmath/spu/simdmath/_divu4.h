@@ -33,8 +33,9 @@
 #include <simdmath.h>
 #include <spu_intrinsics.h>
 
-// divu4 - for each of four unsigned integer slots, compute quotient and remainder of numer/denom
-// and store in divu4_t struct.  Divide by zero produces quotient = 0, remainder = numerator.
+/* divu4 - for each of four unsigned integer slots, compute quotient and remainder of numer/denom
+ * and store in divu4_t struct.  Divide by zero produces quotient = 0, remainder = numerator.
+ */
 
 static inline divu4_t
 _divu4 (vector unsigned int numer, vector unsigned int denom)
@@ -46,21 +47,22 @@ _divu4 (vector unsigned int numer, vector unsigned int denom)
   vec_uint4 newNum, skip, cont;
   int       anyCont;
 
-  // Get difference of leading zeros.
-  // Any possible negative value will be interpreted as a shift > 31
+  /* Get difference of leading zeros.
+   * Any possible negative value will be interpreted as a shift > 31
+   */
 
   denomZeros = spu_cntlz( denom );
   numerZeros = spu_cntlz( numer );
 
   shift = (vec_int4)spu_sub( denomZeros, numerZeros );
 
-  // Shift denom to align leading one with numerator's
+  /* Shift denom to align leading one with numerator's */
 
   denomShifted = spu_sl( denom, (vec_uint4)shift );
   oneShifted = spu_sl( spu_splats(1U), (vec_uint4)shift );
   oneShifted = spu_sel( oneShifted, spu_splats(0U), spu_cmpeq( denom, 0 ) );
 
-  // Shift left all leading zeros.
+  /* Shift left all leading zeros. */
 
   denomLeft = spu_sl( denom, denomZeros );
   oneLeft = spu_sl( spu_splats(1U), denomZeros );
@@ -74,14 +76,16 @@ _divu4 (vector unsigned int numer, vector unsigned int denom)
 
       newQuot = spu_or( quot, oneShifted );
 
-      // Subtract shifted denominator from remaining numerator 
-      // when denominator is not greater.
+      /* Subtract shifted denominator from remaining numerator 
+       * when denominator is not greater.
+       */
 
       skip = spu_cmpgt( denomShifted, numer );
       newNum = spu_sub( numer, denomShifted );
 
-      // If denominator is greater, next shift is one more, otherwise
-      // next shift is number of leading zeros of remaining numerator.
+      /* If denominator is greater, next shift is one more, otherwise
+       * next shift is number of leading zeros of remaining numerator.
+       */
 
       numerZeros = spu_sel( spu_cntlz( newNum ), numerZeros, skip );
       shift = (vec_int4)spu_sub( skip, numerZeros );

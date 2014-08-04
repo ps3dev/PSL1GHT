@@ -39,8 +39,9 @@ _truncf4 (vector float x)
   vector signed int xi;
   vector unsigned int inrange;
     
-  // Can convert to and from signed integer to truncate values in range [-2^31, 2^31).
-  // However, no truncation needed if exponent > 22.
+  /* Can convert to and from signed integer to truncate values in range [-2^31, 2^31).
+   * However, no truncation needed if exponent > 22.
+   */
 
   inrange = spu_cmpabsgt( (vector float)spu_splats(0x4b000000), x );
 

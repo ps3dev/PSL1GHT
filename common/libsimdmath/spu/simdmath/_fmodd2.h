@@ -82,10 +82,10 @@ _fmodd2(vector double x, vector double y)
   exp_x  = spu_rlmask(x_hi, -20);
   exp_y  = spu_rlmask(y_hi, -20);
 
-  // y>x
+  /* y>x */
   resultx = __vec_gt64(abs_y, abs_x);
 
-  //is Inf,  is Nan
+  /* is Inf,  is Nan */
   x_7ff = spu_cmpgt(x_hi, spu_splats((unsigned int)0x7fefffff));
   x_inf = __vec_eq64_half(abs_x, ((vec_uint4){0x7ff00000,0x0,0x7ff00000,0x0}));
   x_nan = spu_andc(x_7ff,  x_inf);
@@ -94,7 +94,7 @@ _fmodd2(vector double x, vector double y)
   y_inf = __vec_eq64_half(abs_y, ((vec_uint4){0x7ff00000,0x0,0x7ff00000,0x0}));
   y_nan = spu_andc(y_7ff,  y_inf);
   
-  // is zero
+  /* is zero */
   zero_x = __vec_eq64_half(abs_x, spu_splats((unsigned int)0x0));
   zero_y = __vec_eq64_half(abs_y, spu_splats((unsigned int)0x0));
 
@@ -103,8 +103,10 @@ _fmodd2(vector double x, vector double y)
    * extract the mantissas (mant_x, mant_y)
    */
   /* change form*/
-  // 0 -> ! is_normal
-  // 0 don't care  (because (x=0, y!=0)match x<y, (x!=0 && y=0)match y=0,  (x==0 && y==0) resultx)
+
+  /* 0 -> ! is_normal
+   * 0 don't care  (because (x=0, y!=0)match x<y, (x!=0 && y=0)match y=0,  (x==0 && y==0) resultx)
+   */
 
   x_is_norm = spu_cmpgt(x_hi, spu_splats((unsigned int)0x000fffff));
   y_is_norm = spu_cmpgt(y_hi, spu_splats((unsigned int)0x000fffff));
@@ -112,7 +114,7 @@ _fmodd2(vector double x, vector double y)
   frac_x = spu_and((vec_uint4)x, mant_mask);
   frac_y = spu_and((vec_uint4)y, mant_mask);
 
-  //cntlz(use when denorm)
+  /* cntlz(use when denorm) */
   cnt_x = spu_cntlz(frac_x);
   cnt_x = spu_add(cnt_x, spu_and(spu_rlqwbyte(cnt_x, 4), spu_cmpeq(cnt_x, 32)));
   cnt_x = spu_add(spu_shuffle(cnt_x, cnt_x, splat_hi), -11);
@@ -125,11 +127,12 @@ _fmodd2(vector double x, vector double y)
     mant_x_norm = spu_andc(spu_sel(implied_1, abs_x, mant_mask), zero_x);
     mant_y_norm = spu_andc(spu_sel(implied_1, abs_y, mant_mask), zero_y);
   */
-  //norm
+
+  /* norm */
   mant_x_norm = spu_or(implied_1, frac_x);
   mant_y_norm = spu_or(implied_1, frac_y);
 
-  //denorm
+  /* denorm */
   shift0 = spu_extract(cnt_x, 0);
   shift1 = spu_extract(cnt_x, 2);
   mant_x_denorm0 = spu_rlmaskqwbyte((vec_uint4)frac_x, -8);
@@ -138,7 +141,7 @@ _fmodd2(vector double x, vector double y)
   mant_x_denorm1 = spu_slqwbytebc(spu_slqw(mant_x_denorm1, shift1), shift1);
   mant_x_denorm = spu_shuffle(mant_x_denorm0, mant_x_denorm1, merge);
   
-  //  vec_int4 shift_y = (vec_int4)spu_sub(cnt_y, spu_splats((unsigned int)11));
+  /*  vec_int4 shift_y = (vec_int4)spu_sub(cnt_y, spu_splats((unsigned int)11)); */
   shift0 = spu_extract(cnt_y, 0);
   shift1 = spu_extract(cnt_y, 2);
   mant_y_denorm0 = spu_rlmaskqwbyte((vec_uint4)frac_y, -8);
@@ -148,7 +151,7 @@ _fmodd2(vector double x, vector double y)
   mant_y_denorm1 = spu_slqwbytebc(spu_slqw(mant_y_denorm1, shift1), shift1);
   mant_y_denorm = spu_shuffle(mant_y_denorm0, mant_y_denorm1, merge);
 
-  // mant_x, mant_y( norm | denorm )
+  /* mant_x, mant_y( norm | denorm ) */
   mant_x = spu_sel(mant_x_denorm, mant_x_norm, x_is_norm);
   mant_y = spu_sel(mant_y_denorm, mant_y_norm, y_is_norm);
 
@@ -169,7 +172,8 @@ _fmodd2(vector double x, vector double y)
    */
   result0 = spu_or(zero_x, zero_y);
 
-  //  n = spu_sub((vec_int4)logb_x, (vec_int4)logb_y); //zhao--
+  /* zhao-- */
+  /*  n = spu_sub((vec_int4)logb_x, (vec_int4)logb_y); */
   n = spu_sub(power_x, power_y);
   mask = spu_cmpgt(n, 0);
 
@@ -206,7 +210,8 @@ _fmodd2(vector double x, vector double y)
    * Double precision generates a denorm for an output.
    */
 
-  //  normal = spu_cmpgt((vec_int4)exp_y, 0);//zhao--
+  /* zhao-- */
+  /*  normal = spu_cmpgt((vec_int4)exp_y, 0); */
 
   cnt = spu_cntlz(mant_x);
   cnt = spu_add(cnt, spu_and(spu_rlqwbyte(cnt, 4), spu_cmpeq(cnt, 32)));
@@ -221,7 +226,7 @@ _fmodd2(vector double x, vector double y)
 
 
 
-  //norm
+  /* norm */
 
   shift0 = spu_extract(cnt, 0);                     
   shift1 = spu_extract(cnt, 2);                     
@@ -235,7 +240,7 @@ _fmodd2(vector double x, vector double y)
   norm   = spu_shuffle(norm0, norm1, merge);
 
   
-  //denorm
+  /* denorm */
   /*
     shift = spu_add((vec_int4)exp_y, -1);
     shift0 = spu_extract(shift, 0);
@@ -247,14 +252,14 @@ _fmodd2(vector double x, vector double y)
   shift0 = spu_extract(shift, 0);
   shift1 = spu_extract(shift, 2);
 
-  //  printf("result denorm: shift0=%d, shift1=%d\n",shift0, shift1);
+  /*  printf("result denorm: shift0=%d, shift1=%d\n",shift0, shift1); */
 
   denorm0 = spu_rlmaskqwbytebc(spu_rlmaskqw(norm0, shift0), 7+shift0);
   denorm1 = spu_rlmaskqwbytebc(spu_rlmaskqw(norm1, shift1), 7+shift1);
 
   denorm = spu_shuffle(denorm0, denorm1, merge);
   
-  // merge
+  /* merge */
   mant_x = spu_sel(denorm, norm, is_normal);
 
   exp_y = (vec_uint4)power;
@@ -262,17 +267,17 @@ _fmodd2(vector double x, vector double y)
 
   result = spu_sel(exp_y, spu_or(sign, mant_x),((vec_uint4){0x800FFFFF, -1, 0x800FFFFF, -1}));
 
-  //y>x  || y<=x
+  /* y>x  || y<=x */
   result = spu_sel(spu_andc(result, spu_rlmask(result0, -1)),
                (vec_uint4)x, resultx);
-  //y=+-inf  => 0
+  /* y=+-inf  => 0 */
   result = spu_sel(result, (vec_uint4)x, y_inf);
-  //x=+-inf  => NaN
+  /* x=+-inf  => NaN */
   result = spu_sel(result, ((vec_uint4){0x7ff80000, 0x0, 0x7ff80000, 0x0}), x_inf);
-  //y=0          =>  0
+  /* y=0          =>  0 */
   result = spu_andc(result, zero_y);
 
-  //x=NaN or y=NaN   => 0
+  /* x=NaN or y=NaN   => 0 */
   result = spu_sel(result, (vec_uint4)x, x_nan);
   result = spu_sel(result, (vec_uint4)y, y_nan);
 

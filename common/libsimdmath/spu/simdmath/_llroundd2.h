@@ -34,9 +34,10 @@
 #include <simdmath.h>
 #include <spu_intrinsics.h>
 
-// 
-// Handles no exception
-// over flow will return unspecified data
+/* 
+ * Handles no exception
+ * over flow will return unspecified data
+ */
 
 static inline vector signed long long
 _llroundd2 (vector double in)
@@ -75,7 +76,7 @@ _llroundd2 (vector double in)
    */
   addend = spu_shuffle(mant0, mant1, ((vec_uchar16){0x80,0x80,0x80,0x80,0x80,0x80,0x80,8, 0x80,0x80,0x80,0x80,0x80,0x80,0x80,24}));
   addend = spu_rlmask(addend, -7);
-  //  addend = spu_and(spu_rlqw(mant, 1), ((vec_uint4){ 0,1,0,1}));
+  /*  addend = spu_and(spu_rlqw(mant, 1), ((vec_uint4){ 0,1,0,1})); */
   mant = spu_addx(mant, addend, spu_rlqwbyte(spu_genc(mant, addend), 4));
 
   /* Compute the two's complement of the mantissa if the 

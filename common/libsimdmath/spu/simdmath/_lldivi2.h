@@ -47,8 +47,9 @@ __lldivi2_negatell2 (vector signed long long x)
   return (vec_llong2)spu_subx(zero, (vec_int4)x, borrow);
 }
 
-// lldivi2 - for each of two signed long long interger slots, compute quotient and remainder of 
-// numer/denom and store in lldivi2_t struct.  Divide by zero produces quotient = 0, remainder = numerator.
+/* lldivi2 - for each of two signed long long interger slots, compute quotient and remainder of 
+ * numer/denom and store in lldivi2_t struct.  Divide by zero produces quotient = 0, remainder = numerator.
+ */
 
 static inline lldivi2_t
 _lldivi2 (vector signed long long numer, vector signed long long denom)
@@ -58,7 +59,7 @@ _lldivi2 (vector signed long long numer, vector signed long long denom)
   vec_ullong2 numerAbs, denomAbs;
   vec_uint4 numerPos, denomPos, quotNeg;
 
-  // Determine whether result needs sign change
+  /* Determine whether result needs sign change */
 
   numerPos = spu_cmpgt((vec_int4)numer, -1);
   numerPos = spu_shuffle(numerPos, numerPos, ((vec_uchar16){0,0,0,0,0,0,0,0, 8,8,8,8,8,8,8,8}));
@@ -66,12 +67,12 @@ _lldivi2 (vector signed long long numer, vector signed long long denom)
   denomPos = spu_shuffle(denomPos, denomPos, ((vec_uchar16){0,0,0,0,0,0,0,0, 8,8,8,8,8,8,8,8}));
   quotNeg = spu_xor( numerPos, denomPos );
     
-  // Use absolute values of numerator, denominator
+  /* Use absolute values of numerator, denominator */
 
   numerAbs = (vec_ullong2)spu_sel(__lldivi2_negatell2(numer), numer, (vec_ullong2)numerPos);
   denomAbs = (vec_ullong2)spu_sel(__lldivi2_negatell2(denom), denom, (vec_ullong2)denomPos);
 
-  // Get difference of leading zeros.
+  /* Get difference of leading zeros. */
 
   resAbs = _lldivu2(numerAbs, denomAbs);
   res.quot = spu_sel((vec_llong2)resAbs.quot, __lldivi2_negatell2((vec_llong2)resAbs.quot),

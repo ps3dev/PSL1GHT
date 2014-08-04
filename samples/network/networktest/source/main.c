@@ -1,6 +1,7 @@
-// This sample application will connect to a specified IP using the PS3's
-// network and send a small message. It will try sending it with both
-// TCP and UDP.
+/* This sample application will connect to a specified IP using the PS3's
+ * network and send a small message. It will try sending it with both
+ * TCP and UDP.
+ */
 
 #include <psl1ght/lv2/net.h>
 
@@ -14,11 +15,13 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-// Configure these (especially the IP) to your own setup.
-// Use netcat to receive the results on your PC:
-// TCP: nc -l -p 4000
-// UDP: nc -u -l -p 4000
-// For some versions of netcat the -p option may need to be removed.
+/* Configure these (especially the IP) to your own setup.
+ * Use netcat to receive the results on your PC:
+ * TCP: nc -l -p 4000
+ * UDP: nc -u -l -p 4000
+ * For some versions of netcat the -p option may need to be removed.
+ */
+
 #define TESTSTRING	"y halo thar\n"
 #define TESTIP		"192.168.1.13"
 #define TESTPORT	4000

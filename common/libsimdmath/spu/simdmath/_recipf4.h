@@ -36,9 +36,10 @@
 static inline vector float
 _recipf4 (vector float x)
 {
-  // Reciprocal estimate and 1 Newton-Raphson iteration.
-  // A constant of 1.0 + 1 ulp in the Newton-Raphson step results in exact 
-  // answers for powers of 2, and a slightly smaller relative error bound.
+  /* Reciprocal estimate and 1 Newton-Raphson iteration.
+   * A constant of 1.0 + 1 ulp in the Newton-Raphson step results in exact 
+   * answers for powers of 2, and a slightly smaller relative error bound.
+   */
 
   vec_float4 y0;
   vec_float4 oneish = (vec_float4)spu_splats(0x3f800001);

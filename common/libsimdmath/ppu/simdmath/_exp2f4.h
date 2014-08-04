@@ -75,8 +75,8 @@
  *    this range will produce undefined results.
  */
 
-
-#define __EXP2F_LN2     0.69314718055995f /* ln(2) */
+/* ln(2) */
+#define __EXP2F_LN2     0.69314718055995f
 
 static inline vector float
 _exp2f4 (vector float x) 
@@ -103,10 +103,12 @@ _exp2f4 (vector float x)
   frac = vec_sub(vec_ctf(ix, 0), x);
   frac = vec_madd(frac, __vec_splatsf4(__EXP2F_LN2), zeros);
 
-  overflow  = (vector unsigned int)vec_cmpgt(x, (vector float)(__vec_splatsi4(0x4300FFFF))); // !!! Biggest possible exponent to fit in range.
+  /* !!! Biggest possible exponent to fit in range. */
+  overflow  = (vector unsigned int)vec_cmpgt(x, (vector float)(__vec_splatsi4(0x4300FFFF)));
   underflow = (vector unsigned int)vec_cmpgt(__vec_splatsf4(-126.0f), x);
 
-  exp_int = (vector float)(vec_sl(vec_add(ix, __vec_splatsi4(126)), __vec_splatsu4(23)));   // !!! HRD <- add with saturation
+  /* !!! HRD <- add with saturation */
+  exp_int = (vector float)(vec_sl(vec_add(ix, __vec_splatsi4(126)), __vec_splatsu4(23)));
 
   /* Instruction counts can be reduced if the polynomial was
    * computed entirely from nested (dependent) fma's. However, 
@@ -125,7 +127,8 @@ _exp2f4 (vector float x)
 
   exp_frac = vec_madd(frac4, hi, lo);
   result = vec_madd(exp_frac, exp_int, zeros);
-  result = vec_madd(exp_frac, exp_int, result); // !!! HRD
+  /* !!! HRD */
+  result = vec_madd(exp_frac, exp_int, result);
 
   /* Handle overflow */
   result = vec_sel(result, __vec_splatsf4(HUGE_VALF), overflow); 

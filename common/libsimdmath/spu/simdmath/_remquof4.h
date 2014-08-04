@@ -50,7 +50,7 @@ _remquof4(vector float x, vector float y, vector signed int *quo)
   vec_uint4 abs_x, abs_y, abs_2x, abs_8y;
   vec_uint4 exp_x, exp_y;
   vec_uint4 zero_x, zero_y;
-  //  vec_uint4 logb_x, logb_y;
+  /*  vec_uint4 logb_x, logb_y; */
   vec_uint4 mant_x, mant_y;
   vec_uint4 not_ge, overflow, quo_pos, mask;
   vec_uint4 result, result0, resultx, cnt, sign, bias;
@@ -80,11 +80,11 @@ _remquof4(vector float x, vector float y, vector signed int *quo)
     resultx = spu_or(spu_cmpgt(abs_8y, abs_x), spu_cmpgt(abs_y, spu_splats((unsigned int)0x7E7FFFFF)));
 
     zero_x = spu_cmpeq(exp_x, 0);
-    //    zero_y = spu_cmpeq(exp_y, 0);
+    /*    zero_y = spu_cmpeq(exp_y, 0); */
     zero_y = spu_cmpgt(implied_1, abs_y );
 
-    //    logb_x = spu_add(exp_x, -127);
-    //    logb_y = spu_add(exp_y, -127);
+    /*    logb_x = spu_add(exp_x, -127); */
+    /*    logb_y = spu_add(exp_y, -127); */
 
     mant_x = spu_andc(spu_sel(implied_1, abs_x, mant_mask), zero_x);
     mant_y = spu_andc(spu_sel(implied_1, abs_8y, mant_mask), zero_y);
@@ -95,8 +95,8 @@ _remquof4(vector float x, vector float y, vector signed int *quo)
      */
     result0 = spu_or(zero_x, zero_y);
 
-    //    n = spu_sub((vec_int4)logb_x, (vec_int4)logb_y);
-    n = spu_sub((vec_int4)exp_x, (vec_int4)exp_y);      // (exp_x-127)-(exp_y-127)=exp_x-exp_y
+    /*    n = spu_sub((vec_int4)logb_x, (vec_int4)logb_y); */
+    n = spu_sub((vec_int4)exp_x, (vec_int4)exp_y);      /* (exp_x-127)-(exp_y-127)=exp_x-exp_y */
     mask = spu_cmpgt(n, 0);
 
     while (spu_extract(spu_gather(mask), 0)) {
@@ -126,10 +126,10 @@ _remquof4(vector float x, vector float y, vector signed int *quo)
      */
     cnt = spu_add(spu_cntlz(mant_x), -8);
 
-    // hide hidden bit and shift left side zero
+    /* hide hidden bit and shift left side zero */
     mant_x = spu_rl(spu_andc(mant_x, implied_1), (vec_int4)cnt);
     
-    exp_y = spu_sub(exp_y, cnt);  //adjust exponent
+    exp_y = spu_sub(exp_y, cnt);  /* adjust exponent */
     result0 = spu_orc(result0, spu_cmpgt((vec_int4)exp_y, 0));    /* zero denorm results */
     exp_y = spu_rl(exp_y, 23);
 
@@ -177,8 +177,8 @@ _remquof4(vector float x, vector float y, vector signed int *quo)
 
   /* Generate a correct final sign 
    */
-  result = spu_sel(abs_x, ((vec_uint4){0,0,0,0}), result0); // reminder 0
-  result = spu_xor(result, sign);                           // set sign
+  result = spu_sel(abs_x, ((vec_uint4){0,0,0,0}), result0); /* reminder 0 */
+  result = spu_xor(result, sign);                           /* set sign   */
 
   quotient = spu_and(quotient, 7);
   quotient = spu_sel(spu_sub(0, quotient), quotient, quo_pos);

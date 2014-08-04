@@ -101,7 +101,7 @@ void CCompiler::Compile(CParser *pParser)
 	Prepare(pParser);
 
 	for(i=0;i<nICount;i++) {
-                //u32 idx = (u32)insns_pos.size();
+                /* u32 idx = (u32)insns_pos.size(); */
 		struct nvfx_insn *insn = &insns[i];
 
 		insns_pos.push_back(m_nInstructions);

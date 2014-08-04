@@ -108,7 +108,7 @@ struct _opcode
    { "UP4UB", OPCODE_UP4UB, INPUT_1S, OUTPUT_V,            _C | _S },
    { "X2D", OPCODE_X2D, INPUT_3V, OUTPUT_V, _R | _H |      _C | _S },
    { "XPD", OPCODE_X2D, INPUT_2V, OUTPUT_V, _R | _H |      _C | _S },
-   //
+   /* */
    { "END", OPCODE_END,0,0,0 },
    { NULL, (enum nvfx_opcode) -1, 0, 0, 0 }
 };
@@ -551,7 +551,7 @@ void CFPParser::ParseMaskedDstReg(const char *token,struct nvfx_insn *insn)
 void CFPParser::ParseVectorSrc(const char *token,struct nvfx_src *reg)
 {
 	s32 idx;
-	//f32 sign = 1.0f;
+	/* f32 sign = 1.0f; */
 
 	if(!token) return;
 

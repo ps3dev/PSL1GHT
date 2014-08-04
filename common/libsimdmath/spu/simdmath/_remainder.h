@@ -38,11 +38,11 @@
 static inline vec_uint4
 __rem_twice_d(vec_uint4 aa)
 {
-  vec_uint4 norm = spu_cmpgt(aa, (vec_uint4)(spu_splats(0x000FFFFFFFFFFFFFULL))); // exp > 0
+  vec_uint4 norm = spu_cmpgt(aa, (vec_uint4)(spu_splats(0x000FFFFFFFFFFFFFULL))); /* exp > 0 */
   norm = spu_shuffle(norm, norm, ((vec_uchar16){ 0,1,2,3,0,1,2,3, 8,9,10,11, 8,9,10,11}));
 
-  // if denorm or zero << 1 , if norm exp + 1
-  return spu_sel(spu_slqw(aa, 1), spu_add(aa, (vec_uint4)(spu_splats(0x0010000000000000ULL))), norm); // x2
+  /* if denorm or zero << 1 , if norm exp + 1 */
+  return spu_sel(spu_slqw(aa, 1), spu_add(aa, (vec_uint4)(spu_splats(0x0010000000000000ULL))), norm); /* x2 */
 }
 
 /*
@@ -51,17 +51,17 @@ __rem_twice_d(vec_uint4 aa)
 static inline vec_uint4
 __rem_sub_d(vec_uint4 aa, vec_uint4 bb)
 {
-  // which is bigger input aa or bb
-  vec_uint4 is_bigb = __vec_gt64(bb, aa);  // bb > aa
+  /* which is bigger input aa or bb */
+  vec_uint4 is_bigb = __vec_gt64(bb, aa);  /* bb > aa */
 
-  // need denorm calc ?
+  /* need denorm calc ? */
   vec_uint4 norm_a, norm_b;
   norm_a = spu_cmpgt(aa, (vec_uint4)(spu_splats(0x000FFFFFFFFFFFFFULL)));
   norm_b = spu_cmpgt(bb, (vec_uint4)(spu_splats(0x000FFFFFFFFFFFFFULL)));
   norm_a = spu_and(norm_a, norm_b);
   norm_a = spu_shuffle(norm_a, norm_a,((vec_uchar16){ 0,1,2,3,0,1,2,3, 8,9,10,11, 8,9,10,11}));
 
-  // calc (aa - bb) and (bb - aa)
+  /* calc (aa - bb) and (bb - aa) */
   vec_uint4 res_a, res_b, res;
   vec_uint4 borrow_a, borrow_b;
   vec_uchar16 mask_b = ((vec_uchar16){4,5,6,7,192,192,192,192,12,13,14,15,192,192,192,192});
@@ -71,10 +71,10 @@ __rem_sub_d(vec_uint4 aa, vec_uint4 bb)
   borrow_b = spu_shuffle(borrow_b, borrow_b, mask_b);
   res_a = spu_subx(aa, bb, borrow_a);
   res_b = spu_subx(bb, aa, borrow_b);
-  res_b = spu_or(res_b, ((vec_uint4){0x80000000,0,0x80000000,0}));  // set sign
+  res_b = spu_or(res_b, ((vec_uint4){0x80000000,0,0x80000000,0}));  /* set sign */
 
-  res = spu_sel(res_a, res_b, is_bigb);  // select (aa - bb) or (bb - aa)
-  // select normal calc or special
+  res = spu_sel(res_a, res_b, is_bigb);  /* select (aa - bb) or (bb - aa) */
+  /* select normal calc or special */
   res = spu_sel(res, (vec_uint4)spu_sub((vec_double2)aa, (vec_double2)bb), norm_a);
 
   return res;

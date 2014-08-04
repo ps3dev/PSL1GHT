@@ -39,9 +39,9 @@ namespace Vectormath {
 
 class floatInVec;
 
-//--------------------------------------------------------------------------------------------------
-// boolInVec class
-//
+/* --------------------------------------------------------------------------------------------------
+ * boolInVec class
+ */
 
 class boolInVec
 {
@@ -52,39 +52,39 @@ class boolInVec
     public:
         inline boolInVec() {}
 
-        // matches standard type conversions
-        //
+        /* matches standard type conversions
+         */
         inline boolInVec(floatInVec vec);
 
-        // explicit cast from bool
-        //
+        /* explicit cast from bool
+         */
         explicit inline boolInVec(bool scalar);
 
 #ifdef _VECTORMATH_NO_SCALAR_CAST
-        // explicit cast to bool
-        // 
+        /* explicit cast to bool
+         */
         inline bool getAsBool() const;
 #else
-        // implicit cast to bool
-        // 
+        /* implicit cast to bool
+         */
         inline operator bool() const;
 #endif
         
-        // get vector data
-        // bool value is splatted across all word slots of vector as 0 (false) or -1 (true)
-        //
+        /* get vector data
+         * bool value is splatted across all word slots of vector as 0 (false) or -1 (true)
+         */
         inline vec_uint4 get128() const;
 
-        // operators
-        //
+        /* operators
+         */
         inline const boolInVec operator ! () const;
         inline boolInVec& operator = (boolInVec vec);
         inline boolInVec& operator &= (boolInVec vec);
         inline boolInVec& operator ^= (boolInVec vec);
         inline boolInVec& operator |= (boolInVec vec);
 
-        // friend functions
-        //
+        /* friend functions
+         */
         friend inline const boolInVec operator == (boolInVec vec0, boolInVec vec1);
         friend inline const boolInVec operator != (boolInVec vec0, boolInVec vec1);
         friend inline const boolInVec operator < (floatInVec vec0, floatInVec vec1);
@@ -99,28 +99,28 @@ class boolInVec
         friend inline const boolInVec select(boolInVec vec0, boolInVec vec1, boolInVec select_vec1);
 };
 
-//--------------------------------------------------------------------------------------------------
-// boolInVec functions
-//
+/* --------------------------------------------------------------------------------------------------
+ * boolInVec functions
+ */
 
-// operators
-//
+/* operators
+ */
 inline const boolInVec operator == (boolInVec vec0, boolInVec vec1);
 inline const boolInVec operator != (boolInVec vec0, boolInVec vec1);
 inline const boolInVec operator & (boolInVec vec0, boolInVec vec1);
 inline const boolInVec operator ^ (boolInVec vec0, boolInVec vec1);
 inline const boolInVec operator | (boolInVec vec0, boolInVec vec1);
 
-// select between vec0 and vec1 using boolInVec.
-// false selects vec0, true selects vec1
-//
+/* select between vec0 and vec1 using boolInVec.
+ * false selects vec0, true selects vec1
+ */
 inline const boolInVec select(boolInVec vec0, boolInVec vec1, boolInVec select_vec1);
 
-} // namespace Vectormath
+} /* namespace Vectormath */
 
-//--------------------------------------------------------------------------------------------------
-// boolInVec implementation
-//
+/* --------------------------------------------------------------------------------------------------
+ * boolInVec implementation
+ */
 
 #include "floatInVec.h"
 
@@ -256,6 +256,6 @@ select(boolInVec vec0, boolInVec vec1, boolInVec select_vec1)
     return boolInVec(vec_sel(vec0.get128(), vec1.get128(), select_vec1.get128()));
 }
  
-} // namespace Vectormath
+} /* namespace Vectormath */
 
-#endif // boolInVec_h
+#endif /* boolInVec_h */

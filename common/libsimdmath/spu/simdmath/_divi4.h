@@ -35,8 +35,9 @@
 
 #include <simdmath/_divu4.h>
 
-// divi4 - for each of four integer slots, compute quotient and remainder of numer/denom
-// and store in divi4_t struct.  Divide by zero produces quotient = 0, remainder = numerator.
+/* divi4 - for each of four integer slots, compute quotient and remainder of numer/denom
+ * and store in divi4_t struct.  Divide by zero produces quotient = 0, remainder = numerator.
+ */
 
 static inline divi4_t
 _divi4 (vector signed int numer, vector signed int denom)
@@ -46,13 +47,13 @@ _divi4 (vector signed int numer, vector signed int denom)
   vec_uint4 numerPos, denomPos, quotNeg;
   vec_uint4 numerAbs, denomAbs;
 
-  // Determine whether result needs sign change
+  /* Determine whether result needs sign change */
 
   numerPos = spu_cmpgt( numer, -1 );
   denomPos = spu_cmpgt( denom, -1 );
   quotNeg = spu_xor( numerPos, denomPos );
     
-  // Use absolute values of numerator, denominator
+  /* Use absolute values of numerator, denominator */
 
   numerAbs = (vec_uint4)spu_sel( spu_sub( 0, numer ), numer, numerPos );
   denomAbs = (vec_uint4)spu_sel( spu_sub( 0, denom ), denom, denomPos );

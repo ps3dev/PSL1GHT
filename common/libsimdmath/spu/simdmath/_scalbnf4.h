@@ -57,7 +57,7 @@ _scalbnf4(vector float x, vector signed int n)
 
   zero = spu_orc(zero, spu_cmpgt(x_exp, 0));
   
-  //  overflow = spu_rlmask(spu_cmpgt(x_exp, 255), -1);
+  /*  overflow = spu_rlmask(spu_cmpgt(x_exp, 255), -1); */
   overflow = spu_cmpgt(x_exp, 255);
 
   /* Merge the expect exponent with x's mantissa. Zero the
@@ -66,7 +66,7 @@ _scalbnf4(vector float x, vector signed int n)
   out = spu_sel(x, (vec_float4)spu_rl(x_exp, 23), exp_mask);
   out = spu_andc(out, (vec_float4)zero);
   out = spu_or(out, (vec_float4)overflow);
-  // add sign bit
+  /* add sign bit */
   out = spu_sel(out, x, spu_splats((unsigned int)0x80000000));
 
   return out;

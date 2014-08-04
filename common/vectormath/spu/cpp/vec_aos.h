@@ -29,9 +29,10 @@
 
 #ifndef _VECTORMATH_VEC_AOS_CPP_H
 #define _VECTORMATH_VEC_AOS_CPP_H
-//-----------------------------------------------------------------------------
-// Constants
-// for shuffles, words are labeled [x,y,z,w] [a,b,c,d]
+/* -----------------------------------------------------------------------------
+ * Constants
+ * for shuffles, words are labeled [x,y,z,w] [a,b,c,d]
+ */
 
 #define _VECTORMATH_SHUF_X 0x00010203
 #define _VECTORMATH_SHUF_Y 0x04050607
@@ -56,8 +57,9 @@
 #define _VECTORMATH_UNIT_0001 (vec_float4){ 0.0f, 0.0f, 0.0f, 1.0f }
 #define _VECTORMATH_SLERP_TOL 0.999f
 
-//-----------------------------------------------------------------------------
-// Definitions
+/* -----------------------------------------------------------------------------
+ * Definitions
+ */
 
 #ifndef _VECTORMATH_INTERNAL_FUNCTIONS
 #define _VECTORMATH_INTERNAL_FUNCTIONS
@@ -1161,7 +1163,7 @@ inline void print( Point3 pnt, const char * name )
 
 #endif
 
-} // namespace Aos
-} // namespace Vectormath
+} /* namespace Aos */
+} /* namespace Vectormath */
 
 #endif

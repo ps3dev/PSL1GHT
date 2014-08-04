@@ -53,8 +53,8 @@ __cbrtf4_calc_quot(vec_int4 n)
   return quot;
 }
 
-#define __CBRTF_cbrt2 1.2599210498948731648             // 2^(1/3)
-#define __CBRTF_sqr_cbrt2 1.5874010519681994748         // 2^(2/3)
+#define __CBRTF_cbrt2 1.2599210498948731648             /* 2^(1/3) */
+#define __CBRTF_sqr_cbrt2 1.5874010519681994748         /* 2^(2/3) */
 
 static inline vector float
 _cbrtf4 (vector float x)
@@ -74,7 +74,7 @@ _cbrtf4 (vector float x)
                     );
   vec_float4 p3 = spu_mul(p, spu_mul(p, p));
   vec_int4 quot = __cbrtf4_calc_quot(xexp);
-  vec_int4 modval = spu_sub(spu_sub(xexp,quot), spu_sl(quot,1)); // mod = xexp - 3*quotient
+  vec_int4 modval = spu_sub(spu_sub(xexp,quot), spu_sl(quot,1)); /* mod = xexp - 3*quotient */
   vec_float4 factor = spu_splats((float)(1.0/__CBRTF_sqr_cbrt2));
   factor = spu_sel(factor, spu_splats((float)(1.0/__CBRTF_cbrt2)), spu_cmpeq(modval,-1));
   factor = spu_sel(factor, spu_splats((float)(      1.0)), spu_cmpeq(modval, 0));

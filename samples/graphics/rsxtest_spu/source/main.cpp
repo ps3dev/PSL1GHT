@@ -274,7 +274,7 @@ void drawFrame()
 	rsxSetFragmentProgramParameter(context,fpo,eyePosition_id,(float*)&objEyePos,fp_offset);
 	rsxSetFragmentProgramParameter(context,fpo,globalAmbient_id,globalAmbientColor,fp_offset);
 	rsxSetFragmentProgramParameter(context,fpo,lightPosition_id,(float*)&objLightPos,fp_offset);
-	//rsxSetFragmentProgramParameter(context,fpo,lightColor_id,lightColor,fp_offset);
+	/* rsxSetFragmentProgramParameter(context,fpo,lightColor_id,lightColor,fp_offset); */
 	rsxSetFragmentProgramParameter(context,fpo,shininess_id,&shininess,fp_offset);
 
 	rsxSetFragmentProgramParameter(context,fpo,Kd_id,materialColorDiffuse,fp_offset);

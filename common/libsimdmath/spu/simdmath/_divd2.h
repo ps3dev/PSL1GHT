@@ -30,8 +30,9 @@
 #ifndef ___SIMD_MATH_DIVD2_H___
 #define ___SIMD_MATH_DIVD2_H___
 
-// Equal to numer * recipd2(denom)
-// See recipd2 for results of special values.
+/* Equal to numer * recipd2(denom)
+ * See recipd2 for results of special values.
+ */
 
 #include <simdmath.h>
 #include <spu_intrinsics.h>

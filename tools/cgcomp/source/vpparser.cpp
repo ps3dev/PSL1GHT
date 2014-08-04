@@ -62,7 +62,7 @@ struct _opcode
 	{ "TXL", OPCODE_TXL,{ 0, 1,-1},2,false },
 	{ "TXP", OPCODE_TXP,{ 0, 1,-1},2,false },
 	{ "XPD", OPCODE_XPD,{ 0, 1,-1},2,false },
-	// end
+	/* end */
 	{ "END", OPCODE_END,{},0,false}
 };
 static const u32 VP_OPCODES_CNT = sizeof(vp_opcodes)/sizeof(struct _opcode);

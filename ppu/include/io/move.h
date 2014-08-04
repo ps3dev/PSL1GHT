@@ -108,8 +108,8 @@ typedef struct _gem_attribute
 {
 	u32 version;
 	u32 max;
-	void * memory ATTRIBUTE_PRXPTR; //pointer to memory to use for gem lib, if you specify null it will automatically allocate for you
-	Spurs *spurs ATTRIBUTE_PRXPTR; //pointer to Spurs object
+	void * memory ATTRIBUTE_PRXPTR; /* pointer to memory to use for gem lib, if you specify null it will automatically allocate for you */
+	Spurs *spurs ATTRIBUTE_PRXPTR; /* pointer to Spurs object */
 	u8 spu_priorities[8]; 
 } gemAttribute;
 
@@ -145,7 +145,7 @@ typedef struct _gem_info
 
 
 typedef struct _gem_video_convert_attribute {
-	s32 version; // set to MOVE_VERSION
+	s32 version; /* set to MOVE_VERSION */
 	gemVideoConvertFormatEnum format;
 	s32 conversion;
 	f32 gain;
@@ -179,7 +179,7 @@ s32 gemEnableMagnetometer(u32 num, s32 enable);
 s32 gemGetRGB(u32 num, f32* r, f32* g, f32* b);
 s32 gemWriteExternalPort(u32 num, u8 data[EXTERNAL_PORT_DATA_SIZE]);
 
-//hues points to an array that can hold 360 boolean values, my assumption is 360 bytes or 360 chars.
+/* hues points to an array that can hold 360 boolean values, my assumption is 360 bytes or 360 chars. */
 s32 gemGetAllTrackableHues(u8* hues);
 s32 gemGetMemorySize(s32 max);
 s32 gemUpdateFinish();

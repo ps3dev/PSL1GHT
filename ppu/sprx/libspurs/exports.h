@@ -1,6 +1,6 @@
 #ifndef __EXPORTS_H__
 #define __EXPORTS_H__
-//initialization functions basic
+/* initialization functions basic */
 EXPORT(spursFinalize, 0xca4c4600);
 EXPORT(spursAttributeSetNamePrefix, 0x7529113);
 EXPORT(spursAttributeInitializeEx, 0x95180230);
@@ -19,7 +19,7 @@ EXPORT(spursGetSpuThreadGroupId, 0x39c173fb);
 EXPORT(spursGetInfo, 0x1f402f8f);
 EXPORT(spursGetSpuGuid, 0x6fcdf6e3);
 
-//TODO add all function definitions and data types
+/* TODO add all function definitions and data types */
 
 
 EXPORT(spursJobGuardReset, 0xaf2519);

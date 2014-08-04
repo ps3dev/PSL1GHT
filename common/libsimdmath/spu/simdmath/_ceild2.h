@@ -73,7 +73,8 @@ _ceild2(vector double in)
    */
   mask_1 = spu_addx(mask, one, spu_rlqwbyte(spu_genc(mask, one), 4));
   pos = spu_cmpgt((vec_int4)in_hi, -1);
-  //pos = spu_cmpgt((vec_int4)in_hi, 0x0); //it is also work
+  /* this also would work */
+  /* pos = spu_cmpgt((vec_int4)in_hi, 0x0); */
   equal0 = spu_cmpeq(spu_and((vec_uint4)in, mask), 0);
   addend = spu_andc(spu_and(mask_1, pos), spu_and(equal0, spu_shuffle(equal0, equal0, swap_words)));
 
@@ -81,7 +82,8 @@ _ceild2(vector double in)
    */
   e_0 = spu_cmpeq(spu_andc((vec_uint4)in, (vec_uint4)sign), zero);
   e_00 = spu_and(e_0, spu_shuffle(e_0, e_0, swap_words));
-  // e_sign = spu_sel(spu_splats((unsigned int)0x0), (vec_uint4)one_d, spu_cmpeq( spu_and((vec_uint4)in_hi, spu_splats((unsigned int)0x80000000)), zero));
+  /* e_sign = spu_sel(spu_splats((unsigned int)0x0), (vec_uint4)one_d, spu_cmpeq( spu_and((vec_uint4)in_hi, spu_splats((unsigned int)0x80000000)), zero)); */
+
   e_sign = spu_and( (vec_uint4)one_d, spu_cmpeq( spu_and((vec_uint4)in_hi,spu_splats((unsigned int)0x80000000)), zero));
   insert =spu_andc(spu_andc(e_sign, e_00), exp_ge0);
 
