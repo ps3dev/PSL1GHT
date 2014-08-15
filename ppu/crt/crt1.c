@@ -22,7 +22,6 @@ extern caddr_t __librt_sbrk_r(struct _reent *ptr,ptrdiff_t incr);
 extern int __librt_chmod_r(struct _reent *r,const char *path,mode_t mode);
 extern int __librt_isatty_r(struct _reent *r,int fd);
 extern int __librt_unlink_r(struct _reent *r,const char *path);
-extern int __librt_access_r(struct _reent *r,const char *path,int amode);
 
 extern int __librt_mkdir_r(struct _reent *r,const char *path,mode_t mode);
 extern DIR* __librt_opendir_r(struct _reent *r,const char *path);
@@ -67,7 +66,6 @@ static void __syscalls_init(void)
 	__syscalls.chmod_r = __librt_chmod_r;
 	__syscalls.isatty_r = __librt_isatty_r;
 	__syscalls.unlink_r = __librt_unlink_r;
-	__syscalls.access_r = __librt_access_r;
 
 	__syscalls.mkdir_r = __librt_mkdir_r;
 	__syscalls.opendir_r = __librt_opendir_r;
