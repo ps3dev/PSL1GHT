@@ -38,11 +38,8 @@ ifneq (,$(findstring MINGW,$(UNAME)))
 endif
 
 ifneq (,$(findstring Darwin,$(shell uname -s)))
-	SDK	:=	/Developer/SDKs/MacOSX10.4u.sdk
-	OSXCFLAGS	:= -mmacosx-version-min=10.4 -isysroot $(SDK) -arch i386 -arch ppc
-	OSXCXXFLAGS	:=	$(OSXCFLAGS)
-	CXXFLAGS	+=	-fvisibility=hidden
-	LDFLAGS		+= -mmacosx-version-min=10.4 -arch i386 -arch ppc -Wl,-syslibroot,$(SDK)
+	CXXFLAGS	+= -I/opt/local/include 	
+	LDFLAGS		+= -L/opt/local/lib
 endif
 
 ifneq (,$(findstring SunOS,$(UNAME)))

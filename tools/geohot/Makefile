@@ -6,9 +6,9 @@ OBJCOPY		:=	$(PREFIX)objcopy
 UNAME		:=	$(shell uname -s)
 
 CFLAGS		:=	$(DEBUGFLAGS) -O2
-CFLAGS		+=	$(INCLUDES)
+CFLAGS		+=	$(INCLUDES) 
 CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
-LDFLAGS		=	$(DEBUGFLAGS)
+LDFLAGS		=	$(DEBUGFLAGS) 
 
 ifeq ($(strip $(PS3DEV)),)
   ifeq ($(strip $(DEVKITPS3)),)
@@ -33,11 +33,8 @@ ifneq (,$(findstring CYGWIN,$(UNAME)))
 endif
 
 ifneq (,$(findstring Darwin,$(UNAME)))
-	SDK			:= /Developer/SDKs/MacOSX10.4u.sdk 
-	OSXCFLAGS	:= -mmacosx-version-min=10.4 -arch i386
-	OSXCXXFLAGS	:=	$(OSXCFLAGS)
-	CXXFLAGS	+=	-fvisibility=hidden
-	LDFLAGS		+= -mmacosx-version-min=10.4 -arch i386 -Wl,-syslibroot,$(SDK) -L/opt/local/lib -lgmp -lcrypto -lz
+	LDFLAGS += -L/opt/local/lib -lgmp -lcrypto -lz
+	CFLAGS += -I/opt/local/include
 endif
 
 ifneq (,$(findstring BSD,$(UNAME)))
