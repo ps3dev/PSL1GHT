@@ -9,6 +9,7 @@
 #include <gmp.h>
 #include <time.h>
 
+#include <openssl/modes.h>
 #include <openssl/sha.h>
 #include <openssl/aes.h>
 #include "zlib.h"
@@ -259,7 +260,7 @@ void enumerate_segments() {
       AES_set_encrypt_key(segment_ptr->crypt_segment.erk, 128, &aes_key);
       memcpy(iv, segment_ptr->crypt_segment.riv, 16);
 #ifndef NO_CRYPT
-      AES_ctr128_encrypt(segment_ptr->data, segment_ptr->data, segment_ptr->len, &aes_key, iv, ecount_buf, &num);
+      CRYPTO_ctr128_encrypt(segment_ptr->data, segment_ptr->data, segment_ptr->len, &aes_key, iv, ecount_buf, &num, (block128_f)AES_encrypt);
 #endif
     }
 
@@ -559,7 +560,7 @@ int main(int argc, char* argv[]) {
   memset(ecount_buf, 0, 16); num=0;
   AES_set_encrypt_key(&output_self_data[metadata_offset], 128, &aes_key);
   memcpy(iv, &output_self_data[metadata_offset+0x20], 16);
-  AES_ctr128_encrypt(&output_self_data[0x40+metadata_offset], &output_self_data[0x40+metadata_offset], get_u64(&(output_self_header.s_shsize))-metadata_offset-0x40, &aes_key, iv, ecount_buf, &num);
+  CRYPTO_ctr128_encrypt(&output_self_data[0x40+metadata_offset], &output_self_data[0x40+metadata_offset], get_u64(&(output_self_header.s_shsize))-metadata_offset-0x40, &aes_key, iv, ecount_buf, &num, (block128_f)AES_encrypt);
   memcpy(&output_self_data[metadata_offset], KEY(keypair_e), sizeof(md_header));
   /*AES_set_encrypt_key(KEY(erk), 256, &aes_key);
   AES_cbc_encrypt(&output_self_data[metadata_offset], &output_self_data[metadata_offset], 0x40, &aes_key, iv, AES_ENCRYPT);*/

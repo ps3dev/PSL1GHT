@@ -8,6 +8,7 @@
 
 #include "include/ps3_common.h"
 #include "include/oddkeys.h"
+#include <openssl/modes.h>
 #include <openssl/sha.h>
 #include <openssl/aes.h>
 
@@ -69,7 +70,7 @@ int main(int argc, char* argv[]) {
   AES_set_encrypt_key(retail_pkg_aes_key, 128, &aes_key);
 
   int num=0; u8 ecount_buf[0x10]; memset(ecount_buf, 0, 0x10);
-  AES_ctr128_encrypt(&data[data_offset], &data[data_offset], data_size, &aes_key, pkg_key, ecount_buf, &num);
+  CRYPTO_ctr128_encrypt(&data[data_offset], &data[data_offset], data_size, &aes_key, pkg_key, ecount_buf, &num, (block128_f)AES_encrypt);
 
 // write back
   FILE *g = fopen(argv[1], "wb");
