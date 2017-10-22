@@ -31,7 +31,7 @@ s32 __attribute__((noinline)) rsxContextCallback(gcmContextData *context,u32 cou
 		"mr		2,31\n"
 		"addi	1,1,128\n"
 		: : "b"(context->callback)
-		: "r31", "r0", "r1", "r2", "lr"
+		: "r31", "r0", "lr"
 	);
 	return result;
 }
