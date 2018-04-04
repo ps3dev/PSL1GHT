@@ -6,7 +6,7 @@
 
 void rsxResetCommandBuffer(gcmContextData *context)
 {
-	u32 offset = 0x1000;			// init state offset;
+	u32 offset = 0x1000;			/* init state offset; */
 	rsxSetJumpCommand(context,offset);
 
 	__sync();

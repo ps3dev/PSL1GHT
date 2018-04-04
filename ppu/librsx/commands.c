@@ -595,17 +595,17 @@ void rsxLoadTexture(gcmContextData *context,u8 index,const gcmTexture *texture)
 	size0 = (texture->width << NV40TCL_TEX_SIZE0_W_SHIFT) | texture->height;
 	size1 = (texture->depth << NV40TCL_TEX_SIZE1_DEPTH_SHIFT) | texture->pitch;
 
-	RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(NV40TCL_TEX_OFFSET(index),2);		// set offset and format for texture at once
+	RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(NV40TCL_TEX_OFFSET(index),2);		/* set offset and format for texture at once */
 	RSX_CONTEXT_CURRENTP[1] = offset;
 	RSX_CONTEXT_CURRENTP[2] = format;
 
-	RSX_CONTEXT_CURRENTP[3] = RSX_METHOD(NV40TCL_TEX_SWIZZLE(index),1);		// set remap order or swizzle respectively for texture
+	RSX_CONTEXT_CURRENTP[3] = RSX_METHOD(NV40TCL_TEX_SWIZZLE(index),1);		/* set remap order or swizzle respectively for texture */
 	RSX_CONTEXT_CURRENTP[4] = swizzle;
 
-	RSX_CONTEXT_CURRENTP[5] = RSX_METHOD(NV40TCL_TEX_SIZE0(index),1);		// set width and height for texture
+	RSX_CONTEXT_CURRENTP[5] = RSX_METHOD(NV40TCL_TEX_SIZE0(index),1);		/* set width and height for texture */
 	RSX_CONTEXT_CURRENTP[6] = size0;
 
-	RSX_CONTEXT_CURRENTP[7] = RSX_METHOD(NV40TCL_TEX_SIZE1(index),1);		// set pitch and depth for texture
+	RSX_CONTEXT_CURRENTP[7] = RSX_METHOD(NV40TCL_TEX_SIZE1(index),1);		/* set pitch and depth for texture */
 	RSX_CONTEXT_CURRENTP[8] = size1;
 
 	RSX_CONTEXT_CURRENT_END(9);
@@ -974,7 +974,7 @@ void rsxSetTransferScaleSurface(gcmContextData *context,const gcmTransferScale *
 
 	RSX_CONTEXT_CURRENTP[0] = RSX_SUBCHANNEL_METHOD(3,NV04_CONTEXT_SURFACES_2D_FORMAT,4);
 	RSX_CONTEXT_CURRENTP[1] = surface->format;
-	RSX_CONTEXT_CURRENTP[2] = ((surface->pitch << 16) | 0x40);	// or'ing with 64 - why?
+	RSX_CONTEXT_CURRENTP[2] = ((surface->pitch << 16) | 0x40);	/* or'ing with 64 - why? */
 	RSX_CONTEXT_CURRENTP[3] = 0;
 	RSX_CONTEXT_CURRENTP[4] = surface->offset;
 
@@ -999,7 +999,7 @@ void rsxSetTransferScaleSurface(gcmContextData *context,const gcmTransferScale *
 }
 
 #if 0
-// This is unfinished
+/* This is unfinished */
 void rsxSetTransferScaleSwizzle(gcmContextData *context,const gcmTransferScale *scale,const gcmTransferSwizzle *swizzle)
 {
 	RSX_CONTEXT_CURRENT_BEGIN(20);

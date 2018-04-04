@@ -33,9 +33,10 @@
 namespace Vectormath {
 namespace Aos {
 
-//-----------------------------------------------------------------------------
-// Constants
-// for shuffles, words are labeled [x,y,z,w] [a,b,c,d]
+/* -----------------------------------------------------------------------------
+ * Constants
+ * for shuffles, words are labeled [x,y,z,w] [a,b,c,d]
+ */
 
 #define _VECTORMATH_SHUF_XAYB ((vec_uchar16)(vec_uint4){ _VECTORMATH_SHUF_X, _VECTORMATH_SHUF_A, _VECTORMATH_SHUF_Y, _VECTORMATH_SHUF_B })
 #define _VECTORMATH_SHUF_ZCWD ((vec_uchar16)(vec_uint4){ _VECTORMATH_SHUF_Z, _VECTORMATH_SHUF_C, _VECTORMATH_SHUF_W, _VECTORMATH_SHUF_D })
@@ -61,8 +62,9 @@ namespace Aos {
 #define _VECTORMATH_SHUF_BBY0 ((vec_uchar16)(vec_uint4){ _VECTORMATH_SHUF_B, _VECTORMATH_SHUF_B, _VECTORMATH_SHUF_Y, _VECTORMATH_SHUF_0 })
 #define _VECTORMATH_PI_OVER_2 1.570796327f
 
-//-----------------------------------------------------------------------------
-// Definitions
+/* -----------------------------------------------------------------------------
+ * Definitions
+ */
 
 inline Matrix3::Matrix3( const Matrix3 & mat )
 {
@@ -2021,7 +2023,7 @@ inline const Matrix3 crossMatrixMul( Vector3 vec, const Matrix3 & mat )
     return Matrix3( cross( vec, mat.getCol0() ), cross( vec, mat.getCol1() ), cross( vec, mat.getCol2() ) );
 }
 
-} // namespace Aos
-} // namespace Vectormath
+} /* namespace Aos */
+} /* namespace Vectormath */
 
 #endif

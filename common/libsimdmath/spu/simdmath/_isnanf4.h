@@ -38,7 +38,7 @@ _isnanf4 (vector float x)
 {   
   (void)x;
       
-  // NaN not supported on SPU, result always zero
+  /* NaN not supported on SPU, result always zero */
   return spu_splats((unsigned int)0x00000000);
 }
 

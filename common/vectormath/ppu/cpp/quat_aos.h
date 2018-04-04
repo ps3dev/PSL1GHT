@@ -29,9 +29,9 @@
 
 #ifndef _VECTORMATH_QUAT_AOS_CPP_H
 #define _VECTORMATH_QUAT_AOS_CPP_H
-//-----------------------------------------------------------------------------
-// Definitions
-
+/* -----------------------------------------------------------------------------
+ * Definitions
+ */
 #ifndef _VECTORMATH_INTERNAL_FUNCTIONS
 #define _VECTORMATH_INTERNAL_FUNCTIONS
 
@@ -530,7 +530,7 @@ inline void print( Quat quat, const char * name )
 
 #endif
 
-} // namespace Aos
-} // namespace Vectormath
+} /* namespace Aos */
+} /* namespace Vectormath */
 
 #endif

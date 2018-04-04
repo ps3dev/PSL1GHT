@@ -103,62 +103,62 @@ to the Cell Broadband Engine documentation.
 #include <lv2/spu.h>
 
 /* MFC channel registers */
-#define MFC_LSA									0x3004	//!< local store address
-#define MFC_EAH									0x3008	//!< effective address high
-#define MFC_EAL									0x300C	//!< effective address low
-#define MFC_Size								0x3010	//!< size of MFC DMA transfer
-#define MFC_Class_CMD							0x3014	//!< class of MFC command
-#define MFC_CMD_Status							0x3014	//!< MFC command status
-#define MFC_QStatus								0x3104	//!< MFC query status
-#define Prxy_QueryType							0x3204	//!< Proxy query type
-#define Prxy_QueryMask							0x321C	//!< Proxy Query mask
-#define Prxy_TagStatus							0x322C	//!< Proxy tag status
-#define SPU_Out_MBox							0x4004	//!< Outbound mailbox
-#define SPU_In_MBox								0x400C	//!< Inbound mailbox
-#define SPU_MBox_Status							0x4014	//!< Outbound mailbox status
-#define SPU_RunCtrl								0x401C	//!< SPU Run control
-#define SPU_Status								0x4024	//!< SPU status
-#define SPU_NextPC								0x4034	//!< SPU next PC
-#define SPU_Sig_Notify_1						0x1400C	//!< Signal notification 1
-#define SPU_Sig_Notify_2						0x1C00C	//!< Signal notification 2
+#define MFC_LSA									0x3004	/* !< local store address */
+#define MFC_EAH									0x3008	/* !< effective address high */
+#define MFC_EAL									0x300C	/* !< effective address low */
+#define MFC_Size								0x3010	/* !< size of MFC DMA transfer */
+#define MFC_Class_CMD							0x3014	/* !< class of MFC command */
+#define MFC_CMD_Status							0x3014	/* !< MFC command status */
+#define MFC_QStatus								0x3104	/* !< MFC query status */
+#define Prxy_QueryType							0x3204	/* !< Proxy query type */
+#define Prxy_QueryMask							0x321C	/* !< Proxy Query mask */
+#define Prxy_TagStatus							0x322C	/* !< Proxy tag status */
+#define SPU_Out_MBox							0x4004	/* !< Outbound mailbox */
+#define SPU_In_MBox								0x400C	/* !< Inbound mailbox */
+#define SPU_MBox_Status							0x4014	/* !< Outbound mailbox status */
+#define SPU_RunCtrl								0x401C	/* !< SPU Run control */
+#define SPU_Status								0x4024	/* !< SPU status */
+#define SPU_NextPC								0x4034	/* !< SPU next PC */
+#define SPU_Sig_Notify_1						0x1400C	/* !< Signal notification 1 */
+#define SPU_Sig_Notify_2						0x1C00C	/* !< Signal notification 2 */
 
-//! No thread attributes
+/* ! No thread attributes */
 #define SPU_THREAD_ATTR_NONE					0x00
-//! Enables interrupts.
+/* ! Enables interrupts. */
 #define SPU_THREAD_ATTR_ASYNC_INT_ENABLE		0x01
-//! Synchronize SPU decrementer with PPU time base
+/* ! Synchronize SPU decrementer with PPU time base */
 #define SPU_THREAD_ATTR_DEC_SYNC_TB_ENABLE		0x02
 
-//! User SPU thread event
+/* ! User SPU thread event */
 #define SPU_THREAD_EVENT_USER					0x01
-//! DMA SPU thread event
+/* ! DMA SPU thread event */
 #define SPU_THREAD_EVENT_DMA					0x02
 
-//! SPU thread event user key
+/* ! SPU thread event user key */
 #define SPU_THREAD_EVENT_USER_KEY				0xFFFFFFFF53505501ULL
-//! SPU thread event DMA key
+/* ! SPU thread event DMA key */
 #define SPU_THREAD_EVENT_DMA_KEY				0xFFFFFFFF53505502ULL
 
-//! Configure signal notification register 1 to overwrite mode
+/* ! Configure signal notification register 1 to overwrite mode */
 #define SPU_SIGNAL1_OVERWRITE					0x00
-//! Configure signal notification register 1 to OR mode
+/* ! Configure signal notification register 1 to OR mode */
 #define SPU_SIGNAL1_OR							0x01
-//! Configure signal notification register 2 to overwrite mode
+/* ! Configure signal notification register 2 to overwrite mode */
 #define SPU_SIGNAL2_OVERWRITE					0x00
-//! Configure signal notification register 2 to OR mode
+/* ! Configure signal notification register 2 to OR mode */
 #define SPU_SIGNAL2_OR							0x02
 
-//! Base of memory-mapped SPU thread resources
+/* ! Base of memory-mapped SPU thread resources */
 #define SPU_THREAD_BASE							0xF0000000ULL
-//! Offset between resources for consecutive SPU threads
+/* ! Offset between resources for consecutive SPU threads */
 #define SPU_THREAD_OFFSET						0x00100000ULL
-//! Base of memory-mapped raw SPU program resources
+/* ! Base of memory-mapped raw SPU program resources */
 #define SPU_RAW_BASE							0xE0000000ULL
-//! Offset between resources for consecutive raw SPU programs
+/* ! Offset between resources for consecutive raw SPU programs */
 #define SPU_RAW_OFFSET							0x00100000ULL
-//! Offset from the beginning of a SPU thread/raw program's resources for local store memory
+/* ! Offset from the beginning of a SPU thread/raw program's resources for local store memory */
 #define SPU_LOCAL_OFFSET						0x00000000ULL
-//! Offset from the beginning of a SPU thread/raw program's resources for IO registers
+/* ! Offset from the beginning of a SPU thread/raw program's resources for IO registers */
 #define SPU_PROBLEM_OFFSET						0x00040000ULL
 
 /*! \brief Get base offset for a raw SPU program.
@@ -167,11 +167,11 @@ to the Cell Broadband Engine documentation.
 #define SPU_RAW_GET_BASE_OFFSET(spu) \
 	(SPU_RAW_BASE + (SPU_RAW_OFFSET*(spu)))
 
-//! Returns the memory-mapped address of local storage of a raw SPU.
+/* ! Returns the memory-mapped address of local storage of a raw SPU. */
 #define SPU_RAW_GET_LOCAL_STORAGE(spu,reg) \
 	(SPU_RAW_GET_BASE_OFFSET(spu) + SPU_LOCAL_OFFSET + (reg))
 
-//! Returns the memory-mapped address of problem storage of a raw SPU.
+/* ! Returns the memory-mapped address of problem storage of a raw SPU. */
 #define SPU_RAW_GET_PROBLEM_STORAGE(spu,reg) \
 	(SPU_RAW_GET_BASE_OFFSET(spu) + SPU_PROBLEM_OFFSET + (reg))
 
@@ -181,11 +181,11 @@ to the Cell Broadband Engine documentation.
 #define SPU_THREAD_GET_BASE_OFFSET(spu) \
 	(SPU_THREAD_BASE + (SPU_THREAD_OFFSET*(spu)))
 
-//! Returns the memory-mapped address of local storage of a SPU thread.
+/* ! Returns the memory-mapped address of local storage of a SPU thread. */
 #define SPU_THREAD_GET_LOCAL_STORAGE(spu,reg) \
 	(SPU_THREAD_GET_BASE_OFFSET(spu) + SPU_LOCAL_OFFSET + (reg))
 
-//! Returns the memory-mapped address of problem storage of a SPU thread.
+/* ! Returns the memory-mapped address of problem storage of a SPU thread. */
 #define SPU_THREAD_GET_PROBLEM_STORAGE(spu,reg) \
 	(SPU_THREAD_GET_BASE_OFFSET(spu) + SPU_PROBLEM_OFFSET + (reg))
 
@@ -193,13 +193,13 @@ to the Cell Broadband Engine documentation.
 extern "C" {
 #endif
 
-//! A structure containing the arguments passed to the SPU main function.
+/* ! A structure containing the arguments passed to the SPU main function. */
 typedef struct _sys_spu_thread_arg
 {
-	u64 arg0;	//!< First argument.
-	u64 arg1;	//!< Second argument.
-	u64 arg2;	//!< Third argument.
-	u64 arg3;	//!< Fourth argument.
+	u64 arg0;	/* !< First argument. */
+	u64 arg1;	/* !< Second argument. */
+	u64 arg2;	/* !< Third argument. */
+	u64 arg3;	/* !< Fourth argument. */
 } sysSpuThreadArgument;
 
 /*! \brief A structure containing SPU thread attributes.
@@ -211,18 +211,18 @@ typedef struct _sys_spu_thread_arg
 */
 typedef struct _sys_spu_thread_attr
 {
-	u32 nameAddress;	//!< Effective address of the thread's name string.
-	u32 nameSize;		//!< Size of the name string in bytes (including terminating null byte).
-	u32 attribute;		//!< OR'ed list of SPU thread attribute flags (or \ref SPU_THREAD_ATTR_NONE)
+	u32 nameAddress;	/* !< Effective address of the thread's name string. */
+	u32 nameSize;		/* !< Size of the name string in bytes (including terminating null byte). */
+	u32 attribute;		/* !< OR'ed list of SPU thread attribute flags (or \ref SPU_THREAD_ATTR_NONE) */
 } sysSpuThreadAttribute;
 
-//! A structure containing SPU thread group attributes.
+/* ! A structure containing SPU thread group attributes. */
 typedef struct _sys_spu_thread_group_attr
 {
-	u32 nameSize;		//!< Size of the name string in bytes (including terminating null byte).
-	u32 nameAddress;	//!< Effective address of the thread group's name string.
-	u32 groupType;		//!< Thread group type (\c 0 for normal thread groups).
-	u32 memContainer;	//!< Memory container id (\c 0 for normal thread groups).
+	u32 nameSize;		/* !< Size of the name string in bytes (including terminating null byte). */
+	u32 nameAddress;	/* !< Effective address of the thread group's name string. */
+	u32 groupType;		/* !< Thread group type (\c 0 for normal thread groups). */
+	u32 memContainer;	/* !< Memory container id (\c 0 for normal thread groups). */
 } sysSpuThreadGroupAttribute;
 
 /*! \brief Initialize the SPU management.

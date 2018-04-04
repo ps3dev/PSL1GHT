@@ -35,7 +35,7 @@
 
 #include <simdmath/_truncf4.h>
 
-// Returns fractional part and stores integral part in *iptr.
+/* Returns fractional part and stores integral part in *iptr. */
 
 static inline vector float
 _modff4 (vector float x, vector float *iptr)

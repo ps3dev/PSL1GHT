@@ -35,9 +35,10 @@
 
 #include <simdmath/_recipf4.h>
 
-//
-// Computes the inverse tangent of all four slots of x. 
-//
+/*
+ * Computes the inverse tangent of all four slots of x. 
+ */
+
 static inline vector float
 _atanf4 (vector float x)
 {

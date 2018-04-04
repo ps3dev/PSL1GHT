@@ -30,9 +30,10 @@
 #ifndef ___SIMD_MATH__SINCOS_H___
 #define ___SIMD_MATH__SINCOS_H___
 
-//
-// Common constants used to evaluate sind2/cosd2/tand2
-//
+/*
+ * Common constants used to evaluate sind2/cosd2/tand2
+ */
+
 #define __SINCOSD_CC0  0.00000000206374484196
 #define __SINCOSD_CC1 -0.00000027555365134677
 #define __SINCOSD_CC2  0.00002480157946764225
@@ -51,9 +52,10 @@
 #define __SINCOSD_KC2  7.5497899548918821691639751442098584e-8
 
 
-//
-// Common constants used to evaluate sinf4/cosf4/tanf4
-//
+/*
+ * Common constants used to evaluate sinf4/cosf4/tanf4
+ */
+
 #define __SINCOSF_CC0  -0.0013602249f
 #define __SINCOSF_CC1   0.0416566950f
 #define __SINCOSF_CC2  -0.4999990225f
@@ -64,9 +66,10 @@
 #define __SINCOSF_KC1  1.57079625129f
 #define __SINCOSF_KC2  7.54978995489e-8f
 
-//
-// Common constants used to evaluate sinf4est/cosf4est
-//
+/*
+ * Common constants used to evaluate sinf4est/cosf4est
+ */
+
 #define __SINCOSF_R1 -0.1666665668f
 #define __SINCOSF_R2  0.8333025139e-2f
 #define __SINCOSF_R3 -0.1980741872e-3f

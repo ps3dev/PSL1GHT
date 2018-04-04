@@ -79,7 +79,7 @@ int main(int argc,char *argv[])
 
 	msgDialogAbort();
 	
-	// yes/no dialog type
+	/* yes/no dialog type */
 	dialogType = (MSG_DIALOG_NORMAL | MSG_DIALOG_BTN_TYPE_YESNO | MSG_DIALOG_DISABLE_CANCEL_ON | MSG_DIALOG_DEFAULT_CURSOR_NO);
 	msgDialogOpen2(dialogType,"Do you want to continue?",dialog_handler,NULL,NULL);
 
@@ -89,7 +89,7 @@ int main(int argc,char *argv[])
 
 	msgDialogAbort();
 
-	// OK dialog type
+	/* OK dialog type */
 	dialogType = (MSG_DIALOG_NORMAL | MSG_DIALOG_BTN_OK);
 	if(dialog_action==1)
 		msgDialogOpen2(dialogType,"Your answer was YES",dialog_handler,NULL,NULL);

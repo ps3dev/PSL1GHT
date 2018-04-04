@@ -54,7 +54,7 @@ _ldexpf4 (vector float x, vector signed int exp)
 
   x = spu_sel(x, (vec_float4)spu_sl(esum,23), expmask);
   x = spu_sel(x, (vec_float4)zeros, minmask);
-  //x = spu_sel(x, (vec_float4)spu_splats((int)0xFFFFFFFF), maxmask);
+  /* x = spu_sel(x, (vec_float4)spu_splats((int)0xFFFFFFFF), maxmask); */
   x = spu_sel(x, (vec_float4)maxmask, maxmask);
   return x;
 }

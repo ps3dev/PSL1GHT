@@ -43,22 +43,22 @@ _fpclassifyf4 (vector float x)
   vec_uint4 unclassified = spu_splats((unsigned int)0xffffffff);
   vec_int4 classtype = (vec_int4)zero;
 
-  //FP_NAN: NaN not supported on SPU, never return FP_NAN
+  /* FP_NAN: NaN not supported on SPU, never return FP_NAN */
 
-  //FP_INFINITE: Inf not supported on SPU, never return FP_INFINITE
+  /* FP_INFINITE: Inf not supported on SPU, never return FP_INFINITE */
 
-  //FP_ZERO: zero exponent and zero mantissa
+  /* FP_ZERO: zero exponent and zero mantissa */
   mask = spu_cmpeq( spu_andc( (vec_uint4)x, spu_splats((unsigned int)0x80000000)), zero );
   classtype = spu_sel( classtype, spu_splats((int)FP_ZERO), mask );
   unclassified = spu_andc( unclassified, mask );
 
-  //FP_SUBNORMAL: zero exponent and non-zero mantissa
+  /* FP_SUBNORMAL: zero exponent and non-zero mantissa */
   mask = spu_and( spu_cmpeq( spu_and( (vec_uint4)x, spu_splats((unsigned int)0x7f800000)), zero ),
               spu_cmpgt( spu_and( (vec_uint4)x, spu_splats((unsigned int)0x007fffff)), zero ) );
   classtype = spu_sel( classtype, spu_splats((int)FP_SUBNORMAL), mask );
   unclassified = spu_andc( unclassified, mask );
 
-  //FP_NORMAL: none of the above
+  /* FP_NORMAL: none of the above */
   classtype = spu_sel( classtype, spu_splats((int)FP_NORMAL), unclassified );
 
   return classtype;

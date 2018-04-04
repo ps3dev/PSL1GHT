@@ -36,21 +36,22 @@
 #include <simdmath/_atanf4.h>
 #include <simdmath/_divf4.h>
 
-//
-// Inverse tangent function of two variables
-//
+/*
+ * Inverse tangent function of two variables
+ */
+
 static inline vector float
 _atan2f4 (vector float y, vector float x)
 {
   vec_float4 res = _atanf4(_divf4(y,x));
 
-  // Use the arguments to determine the quadrant of the result:
-  // if (x < 0)
-  //   if (y < 0)
-  //      res = -PI + res
-  //   else
-  //      res = PI + res
-  //
+  /* Use the arguments to determine the quadrant of the result:
+   * if (x < 0)
+   *   if (y < 0)
+   *      res = -PI + res
+   *   else
+   *      res = PI + res
+   */
   vec_uint4 yNeg = spu_cmpgt(spu_splats(0.0f),y);
   vec_uint4 xNeg = spu_cmpgt(spu_splats(0.0f),x);
 

@@ -50,10 +50,10 @@ _fpclassifyd2 (vector double x)
   vec_llong2 classtype;
   vec_uint4 cmpgt, cmpeq;
 
-  //FP_NORMAL: normal unless nan, infinity, zero, or denorm
+  /* FP_NORMAL: normal unless nan, infinity, zero, or denorm */
   classtype = spu_splats((long long)FP_NORMAL);
 
-  //FP_NAN: all-ones exponent and non-zero mantissa
+  /* FP_NAN: all-ones exponent and non-zero mantissa */
   cmpgt = spu_cmpgt( (vec_uint4)spu_or( (vec_ullong2)x, sign ), (vec_uint4)signexpn );
   cmpeq = spu_cmpeq( (vec_uint4)spu_or( (vec_ullong2)x, sign ), (vec_uint4)signexpn );
   mask = (vec_ullong2)spu_or( spu_shuffle( cmpgt, cmpgt, even ),
@@ -61,16 +61,16 @@ _fpclassifyd2 (vector double x)
                                spu_shuffle( cmpgt, cmpgt, odd ) ) );
   classtype = spu_sel( classtype, spu_splats((long long)FP_NAN), mask );
 
-  //FP_INFINITE: all-ones exponent and zero mantissa
+  /* FP_INFINITE: all-ones exponent and zero mantissa */
   mask = (vec_ullong2)spu_and( cmpeq, spu_shuffle( cmpeq, cmpeq, swapEvenOdd ) );
   classtype = spu_sel( classtype, spu_splats((long long)FP_INFINITE), mask );
 
-  //FP_ZERO: zero exponent and zero mantissa
+  /* FP_ZERO: zero exponent and zero mantissa */
   cmpeq = spu_cmpeq( (vec_uint4)spu_andc( (vec_ullong2)x, sign ), (vec_uint4)zero );
   mask = (vec_ullong2)spu_and( cmpeq, spu_shuffle( cmpeq, cmpeq, swapEvenOdd ) );
   classtype = spu_sel( classtype, spu_splats((long long)FP_ZERO), mask );
    
-  //FP_SUBNORMAL: zero exponent and non-zero mantissa
+  /* FP_SUBNORMAL: zero exponent and non-zero mantissa */
   cmpeq = spu_cmpeq( (vec_uint4)spu_and( (vec_ullong2)x, expn ), (vec_uint4)zero );
   cmpgt = spu_cmpgt( (vec_uint4)spu_andc( (vec_ullong2)x, signexpn ), (vec_uint4)zero );
   mask = (vec_ullong2)spu_and( spu_shuffle( cmpeq, cmpeq, even ), 

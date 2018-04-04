@@ -50,12 +50,12 @@ __ll_spu_sl(vector unsigned long long x, vector unsigned long long count)
   vec_ullong2 mask = (vec_ullong2){0xffffffffffffffffull, 0ull};
   vec_ullong2 x_upper, x_lower;
 
-  // shift upper word
+  /* shift upper word */
   x_upper = spu_and(x, mask);
   x_upper = spu_slqwbytebc(x_upper, spu_extract((vec_uint4)count, 1));
   x_upper = spu_slqw(x_upper, spu_extract((vec_uint4)count, 1));
   
-  // shift lower word
+  /* shift lower word */
   x_lower = spu_slqwbytebc(x, spu_extract((vec_uint4)count, 3));
   x_lower = spu_slqw(x_lower, spu_extract((vec_uint4)count, 3));
 
@@ -71,11 +71,11 @@ __ll_spu_rlmask(vector unsigned long long x, vector unsigned long long count)
 
   cnt_byte = spu_add((vec_uint4)count, 7);
 
-  // shift upper word
+  /* shift upper word */
   x_upper = spu_rlmaskqwbytebc(x, spu_extract(cnt_byte, 1));
   x_upper = spu_rlmaskqw(x_upper, spu_extract((vec_uint4)count, 1));
   
-  // shift lower word
+  /* shift lower word */
   x_lower = spu_andc(x, mask);
   x_lower = spu_rlmaskqwbytebc(x_lower, spu_extract(cnt_byte, 3));
   x_lower = spu_rlmaskqw(x_lower, spu_extract((vec_uint4)count, 3));
@@ -112,5 +112,5 @@ __ll_spu_sub(vector unsigned long long x, vector unsigned long long y)
   return (vec_ullong2)spu_subx((vec_uint4)x, (vec_uint4)y, borrow);
 }
 
-#endif // __LLDIV_H__
+#endif /* __LLDIV_H__ */
 

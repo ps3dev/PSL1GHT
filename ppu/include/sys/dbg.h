@@ -159,7 +159,7 @@ s32 sysDbgGetSPUThreadIds(u32 group_id,u32 *thread_ids,u64 *num_ids,u64 *num_all
 \return zero if no error occured, nonzero otherwise.
 */
 s32 sysDbgRegisterPPUExceptionHandler(dbg_exception_handler_t handler,u64 flags);
-//s32 sysDbgGetEventQueueInformation();
+/* s32 sysDbgGetEventQueueInformation(); */
 
 /*! \brief Get PPU thread name.
 \param id PPU thread id.
@@ -174,8 +174,8 @@ s32 sysDbgGetPPUThreadName(sys_ppu_thread_t id,char *name);
 \return zero if no error occured, nonzero otherwise.
 */
 s32 sysDbgGetSPUThreadName(u32 thread_id,char *name);
-//s32 sysDbgGetMutexInformation();
-//s32 sysDbgGetCondInformation();
+/* s32 sysDbgGetMutexInformation(); */
+/* s32 sysDbgGetCondInformation(); */
 
 /*! \brief Get PPU thread status.
 \param id PPU thread id.
@@ -183,7 +183,7 @@ s32 sysDbgGetSPUThreadName(u32 thread_id,char *name);
 \return zero if no error occured, nonzero otherwise.
 */
 s32 sysDbgGetPPUThreadStatus(sys_ppu_thread_t id,sys_dbg_ppu_thread_status_t *status);
-//s32 sysDbgGetRWLockInformation();
+/* s32 sysDbgGetRWLockInformation(); */
 
 /*! \brief Get SPU thread group status.
 \param group_id SPU thread group id.
@@ -191,7 +191,7 @@ s32 sysDbgGetPPUThreadStatus(sys_ppu_thread_t id,sys_dbg_ppu_thread_status_t *st
 \return zero if no error occured, nonzero otherwise.
 */
 s32 sysDbgGetGetSPUThreadGroupStatus(u32 group_id,sys_dbg_spu_thread_group_status_t *status);
-//s32 sysDbgGetSemaphoreInformation();
+/* s32 sysDbgGetSemaphoreInformation(); */
 
 /*! \brief Get SPU thread group name.
 \param group_id SPU thread group id.
@@ -229,7 +229,7 @@ s32 sysDbgReadPPUThreadContext(sys_ppu_thread_t id,sys_dbg_ppu_thread_context_t 
 \return zero if no error occured, nonzero otherwise.
 */
 s32 sysDbgUnregisterPPUExceptionHandler();
-//s32 sysDbgGetLwMutexInformation();
+/* s32 sysDbgGetLwMutexInformation(); */
 
 #ifdef __cplusplus
 	}

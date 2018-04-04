@@ -35,9 +35,10 @@
 
 #include <simdmath/_sincosf4.h>
 
-//
-//     Computes the sine of each of the four slots by using a polynomia approximation
-//
+/*
+ *     Computes the sine of each of the four slots by using a polynomia approximation
+ */
+
 static inline vector float
 _sinf4 (vector float x)
 {

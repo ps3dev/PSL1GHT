@@ -39,7 +39,7 @@
 static inline vector float
 _divf4 (vector float numer, vector float denom)
 {  
-  // Reciprocal estimate and 1 Newton-Raphson iteration.
+  /* Reciprocal estimate and 1 Newton-Raphson iteration. */
 
   vector float y0, y0numer;
 

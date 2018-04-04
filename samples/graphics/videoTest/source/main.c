@@ -24,7 +24,7 @@ void drawFrame(rsxBuffer *buffer, long frame) {
   s32 i, j;
   for(i = 0; i < buffer->height; i++) {
     s32 color = (i / (buffer->height * 1.0) * 256);
-    // This should make a nice black to green graident
+    /* This should make a nice black to green graident */
     color = (color << 8) | ((frame % 255) << 16);
     for(j = 0; j < buffer->width; j++)
       buffer->ptr[i* buffer->width + j] = color;
@@ -55,11 +55,11 @@ int main(s32 argc, const char* argv[])
 
   flip(context, MAX_BUFFERS - 1);
 
-  long frame = 0; // To keep track of how many frames we have rendered.
+  long frame = 0; /* To keep track of how many frames we have rendered. */
 	
-  // Ok, everything is setup. Now for the main loop.
+  /* Ok, everything is setup. Now for the main loop. */
   while(1){
-    // Check the pads.
+    /* Check the pads. */
     ioPadGetInfo(&padinfo);
     for(i=0; i<MAX_PADS; i++){
       if(padinfo.status[i]){
@@ -72,9 +72,9 @@ int main(s32 argc, const char* argv[])
 			
     }
 
-    waitFlip(); // Wait for the last flip to finish, so we can draw to the old buffer
-    drawFrame(&buffers[currentBuffer], frame++); // Draw into the unused buffer
-    flip(context, buffers[currentBuffer].id); // Flip buffer onto screen
+    waitFlip(); /* Wait for the last flip to finish, so we can draw to the old buffer */
+    drawFrame(&buffers[currentBuffer], frame++); /* Draw into the unused buffer */
+    flip(context, buffers[currentBuffer].id); /* Flip buffer onto screen */
 
     currentBuffer++;
     if (currentBuffer >= MAX_BUFFERS)

@@ -35,9 +35,9 @@
 
 #include <simdmath/_sqrtf4.h>
 
-//
-// Computes the inverse cosine of all four slots of x. 
-//
+/*
+ * Computes the inverse cosine of all four slots of x. 
+ */
 static inline vector float
 _acosf4 (vector float x)
 {

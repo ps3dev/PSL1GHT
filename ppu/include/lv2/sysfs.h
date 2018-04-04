@@ -4,8 +4,9 @@
 #include <time.h>
 #include <unistd.h>
 #include <ppu-types.h>
+#include <sys/param.h>
 
-// Open Flags
+/* Open Flags */
 #define SYS_O_RDONLY		000000
 #define SYS_O_WRONLY		000001
 #define SYS_O_RDWR			000002

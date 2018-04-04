@@ -35,13 +35,14 @@
 
 #include <simdmath/_vec_utils.h>
 
-// rsqrtf4 - for each of four float slots, compute reciprocal square root.
-// Undefined if input < 0.
+/* rsqrtf4 - for each of four float slots, compute reciprocal square root.
+ * Undefined if input < 0.
+ */
 
 static inline vector float
 _rsqrtf4 (vector float x)
 { 
-  // Reciprocal square root estimate and 1 Newton-Raphson iteration.
+  /* Reciprocal square root estimate and 1 Newton-Raphson iteration. */
  
   vector float zero = __vec_splatsf4(0.0f);
   vector float half = __vec_splatsf4(0.5f);

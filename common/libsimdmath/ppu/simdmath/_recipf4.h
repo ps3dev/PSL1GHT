@@ -38,7 +38,7 @@
 static inline vector float
 _recipf4 (vector float x)
 { 
-  // Reciprocal estimate and 1 Newton-Raphson iteration.
+  /* Reciprocal estimate and 1 Newton-Raphson iteration. */
  
   vector float y0;
   vector float ones = __vec_splatsf4(1.0f);

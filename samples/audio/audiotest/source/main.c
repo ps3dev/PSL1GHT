@@ -18,9 +18,9 @@ void fillBuffer(float *buf)
 
 	for (unsigned int i = 0; i < AUDIO_BLOCK_SAMPLES; ++i)
 	{
-		//just fill with a beautiful sine wave :P
+		/* just fill with a beautiful sine wave :P */
 		buf[i*2+0] = sin(pos);
-		//in fact 2 different ones
+		/* in fact 2 different ones */
 		buf[i*2+1] = sin(pos*2);
 		pos+=0.01f;
 		if(pos>M_PI)
@@ -32,17 +32,17 @@ u32 playOneBlock(u64 *readIndex, float *audioDataStart)
 {
 	static u32 audio_block_index=1;
 
-	//get position of the hardware
+	/* get position of the hardware */
 	u64 current_block = *readIndex;
 
-	//try to stay ahead of it
+	/* try to stay ahead of it */
 	if(audio_block_index == current_block)
 	{
 		return 0;
 	}
 	printf("playOneBlock: %ld, %d\n",current_block,audio_block_index);
 
-	//get position of the block to write
+	/* get position of the block to write */
 	float *buf = audioDataStart + 2 /*channelcount*/ * AUDIO_BLOCK_SAMPLES * audio_block_index;
 	fillBuffer(buf);
 
@@ -57,27 +57,28 @@ int main(int argc, const char* argv[])
 	AudioPortConfig config;
 	u32 portNum;
 
-	//initialize the audio system
+	/* initialize the audio system */
 	int ret=audioInit();
 
 	printf("audioInit: %d\n",ret);
 
-	//set some parameters we want
-	//either 2 or 8 channel
+	/* set some parameters we want
+	 * either 2 or 8 channel
+         */
 	params.numChannels = AUDIO_PORT_2CH;
-	//8 16 or 32 block buffer
+	/* 8 16 or 32 block buffer */
 	params.numBlocks = AUDIO_BLOCK_8;
-	//extended attributes
+	/* extended attributes */
 	params.attr = 0;
-	//sound level (1 is default)
+	/* sound level (1 is default) */
 	params.level = 1;
 
-	//open the port (still stopped)
+	/* open the port (still stopped) */
 	ret=audioPortOpen(&params, &portNum);
 	printf("audioPortOpen: %d\n",ret);
 	printf("  portNum: %d\n",portNum);
 
-	//get the params for the buffers, etc
+	/* get the params for the buffers, etc */
 	ret=audioGetPortConfig(portNum, &config);
 	printf("audioGetPortConfig: %d\n",ret);
 	printf("  readIndex: 0x%8X\n",config.readIndex);
@@ -87,7 +88,7 @@ int main(int argc, const char* argv[])
 	printf("  portSize: %d\n",config.portSize);
 	printf("  audioDataStart: 0x%8X\n",config.audioDataStart);
 
-	//start the loop
+	/* start the loop */
 	ret=audioPortStart(portNum);
 	printf("audioPortStart: %d\n",ret);
 
@@ -98,7 +99,7 @@ int main(int argc, const char* argv[])
 			i++;
 	}
 
-	//shutdown in reverse order
+	/* shutdown in reverse order */
 	ret=audioPortStop(portNum);
 	printf("audioPortStop: %d\n",ret);
 	ret=audioPortClose(portNum);

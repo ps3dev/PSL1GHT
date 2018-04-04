@@ -13,7 +13,7 @@ export PORTLIBS	:=	$(PS3DEV)/portlibs/ppu
 export LIBPSL1GHT_INC	:=	-I$(PSL1GHT)/ppu/include -I$(PSL1GHT)/ppu/include/simdmath
 export LIBPSL1GHT_LIB	:=	-L$(PSL1GHT)/ppu/lib
 
-PREFIX	:=	ppu-
+PREFIX	:=	powerpc64-ps3-elf-
 
 MACHDEP	=	-mhard-float -fmodulo-sched -ffunction-sections -fdata-sections
 

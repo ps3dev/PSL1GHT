@@ -44,28 +44,29 @@ _nextafterf4(vector float x, vector float y)
 
   vec_uint4 A, B;
 
-  //abs_inc, abs_dec  
+  /* abs_inc, abs_dec */
   abs_inc_number = spu_sel(spu_splats((unsigned int)0x800000), spu_add((vec_uint4)x, spu_splats((unsigned int)0x1)), spu_cmpabsgt(x, spu_splats(0.0f)));
   abs_dec_number = (vec_uint4)spu_add((vec_float4)spu_sub((vec_uint4)x, spu_splats((unsigned int)0x1)), spu_splats(0.0f));
 
-  //x<= y 
+  /* x<= y */
   A=  spu_andc(abs_inc_number, spu_splats((unsigned int)0x80000000));
-  // in < 0
+  /* in < 0 */
   B= abs_dec_number;
 
   lala_inc = spu_sel((vec_float4)A, (vec_float4)B, spu_cmpgt(spu_splats(0.0f), x));
 
-  // in <=0,   abs_inc ( if in==0, set result's sign to -)
-  //A= spu_or(spu_splats((unsigned int)0x80000000), spu_andc(abs_inc_number, spu_splats((unsigned int)0x80000000)));
+  /* in <=0,   abs_inc ( if in==0, set result's sign to -)
+   * A= spu_or(spu_splats((unsigned int)0x80000000), spu_andc(abs_inc_number, spu_splats((unsigned int)0x80000000)));
+   */
   A= spu_or(abs_inc_number, spu_splats((unsigned int)0x80000000));
-  // in > 0
+  /* in > 0 */
   B = abs_dec_number;
   lala_dec = spu_sel((vec_float4)A, (vec_float4)B, spu_cmpgt(x, spu_splats(0.0f)));
 
 
   x_not_dec = spu_sel(y, lala_inc, spu_cmpgt(y, x));
 
-  // (x <= y) ||  (x > y)
+  /* (x <= y) ||  (x > y) */
   return spu_sel(x_not_dec, lala_dec, spu_cmpgt(x, y));
 }
 

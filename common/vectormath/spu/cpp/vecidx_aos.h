@@ -35,11 +35,11 @@
 namespace Vectormath {
 namespace Aos {
 
-//-----------------------------------------------------------------------------
-// VecIdx 
-// Used in setting elements of Vector3, Vector4, Point3, or Quat with the 
-// subscripting operator.
-//
+/* -----------------------------------------------------------------------------
+ * VecIdx 
+ * Used in setting elements of Vector3, Vector4, Point3, or Quat with the 
+ * subscripting operator.
+ */
 
 class VecIdx
 {
@@ -58,7 +58,7 @@ public:
     inline float operator -=( float scalar );
 };
 
-} // namespace Aos
-} // namespace Vectormath
+} /* namespace Aos */
+} /* namespace Vectormath */
 
 #endif

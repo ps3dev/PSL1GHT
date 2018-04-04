@@ -529,7 +529,7 @@ void *usbGetPrivateData(s32 device_id);
 s32 usbSetPrivateData(s32 device_id, void *priv);
 
 s32 usbGetThreadPriority(s32 thread_type);
-//s32 usbSetThreadPriority(UNKNOWN);
+/* s32 usbSetThreadPriority(UNKNOWN); */
 s32 usbSetThreadPriority2(s32 event_prio, s32 usb_prio, s32 callback_priority);
 
 s32 usbRegisterLdd(usbLddOps *lddops);

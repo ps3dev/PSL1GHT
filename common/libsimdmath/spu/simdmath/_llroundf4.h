@@ -34,9 +34,10 @@
 #include <simdmath.h>
 #include <spu_intrinsics.h>
 
-// 
-// Handles no exception
-// over flow will return unspecified data
+/* 
+ * Handles no exception
+ * over flow will return unspecified data
+ */
 
 static inline llroundf4_t 
 _llroundf4 (vector float in)
@@ -93,8 +94,9 @@ _llroundf4 (vector float in)
   addend1 = spu_shuffle(mant2, mant3, ((vec_uchar16){0x80,0x80,0x80,0x80,0x80,0x80,0x80,8, 0x80,0x80,0x80,0x80,0x80,0x80,0x80,24}));
   addend0 = spu_rlmask(addend0, -7);
   addend1 = spu_rlmask(addend1, -7);
-  //  addend0 = spu_and(spu_rlqw(res0, 1), ((vec_uint4){ 0,1,0,1}));
-  //  addend1 = spu_and(spu_rlqw(res1, 1), ((vec_uint4){ 0,1,0,1}));
+  /*  addend0 = spu_and(spu_rlqw(res0, 1), ((vec_uint4){ 0,1,0,1}));
+   *  addend1 = spu_and(spu_rlqw(res1, 1), ((vec_uint4){ 0,1,0,1}));
+   */
   res0 = spu_addx(res0, addend0, spu_rlqwbyte(spu_genc(res0, addend0), 4));
   res1 = spu_addx(res1, addend1, spu_rlqwbyte(spu_genc(res1, addend1), 4));
 

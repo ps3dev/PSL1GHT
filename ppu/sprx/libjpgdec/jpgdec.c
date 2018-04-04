@@ -58,9 +58,9 @@ static s32 decodeJPEG(jpgDecSource *src,jpgData *out)
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
 	InThdParam.malloc_func = __get_addr32(__get_opd32(jpg_malloc));
-	InThdParam.malloc_arg = 0; // no args
+	InThdParam.malloc_arg = 0; /* no args */
 	InThdParam.free_func = __get_addr32(__get_opd32(jpg_free));
-	InThdParam.free_arg = 0; // no args
+	InThdParam.free_arg = 0; /* no args */
 
 	ret = jpgDecCreate(&mHandle,&InThdParam,&OutThdParam);
 

@@ -38,7 +38,7 @@ _isinff4 (vector float x)
 {   
   (void)x;
       
-  // INF not supported on SPU, result always zero
+  /* INF not supported on SPU, result always zero */
   return spu_splats((unsigned int)0x00000000);
 }
 

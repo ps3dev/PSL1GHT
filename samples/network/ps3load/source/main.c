@@ -45,7 +45,7 @@
 
 static vu32 running = 0;
 static sys_ppu_thread_t thr0;
-//static sys_ppu_thread_t thr1;
+/* static sys_ppu_thread_t thr1; */
 
 static vu32 exit_flag = 0;
 static volatile int listen_socket = -1;

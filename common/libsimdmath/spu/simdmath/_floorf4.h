@@ -40,7 +40,7 @@ _floorf4 (vector float x)
   vec_uint4  inrange;
   vec_float4 truncated, truncated1;
     
-  // Find truncated value and one less.
+  /* Find truncated value and one less. */
 
   inrange = spu_cmpabsgt( (vec_float4)spu_splats(0x4b000000), x );
 
@@ -50,7 +50,7 @@ _floorf4 (vector float x)
   truncated = spu_sel( x, spu_convtf( xi, 0 ), inrange );
   truncated1 = spu_sel( x, spu_convtf( xi1, 0 ), inrange );
 
-  // If truncated value is greater than input, subtract one.
+  /* If truncated value is greater than input, subtract one. */
 
   return spu_sel( truncated, truncated1, spu_cmpgt( truncated, x ) );
 }

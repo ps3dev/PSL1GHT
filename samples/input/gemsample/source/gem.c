@@ -30,8 +30,8 @@ extern rsxBuffer buffers[MAX_BUFFERS];
 extern int currentBuffer;
 float rx, ry;
 
-int dx = 200;			// default step x
-int dy = 100;			// default step y
+int dx = 200;			/* default step x */
+int dy = 100;			/* default step y */
 gemImageState image_state;
 void *buffer_mem ATTRIBUTE_PRXPTR;
 void *video_out ATTRIBUTE_PRXPTR;
@@ -221,7 +221,7 @@ initGemVideoConvert()
   int ret;
   printf("Preparing GemVideoConvert structure \n");	
   gem_video_convert.version=2;
-  gem_video_convert.format=2; //GEM_RGBA_640x480; 
+  gem_video_convert.format=2; /* GEM_RGBA_640x480; */
   gem_video_convert.conversion= GEM_AUTO_WHITE_BALANCE|GEM_COMBINE_PREVIOUS_INPUT_FRAME|GEM_FILTER_OUTLIER_PIXELS|GEM_GAMMA_BOOST; 
   gem_video_convert.gain=1.0f;
   gem_video_convert.red_gain=1.0f;
@@ -251,9 +251,10 @@ initGem ()
 
   printf
       ("preparing GemAttribute structure with sprus and memory stuff is very important align correctly spurs structure \n");
-  u8 gem_spu_priorities[8] = { 1, 1, 1, 1, 1, 0, 0, 0 };	// execute
-								// libgem jobs
-								// on 5 spu
+  u8 gem_spu_priorities[8] = { 1, 1, 1, 1, 1, 0, 0, 0 };	/* execute
+								 * libgem jobs
+								 * on 5 spu
+                                                                 */
   gemAttribute gem_attr;
 
   initAttributeGem (&gem_attr, 1, gem_memory, spurs, gem_spu_priorities);
@@ -355,7 +356,7 @@ readGem ()
   proccessGem (1);
   proccessGem (2);
   proccessGem (3);
-  readGemPad (0);		// This will read buttons from Move
+  readGemPad (0);		/* This will read buttons from Move */
   switch (newGemPad) {
     case 1:
       printf ("Select pressed \n");

@@ -65,7 +65,7 @@ _roundd2 (vector double in)
   or_mask = spu_andc(spu_cmpgt(shift, 0), sign);
 
   and_mask = spu_rlmask(((vec_uint4){ 0xFFFFF, -1, 0xFFFFF, -1}), shift);
-  //  mask = spu_or(spu_and(and_mask, spu_cmpgt(shift, -31)), or_mask);
+  /*  mask = spu_or(spu_and(and_mask, spu_cmpgt(shift, -31)), or_mask); */
   mask = spu_or(spu_and(and_mask, spu_cmpgt(shift, -32)), or_mask);
 
   /* Apply the mask and return the result.

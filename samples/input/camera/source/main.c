@@ -26,15 +26,15 @@ libjpgdec is used by Eyetoy in Playstation 3 only support JPG format... IPU is a
 #include <arpa/inet.h>
 #include "sysutil/events.h"
 
-gcmContextData *context; // Context to keep track of the RSX buffer.
+gcmContextData *context; /* Context to keep track of the RSX buffer. */
 
-VideoResolution res; // Screen Resolution
+VideoResolution res; /* Screen Resolution */
 
 int currentBuffer = 0;
-u32 *buffer[2]; // The buffer we will be drawing into.
+u32 *buffer[2]; /* The buffer we will be drawing into. */
 
 
-void waitFlip() { // Block the PPU thread untill the previous flip operation has finished.
+void waitFlip() { /* Block the PPU thread untill the previous flip operation has finished. */
 	while(gcmGetFlipStatus() != 0) 
 		usleep(200);
 	gcmResetFlipStatus();
@@ -43,27 +43,27 @@ void waitFlip() { // Block the PPU thread untill the previous flip operation has
 void flip(s32 buffer) {
 	assert(gcmSetFlip(context, buffer) == 0);
 	realityFlushBuffer(context);
-	gcmSetWaitFlip(context); // Prevent the RSX from continuing until the flip has finished.
+	gcmSetWaitFlip(context); /* Prevent the RSX from continuing until the flip has finished. */
 }
 
-// Initilize everything. You can probally skip over this function.
+/* Initilize everything. You can probally skip over this function. */
 void init_screen() {
-	// Allocate a 1Mb buffer, alligned to a 1Mb boundary to be our shared IO memory with the RSX.
+	/* Allocate a 1Mb buffer, alligned to a 1Mb boundary to be our shared IO memory with the RSX. */
 	void *host_addr = memalign(1024*1024, 1024*1024);
 	assert(host_addr != NULL);
 
-	// Initilise Reality, which sets up the command buffer and shared IO memory
+	/* Initilise Reality, which sets up the command buffer and shared IO memory */
 	context = realityInit(0x10000, 1024*1024, host_addr); 
 	assert(context != NULL);
 
 	VideoState state;
-	assert(videoGetState(0, 0, &state) == 0); // Get the state of the display
-	assert(state.state == 0); // Make sure display is enabled
+	assert(videoGetState(0, 0, &state) == 0); /* Get the state of the display */
+	assert(state.state == 0); /* Make sure display is enabled */
 
-	// Get the current resolution
+	/* Get the current resolution */
 	assert(videoGetResolution(state.displayMode.resolution, &res) == 0);
 	
-	// Configure the buffer format to xRGB
+	/* Configure the buffer format to xRGB */
 	VideoConfiguration vconfig;
 	memset(&vconfig, 0, sizeof(VideoConfiguration));
 	vconfig.resolution = state.displayMode.resolution;
@@ -74,11 +74,11 @@ void init_screen() {
 	assert(videoConfigure(0, &vconfig, NULL, 0) == 0);
 	assert(videoGetState(0, 0, &state) == 0); 
 
-	s32 buffer_size = 4 * res.width * res.height; // each pixel is 4 bytes
+	s32 buffer_size = 4 * res.width * res.height; /* each pixel is 4 bytes */
 	
-	gcmSetFlipMode(GCM_FLIP_VSYNC); // Wait for VSYNC to flip
+	gcmSetFlipMode(GCM_FLIP_VSYNC); /* Wait for VSYNC to flip */
 
-	// Allocate two buffers for the RSX to draw to the screen (double buffering)
+	/* Allocate two buffers for the RSX to draw to the screen (double buffering) */
 	buffer[0] = rsxMemAlign(16, buffer_size);
 	buffer[1] = rsxMemAlign(16, buffer_size);
 	assert(buffer[0] != NULL && buffer[1] != NULL);
@@ -86,7 +86,7 @@ void init_screen() {
 	u32 offset[2];
 	assert(realityAddressToOffset(buffer[0], &offset[0]) == 0);
 	assert(realityAddressToOffset(buffer[1], &offset[1]) == 0);
-	// Setup the display buffers
+	/* Setup the display buffers */
 	assert(gcmSetDisplayBuffer(0, offset[0], res.width * 4, res.width, res.height) == 0);
 	assert(gcmSetDisplayBuffer(1, offset[1], res.width * 4, res.width, res.height) == 0);
 
@@ -114,12 +114,12 @@ u32 YUV_to_RGB(int y,int u,int v)
    int r,g,b;
    v -= 128;
    u -= 128;
-   // Conversion
+   /* Conversion */
    r = y + u;
    g = y-u/2-v/8;
    b = y+v;
 
-   // Clamp to 0..1
+   /* Clamp to 0..1 */
    if (r < 0) r = 0;
    if (g < 0) g = 0;
    if (b < 0) b = 0;
@@ -135,13 +135,13 @@ void Convert422(u8* yuv, u32 *rgb1, u32 *rgb2)
 {
 	int y1,y2,u,v;
 
-	// Extract yuv components
+	/* Extract yuv components */
 	y1 = yuv[0];
 	v  = yuv[1];
 	y2 = yuv[2];
 	u  = yuv[3];
 
-	// yuv to rgb
+	/* yuv to rgb */
 	*rgb1 = YUV_to_RGB(y1,u,v);
 	*rgb2 = YUV_to_RGB(y2,u,v);
 }
@@ -185,10 +185,10 @@ int decode_jpg(u8 *buf, s32 size)
 	InThdParam.enable   = 0;
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
-	InThdParam.addr_malloc_func  = (u32)(u64) OPD32(jpg_malloc); // (see sysmodule.h)
-	InThdParam.addr_malloc_arg   = 0; // no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
-	InThdParam.addr_free_func    = (u32)(u64) OPD32(jpg_free);  // (see sysmodule.h)
-	InThdParam.addr_free_arg    =  0; // no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
+	InThdParam.addr_malloc_func  = (u32)(u64) OPD32(jpg_malloc); /* (see sysmodule.h) */
+	InThdParam.addr_malloc_arg   = 0; /* no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h) */
+	InThdParam.addr_free_func    = (u32)(u64) OPD32(jpg_free);  /* (see sysmodule.h) */
+	InThdParam.addr_free_arg    =  0; /* no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h) */
 
 
 	ret= JpgDecCreate(&mHandle, &InThdParam, &OutThdParam);
@@ -209,13 +209,13 @@ int decode_jpg(u8 *buf, s32 size)
 			
 			ret = JpgDecReadHeader(mHandle, sHandle, &DecInfo);
 			
-			if(ret==0 && DecInfo.color_space==0) ret=-1; // unsupported color
+			if(ret==0 && DecInfo.color_space==0) ret=-1; /* unsupported color */
 
 			if(ret == 0) {	
 		
 				inParam.addr_cmd_ptr = 0;
 				inParam.downscale	 = 1;
-				inParam.quality		 = JPGDEC_LOW_QUALITY; // fast
+				inParam.quality		 = JPGDEC_LOW_QUALITY; /* fast */
 				inParam.mode         = JPGDEC_TOP_TO_BOTTOM;
 				inParam.color_space  = JPGDEC_ARGB;
 				inParam.color_alpha  = 0xFF;
@@ -225,19 +225,19 @@ int decode_jpg(u8 *buf, s32 size)
 				
 			if(ret == 0) {
 					
-					// this section is the copy buffer area
+					/* this section is the copy buffer area */
 
 					bytes_per_line = (uint64_t)  res.width*4;
 
 					void * bmp_out= buffer[currentBuffer];
 
-					//memset(bmp_out, 0, bytes_per_line * outParam.height);
+					/* memset(bmp_out, 0, bytes_per_line * outParam.height); */
 						
 					ret = JpgDecDecodeData(mHandle, sHandle, bmp_out, &bytes_per_line, &DecDataInfo);
 
 					if((ret == 0) && (DecDataInfo.status == 0)){
 							
-							ret=0; // ok :)
+							ret=0; /* ok :) */
 					}
 				}
 				
@@ -292,9 +292,9 @@ s32 main(s32 argc, const char* argv[])
 	
 	printf("cameraInit() returned %d\n", cameraInit());
 	
-	// Ok, everything is setup. Now for the main loop.
+	/* Ok, everything is setup. Now for the main loop. */
 	while(running){
-		// Check the pads.
+		/* Check the pads. */
 		ioPadGetInfo(&padinfo);
 		for(i=0; i<MAX_PADS; i++){
 			if(padinfo.status[i]){
@@ -308,8 +308,8 @@ s32 main(s32 argc, const char* argv[])
 			
 		}
 
-		waitFlip(); // Wait for the last flip to finish, so we can draw to the old buffer
-		fillFrame(buffer[currentBuffer], 0x00FFFFFF); // Draw into the unused buffer
+		waitFlip(); /* Wait for the last flip to finish, so we can draw to the old buffer */
+		fillFrame(buffer[currentBuffer], 0x00FFFFFF); /* Draw into the unused buffer */
 		
 		if(!cameraSetup){
 			
@@ -335,7 +335,7 @@ s32 main(s32 argc, const char* argv[])
 			}else if(type==CAM_TYPE_EYETOY){
 					
 				cameraSetup = 1;
-				cameraInfo.format=CAM_FORM_JPG; //ONLY JPG FOR EYETOY
+				cameraInfo.format=CAM_FORM_JPG; /* ONLY JPG FOR EYETOY */
 				cameraInfo.framerate=30;
 				cameraInfo.resolution=CAM_RESO_VGA;
 				cameraInfo.info_ver=0x101;
@@ -377,7 +377,7 @@ s32 main(s32 argc, const char* argv[])
 						}
 					}
 				}else if(type==CAM_TYPE_EYETOY){
-						//oopo's libjpg making the job
+						/* oopo's libjpg making the job */
 						decode_jpg(buf,readcount);
 				}
 			}else if(ret!=0){
@@ -385,7 +385,7 @@ s32 main(s32 argc, const char* argv[])
 			}
 		}
 		
-		flip(currentBuffer); // Flip buffer onto screen
+		flip(currentBuffer); /* Flip buffer onto screen */
 		currentBuffer = !currentBuffer;
 		sysCheckCallback();
 	}

@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-//! SPU segment data structure.
+/* ! SPU segment data structure. */
 typedef struct _sys_spu_segment
 {
 	/*! segment type.
@@ -39,9 +39,9 @@ typedef struct _sys_spu_segment
 	- \ref SPU_SEGMENT_TYPE_INFO
 	*/
 	u32 type;
-	u32 lsStart;		//!< start address in local store
-	u32 size;			//!< segment size in bytes
-	//! bla
+	u32 lsStart;		/* !< start address in local store */
+	u32 size;			/* !< segment size in bytes */
+	/* ! bla */
 	union {
 		/*! \brief start address in main memory to be copied if \ref type
 		is \ref SPU_SEGMENT_TYPE_COPY */
@@ -51,13 +51,13 @@ typedef struct _sys_spu_segment
 	};
 } sysSpuSegment;
 
-//! SPU image data structure.
+/* ! SPU image data structure. */
 typedef struct _sys_spu_image
 {
-	u32 type;			//!< type
-	u32 entryPoint;		//!< entry point
-	u32 segments;		//!< address of segments
-	u32 segmentCount;	//!< number of segments
+	u32 type;			/* !< type */
+	u32 entryPoint;		/* !< entry point */
+	u32 segments;		/* !< address of segments */
+	u32 segmentCount;	/* !< number of segments */
 } sysSpuImage;
 
 

@@ -8,7 +8,7 @@
 /* this will resolve to either the NV30 or the NV40 version
  * depending on the current hardware */
 /* unusual, but very fast and compact method */
-//#define NVFX_VP(c) ((NV30_VP_##c) + (nvfx->is_nv4x & ((NV40_VP_##c) - (NV30_VP_##c))))
+/* #define NVFX_VP(c) ((NV30_VP_##c) + (nvfx->is_nv4x & ((NV40_VP_##c) - (NV30_VP_##c)))) */
 #define NVFX_VP(c) (NV40_VP_##c)
 
 #define NVFX_VP_INST_SLOT_VEC 0
@@ -174,7 +174,7 @@
  *
  */
 
-//== Opcode / Destination selection ==
+/* == Opcode / Destination selection == */
 #define NVFX_FP_OP_PROGRAM_END          (1 << 0)
 #define NVFX_FP_OP_OUT_REG_SHIFT        1
 #define NV30_FP_OP_OUT_REG_MASK          (31 << 1)  /* uncertain */
@@ -348,7 +348,7 @@
 #define NV40_FP_OP_ADDR_INDEX_SHIFT        19
 #define NV40_FP_OP_ADDR_INDEX_MASK        (0xF << 19)
 
-//== Register selection ==
+/* == Register selection == */
 #define NVFX_FP_REG_TYPE_SHIFT           0
 #define NVFX_FP_REG_TYPE_MASK           (3 << 0)
 #  define NVFX_FP_REG_TYPE_TEMP   0

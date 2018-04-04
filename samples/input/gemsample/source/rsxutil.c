@@ -18,7 +18,7 @@
 #include "rsxutil.h"
 
 #define GCM_LABEL_INDEX		255
-// graphics
+/* graphics */
 gcmContextData *context;
 void *host_addr = NULL;
 rsxBuffer buffers[MAX_BUFFERS];
@@ -26,12 +26,12 @@ int currentBuffer = 0;
 u16 width;
 u16 height;
 
-// extern gcmContextData *context;
-// extern void *host_addr;
-// extern rsxBuffer buffers[MAX_BUFFERS];
-// extern int currentBuffer;
-// extern u16 width;
-// extern u16 height;
+/* extern gcmContextData *context;        */
+/* extern void *host_addr;                */
+/* extern rsxBuffer buffers[MAX_BUFFERS]; */
+/* extern int currentBuffer;              */
+/* extern u16 width;                      */
+/* extern u16 height;                     */
 static void waitRSXIdle (gcmContextData * context);
 
 static u32 depth_pitch;
@@ -51,7 +51,7 @@ flip (gcmContextData * context, s32 buffer)
 {
   if (gcmSetFlip (context, buffer) == 0) {
     rsxFlushBuffer (context);
-    // Prevent the RSX from continuing until the flip has finished.
+    /* Prevent the RSX from continuing until the flip has finished. */
     gcmSetWaitFlip (context);
 
     return TRUE;
@@ -149,8 +149,9 @@ endScreen ()
 int
 initScreen (void *host_addr, u32 size)
 {
-  // gcmContextData *context = NULL; /* Context to keep track of the RSX
-  // buffer. */
+  /* gcmContextData *context = NULL; */ /* Context to keep track of the RSX
+                                         * buffer.
+                                         */
   videoState state;
   videoConfiguration vconfig;
   videoResolution res;		/* Screen Resolution */
@@ -187,7 +188,7 @@ initScreen (void *host_addr, u32 size)
   if (videoGetState (0, 0, &state) != 0)
     goto error;
 
-  gcmSetFlipMode (GCM_FLIP_VSYNC);	// Wait for VSYNC to flip
+  gcmSetFlipMode (GCM_FLIP_VSYNC);	/* Wait for VSYNC to flip */
 
   depth_pitch = res.width * sizeof (u32);
   depth_buffer = (u32 *) rsxMemalign (64, (res.height * depth_pitch) * 2);

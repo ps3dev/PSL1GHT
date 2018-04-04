@@ -40,9 +40,9 @@ _isnormald2 (vector double x)
   vec_ullong2 expn = spu_splats(0x7ff0000000000000ull);
   vec_ullong2 cmpr;
 
-  //Normal unless nan, infinite, denorm, or zero
+  /* Normal unless nan, infinite, denorm, or zero */
 
-  //Check for 'not zero or all-ones exponent'
+  /* Check for 'not zero or all-ones exponent' */
   cmpr = (vec_ullong2)spu_and( spu_cmpgt( (vec_uint4)spu_and( (vec_ullong2)x, expn ), (vec_uint4)spu_splats(0x0000000000000000ull) ),
                          spu_cmpgt( (vec_uint4)expn, (vec_uint4)spu_and( (vec_ullong2)x, expn ) ) );
   cmpr = spu_shuffle( cmpr, cmpr, even);

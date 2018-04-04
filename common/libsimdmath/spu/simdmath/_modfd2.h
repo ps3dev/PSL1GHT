@@ -35,7 +35,7 @@
 
 #include <simdmath/_truncd2.h>
 
-// Returns fractional part and stores integral part in *iptr.
+/* Returns fractional part and stores integral part in *iptr. */
 
 static inline vector double
 _modfd2 (vector double x, vector double *iptr)
@@ -47,7 +47,7 @@ _modfd2 (vector double x, vector double *iptr)
 
   integral = _truncd2( x );
 
-  // if integral is zero, then fraction is x.
+  /* if integral is zero, then fraction is x. */
   iszero = spu_cmpeq(spu_andc((vec_uint4)integral, sign), 0);
   iszero = spu_and(iszero, spu_shuffle(iszero, iszero, pattern));
   fraction = spu_sel(spu_sub( x, integral ), x, (vec_ullong2)iszero);

@@ -36,7 +36,7 @@
 static inline vector unsigned int
 _isnormalf4 (vector float x)
 {
-  // NaN, INF not supported on SPU; normal unless zero
+  /* NaN, INF not supported on SPU; normal unless zero */
   return spu_cmpabsgt(x, (vector float)spu_splats(0x00000000));
 }
 

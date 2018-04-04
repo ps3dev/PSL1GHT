@@ -35,8 +35,9 @@
 
 #include <simdmath/_vec_utils.h>
 
-// divi4 - for each of four integer slots, compute quotient and remainder of numer/denom
-// and store in divi4_t struct.  Divide by zero produces quotient = 0, remainder = numerator.
+/* divi4 - for each of four integer slots, compute quotient and remainder of numer/denom
+ * and store in divi4_t struct.  Divide by zero produces quotient = 0, remainder = numerator.
+ */
 
 static inline divi4_t
 _divi4 (vector signed int numer, vector signed int denom )
@@ -54,18 +55,18 @@ _divi4 (vector signed int numer, vector signed int denom )
   vector unsigned int quot, newQuot, skip, newNum, cont;
   int       anyCont;
        
-  // determine whether result needs sign change
+  /* determine whether result needs sign change */
  
   numerPos = (vector unsigned int)vec_cmpgt( numer, minusone );
   denomPos = (vector unsigned int)vec_cmpgt( denom, minusone );
   quotNeg = vec_xor( numerPos, denomPos );
    
-  // use absolute values of numerator, denominator
+  /* use absolute values of numerator, denominator */
  
   numerAbs = (vector unsigned int)vec_sel( vec_sub( (vector signed int)zero, numer ), numer, numerPos );
   denomAbs = (vector unsigned int)vec_sel( vec_sub( (vector signed int)zero, denom ), denom, denomPos );
  
-  // get difference of leading zeros to align denom with numer
+  /* get difference of leading zeros to align denom with numer */
 
   denomZeros = vec_sub( k158, vec_sr( (vector unsigned int)vec_ctf( denomAbs, 0 ), k23 ) );
   numerZeros = vec_sub( k158, vec_sr( (vector unsigned int)vec_ctf( numerAbs, 0 ), k23 ) );
@@ -76,7 +77,7 @@ _divi4 (vector signed int numer, vector signed int denom )
   oneShifted = vec_sel( oneShifted, zero, vec_or( vec_cmpeq( denomAbs, zero ), 
                                       vec_cmpgt( denomAbs, numerAbs ) ) );
    
-  // long division
+  /* long division */
 
   quot = zero;
    

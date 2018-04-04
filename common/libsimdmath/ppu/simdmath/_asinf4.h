@@ -39,53 +39,53 @@
 static inline vector float
 _asinf4 (vector float x)
 {
-  // positive = (x > 0)
-  //
+  /* positive = (x > 0) */
+
   vector unsigned int positive = (vector unsigned int)vec_cmpgt(x, __vec_splatsf4(0.0f));
 
-  // x = absf(x)
-  //
+  /* x = absf(x) */
+
   x = vec_abs(x);
 
-  // gtHalf = (|x| > 0.5)
-  //
+  /* gtHalf = (|x| > 0.5) */
+
   vector unsigned int gtHalf = (vector unsigned int)vec_cmpgt(x, __vec_splatsf4(0.5f));    
 
 
-  // if (x > 0.5)
-  //    g = 0.5 - 0.5*x
-  //    x = -2 * sqrtf(g)
-  // else
-  //    g = x * x
-  //
+  /* if (x > 0.5)
+   *    g = 0.5 - 0.5*x
+   *    x = -2 * sqrtf(g)
+   * else
+   *    g = x * x
+   */
   vector float g =
     vec_sel(vec_madd(x, x, __vec_splatsf4(0.0f)),
           vec_madd(__vec_splatsf4(-0.5f), x, __vec_splatsf4(0.5f)), gtHalf);
 
   x = vec_sel(x, vec_madd(__vec_splatsf4(-2.0f), _sqrtf4(g), __vec_splatsf4(0.0f)), gtHalf);
 
-  // Compute the polynomials and take their ratio
-  //  denom = (1.0f*g + -0.554846723e+1f)*g + 5.603603363f
-  //  num = x * g * (-0.504400557f * g + 0.933933258f)
-  //
+  /* Compute the polynomials and take their ratio
+   *  denom = (1.0f*g + -0.554846723e+1f)*g + 5.603603363f
+   *  num = x * g * (-0.504400557f * g + 0.933933258f)
+   */
   vector float denom = vec_add(g, __vec_splatsf4(-5.54846723f));
   vector float num = vec_madd(__vec_splatsf4(-0.504400557f), g, __vec_splatsf4(0.933933258f));
   denom = vec_madd(denom, g, __vec_splatsf4(5.603603363f));
   num = vec_madd(vec_madd(x, g, __vec_splatsf4(0.0f)), num, __vec_splatsf4(0.0f));
 
     
-  // x = x + num / denom
-  //
+  /* x = x + num / denom */
+
   x = vec_add(x,_divf4(num,denom));
 
-  // if (x > 0.5)
-  //    x = x + M_PI_2
-  //
+  /* if (x > 0.5)
+   *    x = x + M_PI_2
+   */
   x = vec_sel(x,vec_add(x, __vec_splatsf4(1.57079632679489661923f)), gtHalf);
 
     
-  // if (!positive) x = -x
-  //
+  /* if (!positive) x = -x */
+
   x = vec_sel((vector float)vec_xor(__vec_splatsi4(0x80000000), (vector signed int)x),
             x, positive);
 

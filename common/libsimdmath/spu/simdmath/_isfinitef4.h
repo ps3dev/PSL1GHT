@@ -38,7 +38,7 @@ _isfinitef4 (vector float x)
 {
   (void)x;
       
-  // NaN, INF not supported on SPU, result always a mask of ones
+  /* NaN, INF not supported on SPU, result always a mask of ones */
   return spu_splats((unsigned int)0xffffffff);
 }
 

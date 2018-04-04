@@ -36,14 +36,14 @@
 static inline vec_uint4
 __vec_gt64_half(vec_uint4 aa, vec_uint4 bb)
 {
-  vec_uint4 gt = spu_cmpgt(aa, bb);  // aa > bb
-  vec_uint4 eq = spu_cmpeq(aa, bb);  // aa = bb
-  return spu_or(gt, spu_and(eq, spu_rlqwbyte(gt, 4))); // only higher is right
+  vec_uint4 gt = spu_cmpgt(aa, bb);  /* aa > bb */
+  vec_uint4 eq = spu_cmpeq(aa, bb);  /* aa = bb */
+  return spu_or(gt, spu_and(eq, spu_rlqwbyte(gt, 4))); /* only higher is right */
 }
 static inline vec_uint4
 __vec_gt64(vec_uint4 aa, vec_uint4 bb)
 {
-  vec_uint4 gt_hi = __vec_gt64_half(aa, bb); // only higher is right
+  vec_uint4 gt_hi = __vec_gt64_half(aa, bb); /* only higher is right */
   return spu_shuffle(gt_hi, gt_hi, ((vec_uchar16){ 0,1,2,3,0,1,2,3, 8,9,10,11, 8,9,10,11}));
 }
 

@@ -132,8 +132,8 @@ int sslCertGetPublicKey(const sslCert cert, const uint8_t **sboData, size_t *sbo
 int sslCertGetRsaPublicKeyModulus(const sslCert cert, const uint8_t **sboData, size_t *sboLength);
 int sslCertGetRsaPublicKeyExponent(const sslCert cert, const uint8_t **sboData, size_t *sboLength);
 
-//int sslCertGetNotBefore(const sslCert cert, CellRtcTick *begin);
-//int sslCertGetNotAfter(const sslCert cert, CellRtcTick *limit);
+/* int sslCertGetNotBefore(const sslCert cert, CellRtcTick *begin); */
+/* int sslCertGetNotAfter(const sslCert cert, CellRtcTick *limit); */
 int sslCertGetSubjectName(const sslCert cert, const sslCertName *name);
 int sslCertGetIssuerName(const sslCert cert, const sslCertName *name);
 

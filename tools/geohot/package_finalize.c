@@ -1,6 +1,7 @@
-// package_finalize by geohot
-// part of geohot's awesome tools for the PS3
-//  released under GPLv3, see http://gplv3.fsf.org/
+/* package_finalize by geohot
+ * part of geohot's awesome tools for the PS3
+ *  released under GPLv3, see http://gplv3.fsf.org/
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]) {
   int data_offset = get_u64(&(header->dataOffset));
   int data_size = get_u64(&(header->dataSize));
 
-// decrypt debug
+/* decrypt debug */
   u8 sha_crap[0x40];
   memset(sha_crap, 0, 0x40);
   memcpy(sha_crap, &data[0x60], 8);
@@ -62,7 +63,7 @@ int main(int argc, char* argv[]) {
     set_u64(sha_crap+0x38, get_u64(sha_crap+0x38)+1);
   }
 
-// recrypt retail
+/* recrypt retail */
   u8 pkg_key[0x10];
   memcpy(pkg_key, &data[0x70], 0x10);
 
@@ -72,12 +73,12 @@ int main(int argc, char* argv[]) {
   int num=0; u8 ecount_buf[0x10]; memset(ecount_buf, 0, 0x10);
   CRYPTO_ctr128_encrypt(&data[data_offset], &data[data_offset], data_size, &aes_key, pkg_key, ecount_buf, &num, (block128_f)AES_encrypt);
 
-// write back
+/* write back */
   FILE *g = fopen(argv[1], "wb");
-  data[4] = 0x80;   // set finalize flag
+  data[4] = 0x80;   /* set finalize flag */
   memset(&data[(data_offset+data_size)], 0, 0x60);
 
-  // add hash
+  /* add hash */
   SHA1(data, nlen-0x20, &data[nlen-0x20]);
   fwrite(data, 1, nlen, g);
   fclose(g);

@@ -39,7 +39,7 @@ _isunorderedf4 (vector float x, vector float y)
   (void)x;
   (void)y;
       
-  // NaN not supported on SPU, result always zero   
+  /* NaN not supported on SPU, result always zero */
   return spu_splats((unsigned int)0x00000000);
 }
 
