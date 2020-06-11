@@ -35,6 +35,8 @@
 #define SYSUTIL_OSK_DONE                        0x0503
 /*! \brief On-screen keyboard has been unloaded. */
 #define SYSUTIL_OSK_UNLOADED                    0x0504
+/*! \brief On-screen keyboard has canceled input. */
+#define SYSUTIL_OSK_INPUT_CANCELED              0x0506
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,6 +53,7 @@ extern "C" {
     - \ref SYSUTIL_OSK_LOADED
     - \ref SYSUTIL_OSK_DONE
     - \ref SYSUTIL_OSK_UNLOADED
+    - \ref SYSUTIL_OSK_INPUT_CANCELED
   \param param Event parameter, depending on event value.
   \param usrdata Pointer to user data as provided to the
       \ref sysUtilRegisterCallback function.
