@@ -629,64 +629,64 @@ static inline void vmathM4Inverse( VmathMatrix4 *result, const VmathMatrix4 *mat
      *    C G K O
      *    L P D H
      */
-    tmp0 = vec_perm(in0, in1, _VECTORMATH_PERM_XAZC); /* A E C G */
-    tmp1 = vec_perm(in2, in3, _VECTORMATH_PERM_XAZC); /* I M K O */
-    tmp2 = vec_perm(in0, in1, _VECTORMATH_PERM_YBWD); /* B F D H */
-    tmp3 = vec_perm(in2, in3, _VECTORMATH_PERM_YBWD); /* J N L P */
-    t0 = vec_perm(tmp0, tmp1, _VECTORMATH_PERM_XYAB); /* A E I M */
-    t1 = vec_perm(tmp3, tmp2, _VECTORMATH_PERM_XYAB); /* J N B F */
-    t2 = vec_perm(tmp0, tmp1, _VECTORMATH_PERM_ZWCD); /* C G K O */
-    t3 = vec_perm(tmp3, tmp2, _VECTORMATH_PERM_ZWCD); /* L P D H */
+    tmp0 = vec_perm(in0, in1, _VECTORMATH_PERM_XAZC);	/* A E C G */
+    tmp1 = vec_perm(in2, in3, _VECTORMATH_PERM_XAZC);	/* I M K O */
+    tmp2 = vec_perm(in0, in1, _VECTORMATH_PERM_YBWD);	/* B F D H */
+    tmp3 = vec_perm(in2, in3, _VECTORMATH_PERM_YBWD);	/* J N L P */
+    t0 = vec_perm(tmp0, tmp1, _VECTORMATH_PERM_XYAB);	/* A E I M */
+    t1 = vec_perm(tmp3, tmp2, _VECTORMATH_PERM_XYAB);	/* J N B F */
+    t2 = vec_perm(tmp0, tmp1, _VECTORMATH_PERM_ZWCD);	/* C G K O */
+    t3 = vec_perm(tmp3, tmp2, _VECTORMATH_PERM_ZWCD);	/* L P D H */
     /* Generate a cofactor matrix. The computed cofactors reside in
      * cof0, cof1, cof2, cof3.
      */
-    t23 = vec_madd(t2, t3, vzero);        /* CL GP KD OH */
-    t23 = vec_perm(t23, t23, _VECTORMATH_PERM_YXWZ);  /* GP CL OH KD */
-    cof0 = vec_nmsub(t1, t23, vzero);           /* -(JGP NCL FOH BKD) */
-    cof1 = vec_nmsub(t0, t23, vzero);           /* -(AGP ECL IOH MKD) */
-    t23r = vec_sld(t23, t23, 8);                /* OH KD GP CL */
-    cof0 = vec_madd(t1, t23r, cof0);            /* JOH NKD BGP FCL + cof0 */
-    cof1 = vec_madd(t0, t23r, cof1);            /* AOH EKD IGP MCL + cof1 */
-    cof1 = vec_sld(cof1, cof1, 8);        /* IGP MCL AOH EKD - IOH MKD AGP ECL */
-    t12 = vec_madd(t1, t2, vzero);        /* JC NG BK FO */
-    t12 = vec_perm(t12, t12, _VECTORMATH_PERM_YXWZ);  /* NG JC FO BK */
-    cof0 = vec_madd(t3, t12, cof0);       /* LNG PJC DFO HBK + cof0 */
-    cof3 = vec_madd(t0, t12, vzero);            /* ANG EJC IFO MBK */
-    t12r = vec_sld(t12, t12, 8);                /* FO BK NG JC */
-    cof0 = vec_nmsub(t3, t12r, cof0);           /* cof0 - LFO PBK DNG HJC */
-    cof3 = vec_nmsub(t0, t12r, cof3);           /* cof3 - AFO EBK ING MJC */
-    cof3 = vec_sld(cof3, cof3, 8);        /* ING MJC AFO EBK - IFO MBK ANG EJC */
-    t1r = vec_sld(t1, t1, 8);             /* B F J N */
-    t2r = vec_sld(t2, t2, 8);             /* K O C G */
-    t1r3 = vec_madd(t1r, t3, vzero);            /* BL FP JD NH */
-    t1r3 = vec_perm(t1r3, t1r3, _VECTORMATH_PERM_YXWZ);     /* FP BL NH JD */
-    cof0 = vec_madd(t2r, t1r3, cof0);           /* KFP OBL CNH GJD + cof0 */
-    cof2 = vec_madd(t0, t1r3, vzero);           /* AFP EBL INH MJD */
-    t1r3r = vec_sld(t1r3, t1r3, 8);       /* NH JD FP BL */
-    cof0 = vec_nmsub(t2r, t1r3r, cof0);         /* cof0 - KNH OJD CFP GBL */
-    cof2 = vec_nmsub(t0, t1r3r, cof2);          /* cof2 - ANH EJD IFP MBL */
-    cof2 = vec_sld(cof2, cof2, 8);        /* IFP MBL ANH EJD - INH MJD AFP EBL */
-    t01 = vec_madd(t0, t1, vzero);        /* AJ EN IB MF */
-    t01 = vec_perm(t01, t01, _VECTORMATH_PERM_YXWZ);  /* EN AJ MF IB */
-    cof2 = vec_nmsub(t3, t01, cof2);            /* cof2 - LEN PAJ DMF HIB */
-    cof3 = vec_madd(t2r, t01, cof3);            /* KEN OAJ CMF GIB + cof3 */ 
-    t01r = vec_sld(t01, t01, 8);                /* MF IB EN AJ */
-    cof2 = vec_madd(t3, t01r, cof2);            /* LMF PIB DEN HAJ + cof2 */
-    cof3 = vec_nmsub(t2r, t01r, cof3);          /* cof3 - KMF OIB CEN GAJ */
-    t03 = vec_madd(t0, t3, vzero);        /* AL EP ID MH */
-    t03 = vec_perm(t03, t03, _VECTORMATH_PERM_YXWZ);  /* EP AL MH ID */
-    cof1 = vec_nmsub(t2r, t03, cof1);           /* cof1 - KEP OAL CMH GID */
-    cof2 = vec_madd(t1, t03, cof2);       /* JEP NAL BMH FID + cof2 */
-    t03r = vec_sld(t03, t03, 8);                /* MH ID EP AL */
-    cof1 = vec_madd(t2r, t03r, cof1);           /* KMH OID CEP GAL + cof1 */
-    cof2 = vec_nmsub(t1, t03r, cof2);           /* cof2 - JMH NID BEP FAL */ 
-    t02 = vec_madd(t0, t2r, vzero);       /* AK EO IC MG */
-    t02 = vec_perm(t02, t02, _VECTORMATH_PERM_YXWZ);  /* E0 AK MG IC */
-    cof1 = vec_madd(t3, t02, cof1);       /* LEO PAK DMG HIC + cof1 */
-    cof3 = vec_nmsub(t1, t02, cof3);            /* cof3 - JEO NAK BMG FIC */
-    t02r = vec_sld(t02, t02, 8);                /* MG IC EO AK */
-    cof1 = vec_nmsub(t3, t02r, cof1);           /* cof1 - LMG PIC DEO HAK */
-    cof3 = vec_madd(t1, t02r, cof3);            /* JMG NIC BEO FAK + cof3 */
+    t23 = vec_madd(t2, t3, vzero);		/* CL GP KD OH */
+    t23 = vec_perm(t23, t23, _VECTORMATH_PERM_YXWZ);	/* GP CL OH KD */
+    cof0 = vec_nmsub(t1, t23, vzero);		/* -(JGP NCL FOH BKD) */
+    cof1 = vec_nmsub(t0, t23, vzero);		/* -(AGP ECL IOH MKD) */
+    t23r = vec_sld(t23, t23, 8);			/* OH KD GP CL */
+    cof0 = vec_madd(t1, t23r, cof0);		/* JOH NKD BGP FCL + cof0 */
+    cof1 = vec_madd(t0, t23r, cof1);		/* AOH EKD IGP MCL + cof1 */
+    cof1 = vec_sld(cof1, cof1, 8);		/* IGP MCL AOH EKD - IOH MKD AGP ECL */
+    t12 = vec_madd(t1, t2, vzero);		/* JC NG BK FO */
+    t12 = vec_perm(t12, t12, _VECTORMATH_PERM_YXWZ);	/* NG JC FO BK */
+    cof0 = vec_madd(t3, t12, cof0);		/* LNG PJC DFO HBK + cof0 */
+    cof3 = vec_madd(t0, t12, vzero);		/* ANG EJC IFO MBK */
+    t12r = vec_sld(t12, t12, 8);			/* FO BK NG JC */
+    cof0 = vec_nmsub(t3, t12r, cof0);		/* cof0 - LFO PBK DNG HJC */
+    cof3 = vec_nmsub(t0, t12r, cof3);		/* cof3 - AFO EBK ING MJC */
+    cof3 = vec_sld(cof3, cof3, 8);		/* ING MJC AFO EBK - IFO MBK ANG EJC */
+    t1r = vec_sld(t1, t1, 8);			/* B F J N */
+    t2r = vec_sld(t2, t2, 8);			/* K O C G */
+    t1r3 = vec_madd(t1r, t3, vzero);		/* BL FP JD NH */
+    t1r3 = vec_perm(t1r3, t1r3, _VECTORMATH_PERM_YXWZ);	/* FP BL NH JD */
+    cof0 = vec_madd(t2r, t1r3, cof0);		/* KFP OBL CNH GJD + cof0 */
+    cof2 = vec_madd(t0, t1r3, vzero);		/* AFP EBL INH MJD */
+    t1r3r = vec_sld(t1r3, t1r3, 8);		/* NH JD FP BL */
+    cof0 = vec_nmsub(t2r, t1r3r, cof0);		/* cof0 - KNH OJD CFP GBL */
+    cof2 = vec_nmsub(t0, t1r3r, cof2);		/* cof2 - ANH EJD IFP MBL */
+    cof2 = vec_sld(cof2, cof2, 8);		/* IFP MBL ANH EJD - INH MJD AFP EBL */
+    t01 = vec_madd(t0, t1, vzero);		/* AJ EN IB MF */
+    t01 = vec_perm(t01, t01, _VECTORMATH_PERM_YXWZ);	/* EN AJ MF IB */
+    cof2 = vec_nmsub(t3, t01, cof2);		/* cof2 - LEN PAJ DMF HIB */
+    cof3 = vec_madd(t2r, t01, cof3);		/* KEN OAJ CMF GIB + cof3 */ 
+    t01r = vec_sld(t01, t01, 8);			/* MF IB EN AJ */
+    cof2 = vec_madd(t3, t01r, cof2);		/* LMF PIB DEN HAJ + cof2 */
+    cof3 = vec_nmsub(t2r, t01r, cof3);		/* cof3 - KMF OIB CEN GAJ */
+    t03 = vec_madd(t0, t3, vzero);		/* AL EP ID MH */
+    t03 = vec_perm(t03, t03, _VECTORMATH_PERM_YXWZ);	/* EP AL MH ID */
+    cof1 = vec_nmsub(t2r, t03, cof1);		/* cof1 - KEP OAL CMH GID */
+    cof2 = vec_madd(t1, t03, cof2);		/* JEP NAL BMH FID + cof2 */
+    t03r = vec_sld(t03, t03, 8);			/* MH ID EP AL */
+    cof1 = vec_madd(t2r, t03r, cof1);		/* KMH OID CEP GAL + cof1 */
+    cof2 = vec_nmsub(t1, t03r, cof2);		/* cof2 - JMH NID BEP FAL */ 
+    t02 = vec_madd(t0, t2r, vzero);		/* AK EO IC MG */
+    t02 = vec_perm(t02, t02, _VECTORMATH_PERM_YXWZ);	/* E0 AK MG IC */
+    cof1 = vec_madd(t3, t02, cof1);		/* LEO PAK DMG HIC + cof1 */
+    cof3 = vec_nmsub(t1, t02, cof3);		/* cof3 - JEO NAK BMG FIC */
+    t02r = vec_sld(t02, t02, 8);			/* MG IC EO AK */
+    cof1 = vec_nmsub(t3, t02r, cof1);		/* cof1 - LMG PIC DEO HAK */
+    cof3 = vec_madd(t1, t02r, cof3);		/* JMG NIC BEO FAK + cof3 */
     /* Compute the determinant of the matrix 
      *
      * det = sum_across(t0 * cof0);
@@ -786,34 +786,34 @@ static inline float vmathM4Determinant( const VmathMatrix4 *mat )
      *    C G K O
      *    L P D H
      */
-    tmp0 = vec_perm(in0, in1, _VECTORMATH_PERM_XAZC); /* A E C G */
-    tmp1 = vec_perm(in2, in3, _VECTORMATH_PERM_XAZC); /* I M K O */
-    tmp2 = vec_perm(in0, in1, _VECTORMATH_PERM_YBWD); /* B F D H */
-    tmp3 = vec_perm(in2, in3, _VECTORMATH_PERM_YBWD); /* J N L P */
-    t0 = vec_perm(tmp0, tmp1, _VECTORMATH_PERM_XYAB); /* A E I M */
-    t1 = vec_perm(tmp3, tmp2, _VECTORMATH_PERM_XYAB); /* J N B F */
-    t2 = vec_perm(tmp0, tmp1, _VECTORMATH_PERM_ZWCD); /* C G K O */
-    t3 = vec_perm(tmp3, tmp2, _VECTORMATH_PERM_ZWCD); /* L P D H */
+    tmp0 = vec_perm(in0, in1, _VECTORMATH_PERM_XAZC);	/* A E C G */
+    tmp1 = vec_perm(in2, in3, _VECTORMATH_PERM_XAZC);	/* I M K O */
+    tmp2 = vec_perm(in0, in1, _VECTORMATH_PERM_YBWD);	/* B F D H */
+    tmp3 = vec_perm(in2, in3, _VECTORMATH_PERM_YBWD);	/* J N L P */
+    t0 = vec_perm(tmp0, tmp1, _VECTORMATH_PERM_XYAB);	/* A E I M */
+    t1 = vec_perm(tmp3, tmp2, _VECTORMATH_PERM_XYAB);	/* J N B F */
+    t2 = vec_perm(tmp0, tmp1, _VECTORMATH_PERM_ZWCD);	/* C G K O */
+    t3 = vec_perm(tmp3, tmp2, _VECTORMATH_PERM_ZWCD);	/* L P D H */
     /* Generate a cofactor matrix. The computed cofactors reside in
      * cof0, cof1, cof2, cof3.
      */
-    t23 = vec_madd(t2, t3, vzero);        /* CL GP KD OH */
-    t23 = vec_perm(t23, t23, _VECTORMATH_PERM_YXWZ);  /* GP CL OH KD */
-    cof0 = vec_nmsub(t1, t23, vzero);           /* -(JGP NCL FOH BKD) */
-    t23r = vec_sld(t23, t23, 8);                /* OH KD GP CL */
-    cof0 = vec_madd(t1, t23r, cof0);            /* JOH NKD BGP FCL + cof0 */
-    t12 = vec_madd(t1, t2, vzero);        /* JC NG BK FO */
-    t12 = vec_perm(t12, t12, _VECTORMATH_PERM_YXWZ);  /* NG JC FO BK */
-    cof0 = vec_madd(t3, t12, cof0);       /* LNG PJC DFO HBK + cof0 */
-    t12r = vec_sld(t12, t12, 8);                /* FO BK NG JC */
-    cof0 = vec_nmsub(t3, t12r, cof0);           /* cof0 - LFO PBK DNG HJC */
-    t1r = vec_sld(t1, t1, 8);             /* B F J N */
-    t2r = vec_sld(t2, t2, 8);             /* K O C G */
-    t1r3 = vec_madd(t1r, t3, vzero);            /* BL FP JD NH */
-    t1r3 = vec_perm(t1r3, t1r3, _VECTORMATH_PERM_YXWZ);     /* FP BL NH JD */
-    cof0 = vec_madd(t2r, t1r3, cof0);           /* KFP OBL CNH GJD + cof0 */
-    t1r3r = vec_sld(t1r3, t1r3, 8);       /* NH JD FP BL */
-    cof0 = vec_nmsub(t2r, t1r3r, cof0);         /* cof0 - KNH OJD CFP GBL */
+    t23 = vec_madd(t2, t3, vzero);		/* CL GP KD OH */
+    t23 = vec_perm(t23, t23, _VECTORMATH_PERM_YXWZ);	/* GP CL OH KD */
+    cof0 = vec_nmsub(t1, t23, vzero);		/* -(JGP NCL FOH BKD) */
+    t23r = vec_sld(t23, t23, 8);			/* OH KD GP CL */
+    cof0 = vec_madd(t1, t23r, cof0);		/* JOH NKD BGP FCL + cof0 */
+    t12 = vec_madd(t1, t2, vzero);		/* JC NG BK FO */
+    t12 = vec_perm(t12, t12, _VECTORMATH_PERM_YXWZ);	/* NG JC FO BK */
+    cof0 = vec_madd(t3, t12, cof0);		/* LNG PJC DFO HBK + cof0 */
+    t12r = vec_sld(t12, t12, 8);			/* FO BK NG JC */
+    cof0 = vec_nmsub(t3, t12r, cof0);		/* cof0 - LFO PBK DNG HJC */
+    t1r = vec_sld(t1, t1, 8);			/* B F J N */
+    t2r = vec_sld(t2, t2, 8);			/* K O C G */
+    t1r3 = vec_madd(t1r, t3, vzero);		/* BL FP JD NH */
+    t1r3 = vec_perm(t1r3, t1r3, _VECTORMATH_PERM_YXWZ);	/* FP BL NH JD */
+    cof0 = vec_madd(t2r, t1r3, cof0);		/* KFP OBL CNH GJD + cof0 */
+    t1r3r = vec_sld(t1r3, t1r3, 8);		/* NH JD FP BL */
+    cof0 = vec_nmsub(t2r, t1r3r, cof0);		/* cof0 - KNH OJD CFP GBL */
     tmp.v = _vmathVfDot4(t0,cof0);
     return tmp.s[0];
 }

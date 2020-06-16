@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2006, 2007 Sony Computer Entertainment Inc.
+   Copyright (C) 2006-2010 Sony Computer Entertainment Inc.
    All rights reserved.
 
    Redistribution and use in source and binary forms,
@@ -27,14 +27,10 @@
    POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _BOOLINVEC_H
-#define _BOOLINVEC_H
+#ifndef _BOOLINVEC_SCALAR_H
+#define _BOOLINVEC_SCALAR_H
 
 #include <math.h>
-#include <altivec.h>
-#include "../c/vec_types.h"
-#undef bool
-
 namespace Vectormath {
 
 class floatInVec;
@@ -45,78 +41,81 @@ class floatInVec;
 
 class boolInVec
 {
-    private:
-        vec_uint4 mData;
+private:
+    unsigned int mData;
 
-        inline boolInVec(vec_uint4 vec);
-    public:
-        inline boolInVec() {}
+public:
+    // Default constructor; does no initialization
+    //
+    inline boolInVec( ) { };
 
-        // matches standard type conversions
-        //
-        inline boolInVec(floatInVec vec);
+    // Construct from a value converted from float
+    //
+    inline boolInVec(floatInVec vec);
 
-        // explicit cast from bool
-        //
-        explicit inline boolInVec(bool scalar);
+    // Explicit cast from bool
+    //
+    explicit inline boolInVec(bool scalar);
 
-#ifdef _VECTORMATH_NO_SCALAR_CAST
-        // explicit cast to bool
-        // 
-        inline bool getAsBool() const;
-#else
-        // implicit cast to bool
-        // 
-        inline operator bool() const;
+    // Explicit cast to bool
+    //
+    inline bool getAsBool() const;
+
+#ifndef _VECTORMATH_NO_SCALAR_CAST
+    // Implicit cast to bool
+    //
+    inline operator bool() const;
 #endif
-        
-        // get vector data
-        // bool value is splatted across all word slots of vector as 0 (false) or -1 (true)
-        //
-        inline vec_uint4 get128() const;
 
-        // operators
-        //
-        inline const boolInVec operator ! () const;
-        inline boolInVec& operator = (boolInVec vec);
-        inline boolInVec& operator &= (boolInVec vec);
-        inline boolInVec& operator ^= (boolInVec vec);
-        inline boolInVec& operator |= (boolInVec vec);
+    // Boolean negation operator
+    //
+    inline const boolInVec operator ! () const;
 
-        // friend functions
-        //
-        friend inline const boolInVec operator == (boolInVec vec0, boolInVec vec1);
-        friend inline const boolInVec operator != (boolInVec vec0, boolInVec vec1);
-        friend inline const boolInVec operator < (floatInVec vec0, floatInVec vec1);
-        friend inline const boolInVec operator <= (floatInVec vec0, floatInVec vec1);
-        friend inline const boolInVec operator > (floatInVec vec0, floatInVec vec1);
-        friend inline const boolInVec operator >= (floatInVec vec0, floatInVec vec1);
-        friend inline const boolInVec operator == (floatInVec vec0, floatInVec vec1);
-        friend inline const boolInVec operator != (floatInVec vec0, floatInVec vec1);
-        friend inline const boolInVec operator & (boolInVec vec0, boolInVec vec1);
-        friend inline const boolInVec operator ^ (boolInVec vec0, boolInVec vec1);
-        friend inline const boolInVec operator | (boolInVec vec0, boolInVec vec1);
-        friend inline const boolInVec select(boolInVec vec0, boolInVec vec1, boolInVec select_vec1);
+    // Assignment operator
+    //
+    inline boolInVec& operator = (boolInVec vec);
+
+    // Boolean and assignment operator
+    //
+    inline boolInVec& operator &= (boolInVec vec);
+
+    // Boolean exclusive or assignment operator
+    //
+    inline boolInVec& operator ^= (boolInVec vec);
+
+    // Boolean or assignment operator
+    //
+    inline boolInVec& operator |= (boolInVec vec);
+
 };
 
-//--------------------------------------------------------------------------------------------------
-// boolInVec functions
-//
-
-// operators
+// Equal operator
 //
 inline const boolInVec operator == (boolInVec vec0, boolInVec vec1);
+
+// Not equal operator
+//
 inline const boolInVec operator != (boolInVec vec0, boolInVec vec1);
+
+// And operator
+//
 inline const boolInVec operator & (boolInVec vec0, boolInVec vec1);
+
+// Exclusive or operator
+//
 inline const boolInVec operator ^ (boolInVec vec0, boolInVec vec1);
+
+// Or operator
+//
 inline const boolInVec operator | (boolInVec vec0, boolInVec vec1);
 
-// select between vec0 and vec1 using boolInVec.
-// false selects vec0, true selects vec1
+// Conditionally select between two values
 //
 inline const boolInVec select(boolInVec vec0, boolInVec vec1, boolInVec select_vec1);
 
+
 } // namespace Vectormath
+
 
 //--------------------------------------------------------------------------------------------------
 // boolInVec implementation
@@ -127,12 +126,6 @@ inline const boolInVec select(boolInVec vec0, boolInVec vec1, boolInVec select_v
 namespace Vectormath {
 
 inline
-boolInVec::boolInVec(vec_uint4 vec)
-{
-    mData = vec;
-}
-
-inline
 boolInVec::boolInVec(floatInVec vec)
 {
     *this = (vec != floatInVec(0.0f));
@@ -141,45 +134,29 @@ boolInVec::boolInVec(floatInVec vec)
 inline
 boolInVec::boolInVec(bool scalar)
 {
-#ifdef __GNUC__
-    if (__builtin_constant_p(scalar))
-    {
-        const unsigned int mask = -(int)scalar;
-        mData = (vec_uint4){mask, mask, mask, mask};
-    }
-    else
-#endif
-    {
-        unsigned int mask = -(int)scalar;
-        vec_uint4 vec = vec_ld(0, &mask);
-        mData = vec_splat(vec_perm(vec, vec, vec_lvsl(0, &mask)), 0);
-    }
+    mData = -(int)scalar;
 }
 
-#ifdef _VECTORMATH_NO_SCALAR_CAST
 inline
 bool
 boolInVec::getAsBool() const
-#else
-inline
-boolInVec::operator bool() const
-#endif
 {
-    return vec_all_gt(mData, ((vec_uint4){0,0,0,0}));
+    return (mData > 0);
 }
 
+#ifndef _VECTORMATH_NO_SCALAR_CAST
 inline
-vec_uint4
-boolInVec::get128() const
+boolInVec::operator bool() const
 {
-    return mData;
+    return getAsBool();
 }
+#endif
 
 inline
 const boolInVec
 boolInVec::operator ! () const
 {
-    return boolInVec(vec_nor(mData, mData));
+    return boolInVec(!mData);
 }
 
 inline
@@ -218,7 +195,7 @@ inline
 const boolInVec
 operator == (boolInVec vec0, boolInVec vec1)
 {
-    return boolInVec((vec_uint4)vec_cmpeq(vec0.get128(), vec1.get128()));
+    return boolInVec(vec0.getAsBool() == vec1.getAsBool());
 }
 
 inline
@@ -227,35 +204,35 @@ operator != (boolInVec vec0, boolInVec vec1)
 {
     return !(vec0 == vec1);
 }
-    
+
 inline
 const boolInVec
 operator & (boolInVec vec0, boolInVec vec1)
 {
-    return boolInVec(vec_and(vec0.get128(), vec1.get128()));
+    return boolInVec(vec0.getAsBool() & vec1.getAsBool());
 }
 
 inline
 const boolInVec
 operator | (boolInVec vec0, boolInVec vec1)
 {
-    return boolInVec(vec_or(vec0.get128(), vec1.get128()));
+    return boolInVec(vec0.getAsBool() | vec1.getAsBool());
 }
 
 inline
 const boolInVec
 operator ^ (boolInVec vec0, boolInVec vec1)
 {
-    return boolInVec(vec_xor(vec0.get128(), vec1.get128()));
+    return boolInVec(vec0.getAsBool() ^ vec1.getAsBool());
 }
 
 inline
 const boolInVec
 select(boolInVec vec0, boolInVec vec1, boolInVec select_vec1)
 {
-    return boolInVec(vec_sel(vec0.get128(), vec1.get128(), select_vec1.get128()));
+    return (select_vec1.getAsBool() == 0) ? vec0 : vec1;
 }
- 
+
 } // namespace Vectormath
 
 #endif // boolInVec_h

@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2006, 2007 Sony Computer Entertainment Inc.
+   Copyright (C) 2006-2010 Sony Computer Entertainment Inc.
    All rights reserved.
 
    Redistribution and use in source and binary forms,
@@ -27,16 +27,10 @@
    POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _FLOATINVEC_H
-#define _FLOATINVEC_H
+#ifndef _FLOATINVEC__SCALAR_H
+#define _FLOATINVEC__SCALAR_H
 
 #include <math.h>
-#include <altivec.h>
-#include <stddef.h>
-#include <simdmath.h>
-#include "../c/vec_types.h"
-#undef bool
-
 namespace Vectormath {
 
 class boolInVec;
@@ -45,87 +39,125 @@ class boolInVec;
 // floatInVec class
 //
 
+// A class representing a scalar float value contained in a vector register
+// This class does not support fastmath
 class floatInVec
 {
-    private:
-        vec_float4 mData;
+private:
+    float mData;
 
-        inline floatInVec(vec_float4 vec);
-    public:
-        inline floatInVec() {}
+public:
+    // Default constructor; does no initialization
+    //
+    inline floatInVec( ) { };
 
-        // matches standard type conversions
-        //
-        inline floatInVec(boolInVec vec);
+    // Construct from a value converted from bool
+    //
+    inline floatInVec(boolInVec vec);
 
-        // construct from a slot of vec_float4
-        //
-        inline floatInVec(vec_float4 vec, int slot);
-        
-        // explicit cast from float
-        //
-        explicit inline floatInVec(float scalar);
+    // Explicit cast from float
+    //
+    explicit inline floatInVec(float scalar);
 
-#ifdef _VECTORMATH_NO_SCALAR_CAST
-        // explicit cast to float
-        // 
-        inline float getAsFloat() const;
-#else
-        // implicit cast to float
-        //
-        inline operator float() const;
+    // Explicit cast to float
+    //
+    inline float getAsFloat() const;
+
+#ifndef _VECTORMATH_NO_SCALAR_CAST
+    // Implicit cast to float
+    //
+    inline operator float() const;
 #endif
 
-        // get vector data
-        // float value is splatted across all word slots of vector
-        //
-        inline vec_float4 get128() const;
+    // Post increment (add 1.0f)
+    //
+    inline const floatInVec operator ++ (int);
 
-        // operators
-        // 
-        inline const floatInVec operator ++ (int);
-        inline const floatInVec operator -- (int);
-        inline floatInVec& operator ++ ();
-        inline floatInVec& operator -- ();
-        inline const floatInVec operator - () const;
-        inline floatInVec& operator = (floatInVec vec);
-        inline floatInVec& operator *= (floatInVec vec);
-        inline floatInVec& operator /= (floatInVec vec);
-        inline floatInVec& operator += (floatInVec vec);
-        inline floatInVec& operator -= (floatInVec vec);
+    // Post decrement (subtract 1.0f)
+    //
+    inline const floatInVec operator -- (int);
 
-        // friend functions
-        //
-        friend inline const floatInVec operator * (floatInVec vec0, floatInVec vec1);
-        friend inline const floatInVec operator / (floatInVec vec0, floatInVec vec1);
-        friend inline const floatInVec operator + (floatInVec vec0, floatInVec vec1);
-        friend inline const floatInVec operator - (floatInVec vec0, floatInVec vec1);
-        friend inline const floatInVec select(floatInVec vec0, floatInVec vec1, boolInVec select_vec1);
+    // Pre increment (add 1.0f)
+    //
+    inline floatInVec& operator ++ ();
+
+    // Pre decrement (subtract 1.0f)
+    //
+    inline floatInVec& operator -- ();
+
+    // Negation operator
+    //
+    inline const floatInVec operator - () const;
+
+    // Assignment operator
+    //
+    inline floatInVec& operator = (floatInVec vec);
+
+    // Multiplication assignment operator
+    //
+    inline floatInVec& operator *= (floatInVec vec);
+
+    // Division assignment operator
+    //
+    inline floatInVec& operator /= (floatInVec vec);
+
+    // Addition assignment operator
+    //
+    inline floatInVec& operator += (floatInVec vec);
+
+    // Subtraction assignment operator
+    //
+    inline floatInVec& operator -= (floatInVec vec);
+
 };
 
-//--------------------------------------------------------------------------------------------------
-// floatInVec functions
+// Multiplication operator
 //
-
-// operators
-// 
 inline const floatInVec operator * (floatInVec vec0, floatInVec vec1);
+
+// Division operator
+//
 inline const floatInVec operator / (floatInVec vec0, floatInVec vec1);
+
+// Addition operator
+//
 inline const floatInVec operator + (floatInVec vec0, floatInVec vec1);
+
+// Subtraction operator
+//
 inline const floatInVec operator - (floatInVec vec0, floatInVec vec1);
+
+// Less than operator
+//
 inline const boolInVec operator < (floatInVec vec0, floatInVec vec1);
+
+// Less than or equal operator
+//
 inline const boolInVec operator <= (floatInVec vec0, floatInVec vec1);
+
+// Greater than operator
+//
 inline const boolInVec operator > (floatInVec vec0, floatInVec vec1);
+
+// Greater than or equal operator
+//
 inline const boolInVec operator >= (floatInVec vec0, floatInVec vec1);
+
+// Equal operator
+//
 inline const boolInVec operator == (floatInVec vec0, floatInVec vec1);
+
+// Not equal operator
+//
 inline const boolInVec operator != (floatInVec vec0, floatInVec vec1);
 
-// select between vec0 and vec1 using boolInVec.
-// false selects vec0, true selects vec1
+// Conditionally select between two values
 //
 inline const floatInVec select(floatInVec vec0, floatInVec vec1, boolInVec select_vec1);
 
+
 } // namespace Vectormath
+
 
 //--------------------------------------------------------------------------------------------------
 // floatInVec implementation
@@ -136,73 +168,37 @@ inline const floatInVec select(floatInVec vec0, floatInVec vec1, boolInVec selec
 namespace Vectormath {
 
 inline
-floatInVec::floatInVec(vec_float4 vec)
-{
-    mData = vec;
-}
-
-inline
 floatInVec::floatInVec(boolInVec vec)
 {
-    mData = vec_ctf(vec_sub((vec_uint4){0,0,0,0}, vec.get128()), 0);
-}
-
-inline
-floatInVec::floatInVec(vec_float4 vec, int slot)
-{
-#ifdef __GNUC__
-    if (__builtin_constant_p(slot))
-    {
-        mData = vec_splat(vec, slot);
-    }
-    else
-#endif
-    {
-        const vec_uchar16 shiftpattern = vec_lvsl(0, (float *)(size_t)(slot << 2));
-        mData = vec_splat(vec_perm(vec, vec, shiftpattern), 0);
-    }
+    mData = float(vec.getAsBool());
 }
 
 inline
 floatInVec::floatInVec(float scalar)
 {
-#ifdef __GNUC__
-    if (__builtin_constant_p(scalar))
-    {
-        mData = (vec_float4){scalar, scalar, scalar, scalar};
-    }
-    else
-#endif
-    {
-        vec_float4 vec = vec_ld(0, &scalar);
-        mData = vec_splat(vec_perm(vec, vec, vec_lvsl(0, &scalar)), 0);
-    }
+    mData = scalar;
 }
 
-#ifdef _VECTORMATH_NO_SCALAR_CAST
 inline
 float
 floatInVec::getAsFloat() const
-#else
-inline
-floatInVec::operator float() const
-#endif
-{
-    return *((float *)&mData);
-}
-
-inline
-vec_float4
-floatInVec::get128() const
 {
     return mData;
 }
+
+#ifndef _VECTORMATH_NO_SCALAR_CAST
+inline
+floatInVec::operator float() const
+{
+    return getAsFloat();
+}
+#endif
 
 inline
 const floatInVec
 floatInVec::operator ++ (int)
 {
-    vec_float4 olddata = mData;
+    float olddata = mData;
     operator ++();
     return floatInVec(olddata);
 }
@@ -211,7 +207,7 @@ inline
 const floatInVec
 floatInVec::operator -- (int)
 {
-    vec_float4 olddata = mData;
+    float olddata = mData;
     operator --();
     return floatInVec(olddata);
 }
@@ -220,7 +216,7 @@ inline
 floatInVec&
 floatInVec::operator ++ ()
 {
-    *this += floatInVec((vec_float4){1.0f,1.0f,1.0f,1.0f});
+    *this += floatInVec(1.0f);
     return *this;
 }
 
@@ -228,7 +224,7 @@ inline
 floatInVec&
 floatInVec::operator -- ()
 {
-    *this -= floatInVec((vec_float4){1.0f,1.0f,1.0f,1.0f});
+    *this -= floatInVec(1.0f);
     return *this;
 }
 
@@ -236,7 +232,7 @@ inline
 const floatInVec
 floatInVec::operator - () const
 {
-    return floatInVec((vec_float4)vec_xor((vec_uint4)mData, (vec_uint4){0x80000000,0x80000000,0x80000000,0x80000000}));
+    return floatInVec(-mData);
 }
 
 inline
@@ -283,35 +279,35 @@ inline
 const floatInVec
 operator * (floatInVec vec0, floatInVec vec1)
 {
-    return floatInVec(vec_madd(vec0.get128(), vec1.get128(), (vec_float4){0,0,0,0}));
+    return floatInVec(vec0.getAsFloat() * vec1.getAsFloat());
 }
 
 inline
 const floatInVec
 operator / (floatInVec num, floatInVec den)
 {
-    return floatInVec(divf4(num.get128(), den.get128()));
+    return floatInVec(num.getAsFloat() / den.getAsFloat());
 }
 
 inline
 const floatInVec
 operator + (floatInVec vec0, floatInVec vec1)
 {
-    return floatInVec(vec_add(vec0.get128(), vec1.get128()));
+    return floatInVec(vec0.getAsFloat() + vec1.getAsFloat());
 }
 
 inline
 const floatInVec
 operator - (floatInVec vec0, floatInVec vec1)
 {
-    return floatInVec(vec_sub(vec0.get128(), vec1.get128()));
+    return floatInVec(vec0.getAsFloat() - vec1.getAsFloat());
 }
 
 inline
 const boolInVec
 operator < (floatInVec vec0, floatInVec vec1)
 {
-    return boolInVec((vec_uint4)vec_cmpgt(vec1.get128(), vec0.get128()));
+    return boolInVec(vec0.getAsFloat() < vec1.getAsFloat());
 }
 
 inline
@@ -325,7 +321,7 @@ inline
 const boolInVec
 operator > (floatInVec vec0, floatInVec vec1)
 {
-    return boolInVec((vec_uint4)vec_cmpgt(vec0.get128(), vec1.get128()));
+    return boolInVec(vec0.getAsFloat() > vec1.getAsFloat());
 }
 
 inline
@@ -339,7 +335,7 @@ inline
 const boolInVec
 operator == (floatInVec vec0, floatInVec vec1)
 {
-    return boolInVec((vec_uint4)vec_cmpeq(vec0.get128(), vec1.get128()));
+    return boolInVec(vec0.getAsFloat() == vec1.getAsFloat());
 }
 
 inline
@@ -348,12 +344,12 @@ operator != (floatInVec vec0, floatInVec vec1)
 {
     return !(vec0 == vec1);
 }
-    
+
 inline
 const floatInVec
 select(floatInVec vec0, floatInVec vec1, boolInVec select_vec1)
 {
-    return floatInVec(vec_sel(vec0.get128(), vec1.get128(), select_vec1.get128()));
+    return (select_vec1.getAsBool() == 0) ? vec0 : vec1;
 }
 
 } // namespace Vectormath
