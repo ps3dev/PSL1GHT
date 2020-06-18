@@ -1,30 +1,47 @@
-#include <stdio.h>
-#include <fcntl.h>
-#include <_ansi.h>
-#include <_syslist.h>
-#include <sys/reent.h>
-#include <sys/errno.h>
-#include <sys/types.h>
-#include <sys/lv2errno.h>
-
 #include <sys/file.h>
-#include <lv2/sysfs.h>
 #include <time.h>
 #include <utime.h>
+#include <sys/errno.h>
 
-int
-_DEFUN(__librt_utime_r,(r,filename,times),
-	   struct _reent *r _AND
-	   const char *filename _AND
-	   const struct utimbuf *times)
+extern int errno;
+
+int __attribute__((weak)) utime(const char *filename, const struct utimbuf *times)
 {
+	s32 ret;
 	if (times == NULL) {
 		struct utimbuf now_time;
 		time_t     now;
 		now = time(NULL);
 		now_time.actime = now;
 		now_time.modtime = now;
-		return lv2errno_r(r,sysLv2FsUtime(filename,(const struct sysFSUtimbuf *)&now_time));
+		ret = sysLv2FsUtime(filename,(sysFSUtimbuf *)&now_time);
 	}
-	return lv2errno_r(r,sysLv2FsUtime(filename,(const struct sysFSUtimbuf *)times));
+	else ret = sysLv2FsUtime(filename,(sysFSUtimbuf *)times);
+	if (ret != SYS_FS_OK ) {
+		switch (ret) {
+			case SYS_FS_EACCES:
+					errno = EACCES;
+					break;
+			case SYS_FS_ENOTDIR:
+					errno = ENOTDIR;
+					break;
+			case SYS_FS_ENOENT:
+					errno = ENOENT;
+					break;
+			case SYS_FS_ENAMETOOLONG:
+					errno = ENAMETOOLONG;
+					break;
+			case SYS_FS_EROFS:
+					errno = EROFS;
+					break;
+			case SYS_FS_ENOTSUP:
+					errno = EPERM;
+					break;		
+				
+			default:
+				  errno = ENOENT;
+		}
+		return - 1;
+	}
+	return ret;
 }
