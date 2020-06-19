@@ -13,7 +13,6 @@
 
 int _utime(const char *path, const struct utimbuf *times, int* _errno)
 {
-	printf("CIAO\n");
 if (times == NULL) {
 		struct utimbuf now_time;
 		time_t     now;
