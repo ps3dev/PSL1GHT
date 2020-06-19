@@ -14,6 +14,9 @@ extern int __librt_fstat_r(struct _reent *r,int fd,struct stat *st);
 extern int __librt_fstat64_r(struct _reent *r,int fd,struct stat *st);
 extern int __librt_stat_r(struct _reent *r,const char *path,struct stat *st);
 extern int __librt_stat64_r(struct _reent *r,const char *path,struct stat *st);
+extern int __librt_ftruncate_r(struct _reent *r,int fd,off_t len);
+extern int __librt_truncate_r(struct _reent *r,const char *path,off_t len);
+extern int __librt_fsync_r(struct _reent *r,int fd);
 extern _ssize_t __librt_read_r(struct _reent *r,int fd,void *ptr,size_t len);
 extern _ssize_t __librt_write_r(struct _reent *r,int fd,const void *ptr,size_t len);
 extern _off_t __librt_lseek_r(struct _reent *r,int fd,_off_t pos,int dir);
@@ -32,6 +35,7 @@ extern long int __librt_telldir_r(struct _reent *r,DIR *dirp);
 extern void __librt_rewinddir_r(struct _reent *r,DIR *dirp);
 extern void __librt_seekdir_r(struct _reent *r,DIR *dirp,long int loc);
 extern int __librt_rmdir_r(struct _reent *r,const char *dirname);
+extern int __librt_link_r(struct _reent *r,const char *old,const char *new);
 extern int __librt_unlink_r(struct _reent *r,const char *path);
 extern int __librt_access_r(struct _reent *r,const char *path,int amode);
 
@@ -65,6 +69,9 @@ static void __syscalls_init(void)
 	__syscalls.fstat64_r = __librt_fstat64_r;
 	__syscalls.stat_r = __librt_stat_r;
 	__syscalls.stat64_r = __librt_stat64_r;
+	__syscalls.ftruncate_r = __librt_ftruncate_r;
+	__syscalls.truncate_r = __librt_truncate_r;
+	__syscalls.fsync_r = __librt_fsync_r;
 	__syscalls.chmod_r = __librt_chmod_r;
 	__syscalls.rename_r = __librt_rename_r;
 	__syscalls.isatty_r = __librt_isatty_r;
@@ -78,6 +85,7 @@ static void __syscalls_init(void)
 	__syscalls.rewinddir_r = __librt_rewinddir_r;
 	__syscalls.seekdir_r = __librt_seekdir_r;
 	__syscalls.rmdir_r = __librt_rmdir_r;
+	__syscalls.link_r = __librt_link_r;
 	__syscalls.unlink_r = __librt_unlink_r;
 	__syscalls.access_r = __librt_access_r;
 

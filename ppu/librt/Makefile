@@ -46,7 +46,7 @@ OBJS		:= \
 			sbrk.o exit.o close.o lseek.o read.o open.o sleep.o write.o fstat.o \
 			socket.o lock.o dirent.o mkdir.o times.o umask.o lv2errno.o heap.o \
 			chmod.o rename.o rmdir.o isatty.o gettod.o settod.o unlink.o access.o \
-			utime.o
+			link.o truncate.o fsync.o
 
 all: ppu
 
