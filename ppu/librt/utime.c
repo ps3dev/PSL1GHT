@@ -11,9 +11,9 @@
 #include <utime.h>
 
 int
-_DEFUN(__librt_access_r,(r,filename,times),
+_DEFUN(__librt_utime_r,(r,path,times),
 	   struct _reent *r _AND
-	   const char *filename _AND
+	   const char *path _AND
 	   const struct utimbuf *times)
 {
 	if (times == NULL) {
@@ -22,7 +22,7 @@ _DEFUN(__librt_access_r,(r,filename,times),
 		now = time(NULL);
 		now_time.actime = now;
 		now_time.modtime = now;
-		return lv2errno_r(sysLv2FsUtime(filename,(sysFSUtimbuf *)&now_time));
+		return lv2errno_r(sysLv2FsUtime(path,(sysFSUtimbuf *)&now_time));
 	}
-	else return lv2errno_r(sysLv2FsUtime(filename,(sysFSUtimbuf *)times));
+	else return lv2errno_r(sysLv2FsUtime(path,(sysFSUtimbuf *)times));
 }
