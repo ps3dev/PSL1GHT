@@ -128,6 +128,7 @@ void readoptions(struct _options *options,int argc,char *argv[])
 
 	options->src_file = argv[i];
 	options->dst_file = argv[i+1];
+
 #ifdef __CYGWIN__
 	if (options->src_file[0] == '/') {		//workaround to solve full path file source problem with cgywin
 		getcwd(currdir, sizeof(currdir));
