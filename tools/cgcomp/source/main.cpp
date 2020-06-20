@@ -4,9 +4,18 @@
 #include "compiler.h"
 #include "compilerfp.h"
 
+#ifdef __CYGWIN__
+	#include <libgen.h>
+	#include <unistd.h>
+	char currdir[1024];
+	char destfile[1026];
+#endif
+
 #if !defined(WIN32)
 #include <dlfcn.h>
 #endif
+
+
 
 #define PROG_TYPE_NONE			0
 #define PROG_TYPE_VP			1
@@ -119,6 +128,21 @@ void readoptions(struct _options *options,int argc,char *argv[])
 
 	options->src_file = argv[i];
 	options->dst_file = argv[i+1];
+#ifdef __CYGWIN__
+	if (options->src_file[0] == '/') {		//workaround to solve full path file source problem with cgywin
+		getcwd(currdir, sizeof(currdir));
+		char *fname, *path;
+		if (options->dst_file[0] != '/') {
+			sprintf(destfile, "%s/%s",currdir,  options->dst_file);
+			options->dst_file = destfile;
+			printf("destfile %s\n", options->dst_file);
+		}
+		fname = basename((char *)options->src_file);
+		path = (char *)dirname((char *)options->src_file);
+		chdir(path);	
+		options->src_file = fname;
+	}
+#endif
 }
 
 char* readfile(const char *filename)
