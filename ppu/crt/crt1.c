@@ -4,7 +4,6 @@
 #include <sys/time.h>
 #include <sys/dirent.h>
 #include <sys/syscalls.h>
-#include <utime.h>
 
 extern void _init();
 
@@ -89,7 +88,7 @@ static void __syscalls_init(void)
 	__syscalls.rmdir_r = __librt_rmdir_r;
 	__syscalls.link_r = __librt_link_r;
 	__syscalls.unlink_r = __librt_unlink_r;
-	//__syscalls.access_r = __librt_access_r;
+	__syscalls.access_r = __librt_access_r;
 	__syscalls.utime_r = __librt_utime_r;
 
 	__syscalls.sleep_r = __librt_sleep_r;
