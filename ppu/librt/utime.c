@@ -8,6 +8,7 @@
 #include <sys/lv2errno.h>
 
 #include <sys/file.h>
+#include <utime.h>
 
 int
 _DEFUN(__librt_utime_r,(r,path,times),
