@@ -119,7 +119,8 @@ install: $(BUILD)
 	@echo Installing $(TARGET)$(EXEEXT)
 	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
 	@install -m 755  $(OUTPUT) $(PS3DEV)/bin
-
+	@chmod 755 ./cgdll-installer.sh
+	@./cgdll-installer.sh
 #---------------------------------------------------------------------------------
 else
 
