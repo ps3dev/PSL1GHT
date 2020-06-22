@@ -41,6 +41,7 @@ endif
 ifneq (,$(findstring CYGWIN,$(UNAME)))
 	LDFLAGS		+= -s
 	EXEEXT		:= .exe
+	CXXFLAGS	+= -DWIN32
 	OS	:=	win32
 endif
 
