@@ -41,6 +41,7 @@ endif
 ifneq (,$(findstring CYGWIN,$(UNAME)))
 	LDFLAGS		+= -s
 	EXEEXT		:= .exe
+	CXXFLAGS	+= -DWIN32
 	OS	:=	win32
 endif
 
@@ -118,6 +119,7 @@ install: $(BUILD)
 	@echo Installing $(TARGET)$(EXEEXT)
 	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
 	@install -m 755  $(OUTPUT) $(PS3DEV)/bin
+	@./cgdll-installer.sh
 
 #---------------------------------------------------------------------------------
 else
