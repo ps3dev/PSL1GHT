@@ -23,6 +23,7 @@ then
 	CGHASH=$(rhash -C cg.dll -p "%{crc32}") 
 	if [[ $CGHASH =~ "28f6073b" || $CGHASH =~ "e5228ec2" ]];
 	then
+		chmod 766 cg.dll
 		mv -f cg.dll $PS3DEV/bin;
 	else
 		echo "Error - cg.dll: wrong CRC32";
