@@ -25,6 +25,7 @@ SFO			:=	sfo.py
 
 SPRX			:=	sprxlinker$(POSTFIX)
 CGCOMP			:=	cgcomp$(POSTFIX)
+RAW2H			:=	bin2s$(POSTFIX)
 PS3LOADAPP		:=	ps3load$(POSTFIX)
 
 # fake SELF type4 / type8 tools
