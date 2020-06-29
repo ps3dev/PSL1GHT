@@ -4,7 +4,7 @@
 ## Uname string
 UNAME=$(uname -a)
 
-if [[ $UNAME =~ "CYGWIN" || $UNAME =~ "MINGW" ]];
+if echo $UNAME | grep -q "CYGWIN" || echo $UNAME | grep -q "MINGW";
 then 
 	## Download a fresh cg.dll
 	rm -f cg.zip;
