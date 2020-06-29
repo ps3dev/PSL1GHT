@@ -1,15 +1,15 @@
-#!/bin/sh -e
+#!/usr/bin/env bash
 # NVIDIA cg.dll installer script by CrystalCT (crystal@unict.it)
 
 ## Uname string
 UNAME=$(uname -a)
 
-if echo $UNAME | grep -q "CYGWIN" || echo $UNAME | grep -q "MINGW";
+if [[ "$UNAME" =~ (CYGWIN|MINGW) ]];
 then 
 	## Download a fresh cg.dll
 	rm -f cg.zip;
 	rm -f cg.dll;
-	if [[ $UNAME =~ "x86_64" || $UNAME =~ "MINGW64" ]];
+	if [[ "$UNAME" =~ (x86_64|MINGW64) ]];
 	then
 		wget --continue --no-check-certificate https://wikidll.com/download/3726/cg.zip;
 	else
@@ -21,7 +21,7 @@ then
 	unzip cg.zip
 	rm -f cg.zip
 	CGHASH=$(rhash -C cg.dll -p "%{crc32}") 
-	if [[ $CGHASH =~ "28f6073b" || $CGHASH =~ "e5228ec2" ]];
+	if [[ "$CGHASH" =~ (28f6073b|e5228ec2) ]];
 	then
 		chmod 766 cg.dll
 		mv -f cg.dll $PS3DEV/bin;
