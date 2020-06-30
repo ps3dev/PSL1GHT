@@ -14,7 +14,7 @@ clean:
 	@rm -rf $(TARGET) *.exe
 
 install: all
-	@cp $(TARGET) $(PSL1GHT)/host/bin/
+	@cp $(TARGET) $(PSL1GHT)/bin/
 
 $(TARGET): $(CFILES)
 	@$(CC) $(CFLAGS) $< -o $@
