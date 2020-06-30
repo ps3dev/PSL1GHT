@@ -3,8 +3,8 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(PSL1GHT)),)
-$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
 TARGET		:= raw2h
@@ -24,8 +24,8 @@ clean:
 
 install: all
 	@echo Installing $(TARGET)
-	@[ -d $(PSL1GHT)/bin ] || mkdir -p $(PSL1GHT)/bin
-	@cp $(TARGET) $(PSL1GHT)/bin/
+	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
+	@cp $(TARGET) $(PS3DEV)/bin/
 
 $(TARGET): $(CFILES)
 	@$(CC) $(CFLAGS) $< -o $@
