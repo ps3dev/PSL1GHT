@@ -1,3 +1,12 @@
+#---------------------------------------------------------------------------------
+# Clear the implicit built in rules
+#---------------------------------------------------------------------------------
+.SUFFIXES:
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(PSL1GHT)),)
+$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
+endif
+
 TARGET		:= raw2h
 SOURCE		:= .
 
@@ -14,6 +23,8 @@ clean:
 	@rm -rf $(TARGET) *.exe
 
 install: all
+	@echo Installing $(TARGET)
+	@[ -d $(PSL1GHT)/bin ] || mkdir -p $(PSL1GHT)/bin
 	@cp $(TARGET) $(PSL1GHT)/bin/
 
 $(TARGET): $(CFILES)
