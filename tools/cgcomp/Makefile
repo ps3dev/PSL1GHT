@@ -19,6 +19,7 @@ UNAME	:=	$(shell uname -s)
 CFLAGS	:=	$(DEBUGFLAGS) -Wall -O2
 CFLAGS	+=	$(INCLUDES)
 CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
+CGTOOLKIT	:= echo Linux and Mac users should install Cg Toolkit package from NVIDIA web site.
 
 LDFLAGS	=	$(DEBUGFLAGS)
 
@@ -36,6 +37,7 @@ ifneq (,$(findstring MINGW,$(UNAME)))
 	CFLAGS		+= -mno-cygwin
 	LDFLAGS		+= -mno-cygwin -s
 	OS	:=	win32
+	CGTOOLKIT	:= chmod 755 ./cgdll-installer.sh; ./cgdll-installer.sh
 endif
 
 ifneq (,$(findstring CYGWIN,$(UNAME)))
@@ -43,6 +45,7 @@ ifneq (,$(findstring CYGWIN,$(UNAME)))
 	EXEEXT		:= .exe
 	CXXFLAGS	+= -DWIN32
 	OS	:=	win32
+	CGTOOLKIT	:= chmod 755 ./cgdll-installer.sh; ./cgdll-installer.sh
 endif
 
 ifneq (,$(findstring Darwin,$(UNAME)))
@@ -119,8 +122,7 @@ install: $(BUILD)
 	@echo Installing $(TARGET)$(EXEEXT)
 	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
 	@install -m 755  $(OUTPUT) $(PS3DEV)/bin
-	@chmod 755 ./cgdll-installer.sh
-	@./cgdll-installer.sh
+	@$(CGTOOLKIT)
 #---------------------------------------------------------------------------------
 else
 
