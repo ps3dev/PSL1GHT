@@ -166,17 +166,17 @@ typedef void* sslCert;
 typedef void* sslCertName;
 
 
-int sslInit(void *pool, s32 poolSize);
+int sslInit(void *pool, uint32_t poolSize);
 int sslEnd(void);
 
 /* SSL certificate loader */
-int sslCertificateLoader(uint64_t flag, char *buffer, s32 size, s32 *required);
+int sslCertificateLoader(uint64_t flag, char *buffer, uint32_t size, uint32_t *required);
 
 /* SSL certificate information get functions */
-int sslCertGetSerialNumber(const sslCert cert, const uint8_t **sboData, s32 *sboLength);
-int sslCertGetPublicKey(const sslCert cert, const uint8_t **sboData, s32 *sboLength);
-int sslCertGetRsaPublicKeyModulus(const sslCert cert, const uint8_t **sboData, s32 *sboLength);
-int sslCertGetRsaPublicKeyExponent(const sslCert cert, const uint8_t **sboData, s32 *sboLength);
+int sslCertGetSerialNumber(const sslCert cert, const uint8_t **sboData, uint32_t *sboLength);
+int sslCertGetPublicKey(const sslCert cert, const uint8_t **sboData, uint32_t *sboLength);
+int sslCertGetRsaPublicKeyModulus(const sslCert cert, const uint8_t **sboData, uint32_t *sboLength);
+int sslCertGetRsaPublicKeyExponent(const sslCert cert, const uint8_t **sboData, uint32_t *sboLength);
 
 //int sslCertGetNotBefore(const sslCert cert, CellRtcTick *begin);
 //int sslCertGetNotAfter(const sslCert cert, CellRtcTick *limit);
@@ -184,7 +184,7 @@ int sslCertGetSubjectName(const sslCert cert, const sslCertName *name);
 int sslCertGetIssuerName(const sslCert cert, const sslCertName *name);
 
 int sslCertGetNameEntryCount(const sslCert cert, uint32_t *entryCount);
-int sslCertGetNameEntryInfo(const sslCert cert, uint32_t entryNum, const char **oidName, const uint8_t **value, s32 *valueLength, int32_t flag);
+int sslCertGetNameEntryInfo(const sslCert cert, uint32_t entryNum, const char **oidName, const uint8_t **value, uint32_t *valueLength, int32_t flag);
 int sslCertGetMd5Fingerprint(const sslCert cert, const uint8_t *buf, uint32_t *plen);
 
 

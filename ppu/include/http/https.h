@@ -18,7 +18,7 @@ extern "C" {
 typedef struct _https_data
 {
   char *ptr ATTRIBUTE_PRXPTR;
-  s32 size;
+  u32 size;
 } httpsData;
 
 
@@ -34,7 +34,7 @@ typedef int (*httpsSslCallback)(s32 verErr,sslCert const sslCerts[],int certNum,
  */
 
 /* initialization */
-s32 httpsInit(s32 caCertNum,const httpsData *caList);
+s32 httpsInit(u32 caCertNum,const httpsData *caList);
 s32 httpsEnd(void);
 
 /* SSL certificate */

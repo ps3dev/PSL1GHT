@@ -122,25 +122,25 @@ typedef int (*httpCookieRecvCallback)(httpTransId tid,const httpUri *uri,const c
  */
 
 /* initialization */
-s32 httpInit(void *pool,s32 poolSize);
+s32 httpInit(void *pool,u32 poolSize);
 s32 httpEnd(void);
 
 /* transaction request */
-s32 httpSendRequest(httpTransId tid,const char *buf,s32 size,s32 *sent);
-s32 httpRecvResponse(httpTransId tid,char *buf,s32 size,s32 *recvd);
+s32 httpSendRequest(httpTransId tid,const char *buf,u32 size,u32 *sent);
+s32 httpRecvResponse(httpTransId tid,char *buf,u32 size,u32 *recvd);
 
 /* proxy */
 s32 httpSetProxy(const httpUri *proxy);
-s32 httpGetProxy(httpUri *proxy,void *pool,s32 poolSize,s32 *required);
+s32 httpGetProxy(httpUri *proxy,void *pool,u32 poolSize,u32 *required);
 
 /* request content length */
 s32 httpRequestSetContentLength(httpTransId tid,u64 totalSize);
 s32 httpRequestGetContentLength(httpTransId tid,u64 *totalSize);
 
 /* request headers */
-s32 httpRequestGetAllHeaders(httpTransId tid,httpHeader **headers,s32 *items,void *pool,s32 poolSize,s32 *required);
+s32 httpRequestGetAllHeaders(httpTransId tid,httpHeader **headers,u32 *items,void *pool,u32 poolSize,u32 *required);
 s32 httpRequestSetHeader(httpTransId tid,const httpHeader *header);
-s32 httpRequestGetHeader(httpTransId tid,httpHeader *header,const char *name,void *pool,s32 poolSize,s32 *required);
+s32 httpRequestGetHeader(httpTransId tid,httpHeader *header,const char *name,void *pool,u32 poolSize,u32 *required);
 s32 httpRequestAddHeader(httpTransId tid,const httpHeader *header);
 s32 httpRequestDeleteHeader(httpTransId tid,const char *name);
 
@@ -151,15 +151,15 @@ s32 httpResponseGetStatusCode(httpTransId tid,int32_t *code);
 s32 httpResponseGetContentLength(httpTransId tid,u64 *totalSize);
 
 /* response status line */
-s32 httpResponseGetStatusLine(httpTransId tid,httpStatusLine *status,void *pool,s32 poolSize,s32 *required);
+s32 httpResponseGetStatusLine(httpTransId tid,httpStatusLine *status,void *pool,u32 poolSize,u32 *required);
 
 /* cookies */
-s32 httpInitCookie(void *pool,s32 poolSize);
+s32 httpInitCookie(void *pool,u32 poolSize);
 s32 httpEndCookie(void);
 s32 httpAddCookieWithClientId(const httpUri *uri,const char *cookie,httpClientId cid);
 s32 httpSessionCookieFlush(httpClientId cid);
-s32 httpCookieExportWithClientId(void *buf,s32 size,s32 *exportSize,httpClientId cid);
-s32 httpCookieImportWithClientId(const void *buf,s32 size,httpClientId cid);
+s32 httpCookieExportWithClientId(void *buf,u32 size,u32 *exportSize,httpClientId cid);
+s32 httpCookieImportWithClientId(const void *buf,u32 size,httpClientId cid);
 
 /* cookie callbacks */
 s32 httpClientSetCookieSendCallback(httpClientId cid,httpCookieSendCallback cb,void *arg);
@@ -176,7 +176,7 @@ s32 httpDestroyClient(httpClientId cid);
 
 /* proxy */
 s32 httpClientSetProxy(httpClientId cid,const httpUri *proxy);
-s32 httpClientGetProxy(httpClientId cid,httpUri *proxy,void *pool,s32 poolSize,s32 *required);
+s32 httpClientGetProxy(httpClientId cid,httpUri *proxy,void *pool,u32 poolSize,u32 *required);
 
 /* version */
 s32 httpClientSetVersion(httpClientId cid,u32 major,u32 minor);
@@ -208,11 +208,11 @@ s32 httpClientGetCookieStatus(httpClientId cid,u32 *enable);
 
 /* user agent */
 s32 httpClientSetUserAgent(httpClientId cid,const char *userAgent);
-s32 httpClientGetUserAgent(httpClientId cid,char *userAgent,s32 size,s32 *required);
+s32 httpClientGetUserAgent(httpClientId cid,char *userAgent,u32 size,u32 *required);
 
 /* buffer max */
-s32 httpClientSetResponseBufferMax(httpClientId cid,s32 max);
-s32 httpClientGetResponseBufferMax(httpClientId cid,s32 *max);
+s32 httpClientSetResponseBufferMax(httpClientId cid,u32 max);
+s32 httpClientGetResponseBufferMax(httpClientId cid,u32 *max);
 
 /* close connections */
 s32 httpClientCloseAllConnections(httpClientId cid);
@@ -234,24 +234,24 @@ s32 httpClientSetConnTimeout(httpClientId cid,s64 usec);
 s32 httpClientGetConnTimeout(httpClientId cid,s64 *usec);
 
 /* pool size */
-s32 httpClientSetTotalPoolSize(httpClientId cid,s32 poolSize);
-s32 httpClientGetTotalPoolSize(httpClientId cid,s32 *poolSize);
-s32 httpClientSetPerHostPoolSize(httpClientId cid,s32 poolSize);
-s32 httpClientGetPerHostPoolSize(httpClientId cid,s32 *poolSize);
+s32 httpClientSetTotalPoolSize(httpClientId cid,u32 poolSize);
+s32 httpClientGetTotalPoolSize(httpClientId cid,u32 *poolSize);
+s32 httpClientSetPerHostPoolSize(httpClientId cid,u32 poolSize);
+s32 httpClientGetPerHostPoolSize(httpClientId cid,u32 *poolSize);
 
 /* keep alive */
-s32 httpClientSetPerHostKeepAliveMax(httpClientId cid,s32 maxSize);
-s32 httpClientGetPerHostKeepAliveMax(httpClientId cid,s32 *maxSize);
+s32 httpClientSetPerHostKeepAliveMax(httpClientId cid,u32 maxSize);
+s32 httpClientGetPerHostKeepAliveMax(httpClientId cid,u32 *maxSize);
 
 /* pipeline */
-s32 httpClientSetPerPipelineMax(httpClientId cid,s32 pipeMax);
-s32 httpClientGetPerPipelineMax(httpClientId cid,s32 *pipeMax);
+s32 httpClientSetPerPipelineMax(httpClientId cid,u32 pipeMax);
+s32 httpClientGetPerPipelineMax(httpClientId cid,u32 *pipeMax);
 
 /* client headers */
-s32 httpClientGetAllHeaders(httpClientId cid,httpHeader **headers,s32 *items,void *pool,s32 poolSize,s32 *required);
+s32 httpClientGetAllHeaders(httpClientId cid,httpHeader **headers,u32 *items,void *pool,u32 poolSize,u32 *required);
 s32 httpClientSetHeader(httpClientId cid,const httpHeader *header);
 
-s32 httpClientGetHeader(httpClientId cid,httpHeader *header,const char *name,void *pool,s32 poolSize,s32 *required);
+s32 httpClientGetHeader(httpClientId cid,httpHeader *header,const char *name,void *pool,u32 poolSize,u32 *required);
 s32 httpClientAddHeader(httpClientId cid,const httpHeader *header);
 s32 httpClientDeleteHeader(httpClientId cid,const char *name);
 
@@ -267,17 +267,17 @@ s32 httpClientSetRedirectCallback(httpClientId cid,httpRedirectCallback cb,void 
 /* general transactions */
 s32 httpCreateTransaction(httpTransId *tid,httpClientId cid,const char *method,const httpUri *uri);
 s32 httpDestroyTransaction(httpTransId tid);
-s32 httpTransactionGetUri(httpTransId tid,httpUri *uri,void *pool,s32 poolSize,s32 *required);
+s32 httpTransactionGetUri(httpTransId tid,httpUri *uri,void *pool,u32 poolSize,u32 *required);
 s32 httpTransactionCloseConnection(httpTransId tid);
 s32 httpTransactionReleaseConnection(httpTransId tid,int *sid);
 s32 httpTransactionAbortConnection(httpTransId tid);
 
 /* SSL transactions */
-s32 httpTransactionGetSslCipherName(httpTransId tid,char *name,s32 size,s32 *required);
+s32 httpTransactionGetSslCipherName(httpTransId tid,char *name,u32 size,u32 *required);
 s32 httpTransactionGetSslCipherId(httpTransId tid,int32_t *id);
-s32 httpTransactionGetSslCipherVersion(httpTransId tid,char *version,s32 size,s32 *required);
+s32 httpTransactionGetSslCipherVersion(httpTransId tid,char *version,u32 size,u32 *required);
 s32 httpTransactionGetSslCipherBits(httpTransId tid,int32_t *effectiveBits,int32_t *algorithmBits);
-s32 httpTransactionGetSslCipherString(httpTransId tid,char *buffer,s32 size);
+s32 httpTransactionGetSslCipherString(httpTransId tid,char *buffer,u32 size);
 s32 httpTransactionGetSslVersion(httpTransId tid,int32_t *version);
 s32 httpTransactionGetSslId(httpTransId tid,httpSslId *id);
 
