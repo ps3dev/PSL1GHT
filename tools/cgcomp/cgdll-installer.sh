@@ -1,4 +1,5 @@
-#!/bin/sh -e
+#!/bin/bash
+set -e
 # NVIDIA cg.dll installer script by CrystalCT (crystal@unict.it)
 
 ## Uname string
