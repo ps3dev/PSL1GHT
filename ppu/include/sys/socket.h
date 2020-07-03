@@ -4,6 +4,8 @@
 #ifndef __SYS_SOCKET_H__
 #define __SYS_SOCKET_H__
 
+#include <ppu-types.h>
+
 typedef u32 socklen_t;
 typedef u8 sa_family_t;
 
