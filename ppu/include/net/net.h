@@ -5,10 +5,6 @@
 #include <select.h>
 #include <poll.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define	NET_EPERM			1
 #define	NET_ENOENT			2
 #define	NET_ESRCH			3
@@ -138,6 +134,10 @@ typedef struct _net_init_param
 	u32 memory_size;
 	s32 flags;
 } netInitParam;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 s32 netInitialize();
 s32 netDeinitialize();
