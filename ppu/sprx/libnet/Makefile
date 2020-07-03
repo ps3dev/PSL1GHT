@@ -33,7 +33,7 @@ export OFILES		:=	$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
 export VPATH		:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
 
 export INCLUDE		:=	$(foreach dir,$(INCLUDES), -iquote $(CURDIR)/$(dir)) \
-						-I$(BASEDIR)/../../include
+						-I$(BASEDIR)/../../include -I$(BASEDIR)/../../include
 
 #---------------------------------------------------------------------------------
 else
