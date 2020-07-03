@@ -6,9 +6,8 @@
 #include <netinet/in.h>
 #include <socket.h>
 #include <select.h>
+#include <sysutil/sysnet.h>
 #include <sys/lv2errno.h>
-
-#include <sys/socket.h>
 
 #define FD(socket)			((socket)&~SOCKET_FD_MASK)
 
