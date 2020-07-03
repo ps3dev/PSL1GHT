@@ -1,7 +1,6 @@
 #ifndef __INET_H__
 #define __INET_H__
 
-#include <stdint.h>
 #include <netinet/in.h>
 
 #define htonl(hostlong) (hostlong)

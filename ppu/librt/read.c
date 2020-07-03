@@ -3,7 +3,7 @@
 #include <sys/reent.h>
 #include <sys/errno.h>
 #include <sys/types.h>
-#include <net/socket.h>
+#include <socket.h>
 #include <sys/lv2errno.h>
 
 #include <sys/tty.h>

@@ -1,9 +1,13 @@
-#ifndef __LV2_NET_H__
-#define __LV2_NET_H__
+#ifndef __NET_H__
+#define __NET_H__
 
-#include <net/socket.h>
-#include <net/select.h>
-#include <net/poll.h>
+#include <socket.h>
+#include <select.h>
+#include <poll.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define	NET_EPERM			1
 #define	NET_ENOENT			2
@@ -102,10 +106,6 @@
 
 #define net_errno			(*netErrnoLoc())
 #define net_h_errno			(*netHErrnoLoc())
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 struct net_msghdr
 {

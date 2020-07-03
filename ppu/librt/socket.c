@@ -4,8 +4,8 @@
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <net/socket.h>
-#include <net/select.h>
+#include <socket.h>
+#include <select.h>
 #include <sys/lv2errno.h>
 
 #include <sys/socket.h>

@@ -10,7 +10,7 @@
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <net/socket.h>
+#include <socket.h>
 #include <net/net.h>
 
 #include <sys/thread.h>
