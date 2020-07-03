@@ -1,9 +1,8 @@
 #ifndef __IN_H__
 #define __IN_H__
 
+#include <socket.h>
 #include <ppu-types.h>
-#include <net/socket.h>
-
 
 #define IPPROTO_IP           0x00
 #define IPPROTO_ICMP         0x01
@@ -87,8 +86,5 @@ struct ip_mreq
         struct in_addr imr_multiaddr;
         struct in_addr imr_interface;
 };
-
-
-#include <arpa/inet.h>
 
 #endif

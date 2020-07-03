@@ -8,9 +8,9 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <net/net.h>
-#include <net/netdb.h>
-#include <net/socket.h>
-#include <net/select.h>
+#include <netdb.h>
+#include <socket.h>
+#include <select.h>
 
 #include <sys/lv2errno.h>
 

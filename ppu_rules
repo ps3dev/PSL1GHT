@@ -10,7 +10,7 @@ export PATH		:=	$(PS3DEV)/bin:$(PS3DEV)/ppu/bin:$(PATH)
 
 export PORTLIBS		:=	$(PS3DEV)/portlibs/ppu
 
-export LIBPSL1GHT_INC	:=	-I$(PSL1GHT)/ppu/include -I$(PSL1GHT)/ppu/include/simdmath
+export LIBPSL1GHT_INC	:=	-I$(PSL1GHT)/ppu/include -I$(PSL1GHT)/ppu/include/simdmath -I$(PSL1GHT)/ppu/include/sys
 export LIBPSL1GHT_LIB	:=	-L$(PSL1GHT)/ppu/lib
 
 PREFIX			:=	ppu-
