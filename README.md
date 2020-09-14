@@ -5,7 +5,6 @@ PSL1GHT is a lightweight PlayStation 3 homebrew SDK that uses the open-source
 PlayStation 3 toolchains to compile user applications that will run from the
 XMB menu (GameOS homebrew).
 
-
 Credits
 -------
 
@@ -15,13 +14,12 @@ Credits
     Tempus      - PSL1GHT Logo
     lousyphreak - libaudio
     Hermes      - sysmodule, libpngdec, libjpgdec
-    BigBoss     - EyeToy support added to libcamera sample, libgem sample.
+    BigBoss       - EyeToy support added to libcamera sample, libgem sample.
     ooPo        - ps3libraries
     ElSemi      - Vertex Program Compiler
     zerkman     - SPU sample code
     shagkur     - Author
     miigotu     - Author
-
 
 Environment
 -----------
@@ -42,7 +40,6 @@ Most of the PSL1GHT samples included in the samples/ directory require various
 libraries from [ps3libraries](http://github.com/ps3dev/ps3libraries) to be
 installed.
 
-
 Building
 --------
 
@@ -59,21 +56,20 @@ install it to, for example...
 ... for a local build of it. Ensure that $PSL1GHT is set when you are
 building any of the examples or other apps that use PSL1GHT.
 
-
 Current Status
 --------------
 
 ### Graphics
 
-PSL1GHT supports hardware acclerated 3d graphics.
-Vertex shaders are a work in progress and Fragment shaders don't exsist yet.
+PSL1GHT supports hardware accelerated 3d graphics.
+Vertex shaders are a work in progress and Fragment shaders don't exist yet.
 
 ### Input
 
 PS3 controllers are fully supported, and pressing the PS button brings up the
 in-game XMB menu, assuming the framebuffer is working.
 
-Quitting from the XMB requires the application to register a callback ot handle the event. An example using this is the camera example.
+Quitting from the XMB requires the application to register a callback to handle the event. An example using this is the camera example.
 
 ### Filesystem Access
 
@@ -84,7 +80,7 @@ directly (see include/psl1ght/lv2/filesystem.h)
 
 ### Networking
 
-Berkeley sockets are available for use in PSL1GHT, though some of the
+Berkeley sockets are available for use in PSL1GHT, though some
 implementation remains incomplete at this time (hostname lookups, for example).
 
 ### STDOUT Debugging
@@ -120,4 +116,3 @@ The following libraries are currently supported:
 * libpngdec
 * libjpgdec
 * libgem
-
