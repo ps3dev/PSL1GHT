@@ -1,4 +1,4 @@
-TARGETS := msgdialog osk threadtest
+TARGETS := msgdialog osk save threadtest
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET; done

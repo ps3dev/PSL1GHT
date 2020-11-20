@@ -1,4 +1,4 @@
-TARGETS := spuchain spudma sputest sputhread spuparallel spumars
+TARGETS := spuchain spudma spumars spuparallel spurs sputest sputhread
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET bin; done

@@ -2,7 +2,7 @@
 ## Configuration
 ##
 
-PREFIX          := ppu
+PREFIX      := ppu
 
 TARGET		:= audiosync.self
 

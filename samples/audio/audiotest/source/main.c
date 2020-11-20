@@ -4,7 +4,6 @@
  */
 
 #include <audio/audio.h>
-#include <psl1ght/lv2/timer.h>
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
@@ -53,8 +52,8 @@ u32 playOneBlock(u64 *readIndex, float *audioDataStart)
 
 int main(int argc, const char* argv[])
 {
-	AudioPortParam params;
-	AudioPortConfig config;
+	audioPortParam params;
+	audioPortConfig config;
 	u32 portNum;
 
 	//initialize the audio system
@@ -68,7 +67,7 @@ int main(int argc, const char* argv[])
 	//8 16 or 32 block buffer
 	params.numBlocks = AUDIO_BLOCK_8;
 	//extended attributes
-	params.attr = 0;
+	params.attrib = 0;
 	//sound level (1 is default)
 	params.level = 1;
 

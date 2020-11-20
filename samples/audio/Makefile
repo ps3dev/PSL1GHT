@@ -1,4 +1,4 @@
-TARGETS := audiosync # audiotest
+TARGETS := audiosync audiotest
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET; done
