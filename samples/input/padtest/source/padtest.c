@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
     struct    sockaddr_in servaddr;  /*  socket address structure  */
     char      buffer[MAX_LINE];      /*  character buffer          */
     char     *endptr;                /*  for strtol()              */
-	PadInfo padinfo;
-	PadData paddata;
+	padInfo padinfo;
+	padData paddata;
 	
 	fprintf(stdout, "Starting Pad Test.\n");
     /*  Get port number from the command line, and
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
 			sprintf(buffer, "UP.... %d\r\n", paddata.BTN_UP);
 			Writeline(conn_s, buffer, strlen(buffer));
 			
-			PadActParam actparam;
+			padActParam actparam;
 			actparam.small_motor = 1;
 			actparam.large_motor = 0;
 			

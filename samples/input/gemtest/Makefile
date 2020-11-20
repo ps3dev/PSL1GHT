@@ -125,7 +125,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).self: $(OUTPUT).elf
-	@make_fself $(OUTPUT).elf $(OUTPUT).self
+	@fself $(OUTPUT).elf $(OUTPUT).self
 $(OUTPUT).elf: $(OUTPUT)
 	@cp $(OUTPUT) $(OUTPUT).elf
 	@sprxlinker $(OUTPUT).elf

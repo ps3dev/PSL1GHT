@@ -117,49 +117,49 @@ int main(int argc, char *argv[]) {
 			{
 				KbLed led_state;
 				/* num_lock=ON, caps_lock=OFF, scroll_lock=OFF, compose=OFF, kana=OFF*/
-				led_state.leds = 0;
-				led_state.num_lock = 1;
-				sprintf(buffer, "num_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				led_state._KbLedU.leds = 0;
+				led_state._KbLedU._KbLedS.num_lock = 1;
+				sprintf(buffer, "num_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state._KbLedU.leds, ioKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* num_lock=OFF, caps_lock=ON, scroll_lock=OFF, compose=OFF, kana=OFF*/
-				led_state.leds = 0;
-				led_state.caps_lock = 1;
-				sprintf(buffer, "caps_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				led_state._KbLedU.leds = 0;
+				led_state._KbLedU._KbLedS.caps_lock = 1;
+				sprintf(buffer, "caps_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state._KbLedU.leds, ioKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* num_lock=OFF, caps_lock=OFF, scroll_lock=ON, compose=OFF, kana=OFF*/
-				led_state.leds = 0;
-				led_state.scroll_lock = 1;
-				sprintf(buffer, "scroll_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				led_state._KbLedU.leds = 0;
+				led_state._KbLedU._KbLedS.scroll_lock = 1;
+				sprintf(buffer, "scroll_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state._KbLedU.leds, ioKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);		
 				/* num_lock=OFF, caps_lock=OFF, scroll_lock=OFF, compose=ON, kana=OFF*/
-				led_state.leds = 0;
-				led_state.compose = 1;
-				sprintf(buffer, "compose=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				led_state._KbLedU.leds = 0;
+				led_state._KbLedU._KbLedS.compose = 1;
+				sprintf(buffer, "compose=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state._KbLedU.leds, ioKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* num_lock=OFF, caps_lock=OFF, scroll_lock=OFF, compose=OFF, kana=ON*/
-				led_state.leds = 0;
-				led_state.kana = 1;
-				sprintf(buffer, "kana=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				led_state._KbLedU.leds = 0;
+				led_state._KbLedU._KbLedS.kana = 1;
+				sprintf(buffer, "kana=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state._KbLedU.leds, ioKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* All Kb Leds=OFF */
-				led_state.leds = 0;
-				sprintf(buffer, "All Kb Leds=OFF Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				led_state._KbLedU.leds = 0;
+				sprintf(buffer, "All Kb Leds=OFF Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state._KbLedU.leds, ioKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);	
 				/* All Kb Leds=ON */
-				led_state.leds = 0xFFFFFFFF;
-				led_state.reserved = 0;
-				sprintf(buffer, "All Kb Leds=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				led_state._KbLedU.leds = 0xFFFFFFFF;
+				led_state._KbLedU._KbLedS.reserved = 0;
+				sprintf(buffer, "All Kb Leds=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state._KbLedU.leds, ioKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* All Kb Leds=OFF */
-				led_state.leds = 0;
-				sprintf(buffer, "All Kb Leds=OFF Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				led_state._KbLedU.leds = 0;
+				sprintf(buffer, "All Kb Leds=OFF Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state._KbLedU.leds, ioKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 
@@ -182,32 +182,32 @@ int main(int argc, char *argv[]) {
 					Writeline(conn_s, buffer, strlen(buffer));
 				}
 				
-				sprintf(buffer, "led.num_lock..... %d\r\n", kbdata.led.num_lock);
+				sprintf(buffer, "led.num_lock..... %d\r\n", kbdata.led._KbLedU._KbLedS.num_lock);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "led.caps_lock..... %d\r\n", kbdata.led.caps_lock);
+				sprintf(buffer, "led.caps_lock..... %d\r\n", kbdata.led._KbLedU._KbLedS.caps_lock);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "led.scroll_lock..... %d\r\n", kbdata.led.scroll_lock);
+				sprintf(buffer, "led.scroll_lock..... %d\r\n", kbdata.led._KbLedU._KbLedS.scroll_lock);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "led.compose..... %d\r\n", kbdata.led.compose);
+				sprintf(buffer, "led.compose..... %d\r\n", kbdata.led._KbLedU._KbLedS.compose);
 				Writeline(conn_s, buffer, strlen(buffer));			
-				sprintf(buffer, "led.kana..... %d\r\n", kbdata.led.compose);
+				sprintf(buffer, "led.kana..... %d\r\n", kbdata.led._KbLedU._KbLedS.compose);
 				Writeline(conn_s, buffer, strlen(buffer));			
 				
-				sprintf(buffer, "mkey.l_ctrl..... %d\r\n", kbdata.mkey.l_ctrl);
+				sprintf(buffer, "mkey.l_ctrl..... %d\r\n", kbdata.mkey._KbMkeyU._KbMkeyS.l_ctrl);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "mkey.l_shift..... %d\r\n", kbdata.mkey.l_shift);
+				sprintf(buffer, "mkey.l_shift..... %d\r\n", kbdata.mkey._KbMkeyU._KbMkeyS.l_shift);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "mkey.l_alt..... %d\r\n", kbdata.mkey.l_alt);
+				sprintf(buffer, "mkey.l_alt..... %d\r\n", kbdata.mkey._KbMkeyU._KbMkeyS.l_alt);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "mkey.l_win..... %d\r\n", kbdata.mkey.l_win);
+				sprintf(buffer, "mkey.l_win..... %d\r\n", kbdata.mkey._KbMkeyU._KbMkeyS.l_win);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "mkey.r_ctrl..... %d\r\n", kbdata.mkey.r_ctrl);
+				sprintf(buffer, "mkey.r_ctrl..... %d\r\n", kbdata.mkey._KbMkeyU._KbMkeyS.r_ctrl);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "mkey.r_shift..... %d\r\n", kbdata.mkey.r_shift);
+				sprintf(buffer, "mkey.r_shift..... %d\r\n", kbdata.mkey._KbMkeyU._KbMkeyS.r_shift);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "mkey.r_alt..... %d\r\n", kbdata.mkey.r_alt);
+				sprintf(buffer, "mkey.r_alt..... %d\r\n", kbdata.mkey._KbMkeyU._KbMkeyS.r_alt);
 				Writeline(conn_s, buffer, strlen(buffer));
-				sprintf(buffer, "mkey.r_win..... %d\r\n", kbdata.mkey.r_win);
+				sprintf(buffer, "mkey.r_win..... %d\r\n", kbdata.mkey._KbMkeyU._KbMkeyS.r_win);
 				Writeline(conn_s, buffer, strlen(buffer));
 				
 				sprintf(buffer, "Finished.\r\n");
@@ -264,12 +264,12 @@ int main(int argc, char *argv[]) {
 				
 				/* Use previous data */
 				mapping = kbconfig.mapping;
-				mkey.mkeys = kbdata.mkey.mkeys;
-				led.leds = kbdata.led.leds;
+				mkey._KbMkeyU.mkeys = kbdata.mkey._KbMkeyU.mkeys;
+				led._KbLedU.leds = kbdata.led._KbLedU.leds;
 				for(int j=0; j<kbdata.nb_keycode ;j++)
 				{
 					rawcode = kbdata.keycode[j];
-					sprintf(buffer, "Calling ioKbCnvRawCode(%d, 0x%08X, 0x%08X, 0x%04X) returned 0x%04X\r\n", mapping, mkey.mkeys, led.leds, rawcode,
+					sprintf(buffer, "Calling ioKbCnvRawCode(%d, 0x%08X, 0x%08X, 0x%04X) returned 0x%04X\r\n", mapping, mkey._KbMkeyU.mkeys, led._KbLedU.leds, rawcode,
 								ioKbCnvRawCode(mapping, mkey, led, rawcode));
 					Writeline(conn_s, buffer, strlen(buffer));
 				}
@@ -305,8 +305,8 @@ int main(int argc, char *argv[]) {
 	sprintf(buffer, "KbInfo:\r\nMax Kbs: %u\r\nConnected Kbs: %u\r\nInfo Field: %08x\r\n", kbinfo.max, kbinfo.connected, kbinfo.info);
 	Writeline(conn_s, buffer, strlen(buffer));	
 
-	PadInfo2 padinfo2;
-	PadData paddata;
+	padInfo2 padinfo2;
+	padData paddata;
 	s32 status;
 
 	while(receive_exit_request == 0)
@@ -346,17 +346,17 @@ int main(int argc, char *argv[]) {
 						KbMkey mkey;
 						KbLed led;
 						keycode = kbdata.keycode[j];
-						mkey.mkeys = kbdata.mkey.mkeys;
-						led.leds = kbdata.led.leds;
+						mkey._KbMkeyU.mkeys = kbdata.mkey._KbMkeyU.mkeys;
+						led._KbLedU.leds = kbdata.led._KbLedU.leds;
 						if(keycode == 0)
 						{
 							sprintf(buffer, "keycode[%d]=%d/0x%04X mkeys=0x%08X leds=0x%08X\r\n",
-									j, keycode, keycode, mkey.mkeys, led.leds);
+									j, keycode, keycode, mkey._KbMkeyU.mkeys, led._KbLedU.leds);
 							Writeline(conn_s, buffer, strlen(buffer));
 						}else
 						{
 							sprintf(buffer, "keycode[%d]=%d/0x%04X=%c mkeys=0x%08X leds=0x%08X\r\n",
-									j, keycode, keycode, (keycode&0x00FF), mkey.mkeys, led.leds);
+									j, keycode, keycode, (keycode&0x00FF), mkey._KbMkeyU.mkeys, led._KbLedU.leds);
 							Writeline(conn_s, buffer, strlen(buffer));
 						}
 					}

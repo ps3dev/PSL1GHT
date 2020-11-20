@@ -1,4 +1,4 @@
-TARGETS := # camera gemtest kbtest padtest
+TARGETS := gemtest gemsample kbtest padtest # camera
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET; done

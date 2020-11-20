@@ -156,7 +156,7 @@ initScreen (void *host_addr, u32 size)
   videoResolution res;		/* Screen Resolution */
 
   /* Initilise Reality, which sets up the command buffer and shared IO memory */
-  context = rsxInit (CB_SIZE, size, host_addr);
+  rsxInit (&context, CB_SIZE, size, host_addr);
   if (context == NULL)
     goto error;
 
@@ -238,8 +238,8 @@ setRenderTarget (gcmContextData * context, rsxBuffer * buffer)
 {
   gcmSurface sf;
 
-  sf.colorFormat = GCM_TF_COLOR_X8R8G8B8;
-  sf.colorTarget = GCM_TF_TARGET_0;
+  sf.colorFormat = GCM_SURFACE_X8R8G8B8; /* GCM_TF_COLOR_X8R8G8B8 */
+  sf.colorTarget = GCM_SURFACE_TARGET_0; /* GCM_TF_TARGET_0 */
   sf.colorLocation[0] = GCM_LOCATION_RSX;
   sf.colorOffset[0] = buffer->offset;
   sf.colorPitch[0] = depth_pitch;
@@ -254,13 +254,13 @@ setRenderTarget (gcmContextData * context, rsxBuffer * buffer)
   sf.colorPitch[2] = 64;
   sf.colorPitch[3] = 64;
 
-  sf.depthFormat = GCM_TF_ZETA_Z16;
+  sf.depthFormat = GCM_SURFACE_ZETA_Z16; /* GCM_TF_ZETA_Z16 */
   sf.depthLocation = GCM_LOCATION_RSX;
   sf.depthOffset = depth_offset;
   sf.depthPitch = depth_pitch;
 
-  sf.type = GCM_TF_TYPE_LINEAR;
-  sf.antiAlias = GCM_TF_CENTER_1;
+  sf.type = 1; /* GCM_TF_TYPE_LINEAR */
+  sf.antiAlias = 0; /* GCM_TF_CENTER_1 */
 
   sf.width = buffer->width;
   sf.height = buffer->height;
