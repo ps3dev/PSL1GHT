@@ -30,7 +30,7 @@ CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS		= 	-Wall -mcpu=cell $(MACHDEP) $(INCLUDE)
+CFLAGS		= 	-O2 -Wall -mcpu=cell $(MACHDEP) $(INCLUDE)
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS		=	$(MACHDEP) -Wl,-Map,$(notdir $@).map
@@ -44,7 +44,7 @@ LIBS	:= -lrsx -lgcm_sys -lio -lsysutil -lrt -llv2 -lm -lcamera -lgem -lspurs -ls
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= 
+LIBDIRS	:= $(PORTLIBS)
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional

@@ -71,6 +71,7 @@ clean:
 run:
 	ps3load $(OUTPUT).self
 
+pkg:	$(BUILD) $(OUTPUT).pkg
 
 else
 

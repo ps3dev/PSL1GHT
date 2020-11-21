@@ -75,18 +75,14 @@ clean:
 run:
 	ps3load $(OUTPUT).self
 
+pkg:	$(BUILD) $(OUTPUT).pkg
 
 else
 
 DEPENDS	:=	$(OFILES:.o=.d)
 
 $(OUTPUT).self: $(OUTPUT).elf
-	@fself $(OUTPUT).elf $(OUTPUT).self
-$(OUTPUT).elf: $(OUTPUT)
-	@cp $(OUTPUT) $(OUTPUT).elf
-	@sprxlinker $(OUTPUT).elf
-$(OUTPUT):	$(OFILES)
-	$(VERB) $(LD)  $^ $(LDFLAGS) $(LIBPATHS) $(LIBS) -o $@
+$(OUTPUT).elf: $(OFILES)
 
 
 %.bin.o	:	%.bin

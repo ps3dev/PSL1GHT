@@ -6,3 +6,5 @@ all:
 
 clean:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET clean; done
+pkg:
+	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET pkg; done
