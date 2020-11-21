@@ -1,4 +1,4 @@
-TARGETS := ps3load echoserv networktest
+TARGETS := debugtest echoserv httptest networktest ps3load
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET; done
