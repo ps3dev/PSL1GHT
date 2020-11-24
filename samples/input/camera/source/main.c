@@ -24,6 +24,7 @@ libjpgdec is used by Eyetoy in Playstation 3 only support JPG format... IPU is a
 
 #include <arpa/inet.h>
 #include <sysutil/sysutil.h>
+#include <ppu-asm.h>
 
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
