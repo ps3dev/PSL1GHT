@@ -33,7 +33,7 @@ u32 *color_buffer[FRAME_BUFFER_COUNT];
 f32 aspect_ratio;
 
 static u32 sResolutionIds[] = {
-    VIDEO_RESOLUTION_960x1080,
+    VIDEO_RESOLUTION_1080,
     VIDEO_RESOLUTION_720,
     VIDEO_RESOLUTION_480,
     VIDEO_RESOLUTION_576
