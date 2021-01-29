@@ -76,6 +76,10 @@ typedef double						f64;
 #define strnicmp strncasecmp
 #endif
 
+#ifdef __CYGWIN__
+#include <strings.h>
+#endif
+
 typedef struct rsx_vp
 {
 	u16 magic;

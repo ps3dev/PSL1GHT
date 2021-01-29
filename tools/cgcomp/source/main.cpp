@@ -1,15 +1,16 @@
-#include "types.h"
-#include "fpparser.h"
-#include "vpparser.h"
-#include "compilervp.h"
-#include "compilerfp.h"
-
 #ifdef __CYGWIN__
+	#define _GNU_SOURCE
 	#include <libgen.h>
 	#include <unistd.h>
 	char currdir[1024];
 	char destfile[1026];
 #endif
+
+#include "types.h"
+#include "fpparser.h"
+#include "vpparser.h"
+#include "compilervp.h"
+#include "compilerfp.h"
 
 #if !defined(WIN32)
 #include <dlfcn.h>
