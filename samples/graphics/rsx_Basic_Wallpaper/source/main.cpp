@@ -17,22 +17,17 @@
 
 #include "acid.h"
 #include "mesh.h"
-#include "geometry.h"
 #include "rsxutil.h"
 
 #include "diffuse_specular_shader_vpo.h"
 #include "scanlines_fpo.h"
 
-typedef struct
-{
-	float x, y, z;
-	u32 rgba;
-} Vertex_t;
-
-Vertex_t* vertex_buffer;
-u32 VertexBufferOffset;
+#define GCM_APP_WAIT_LABEL_INDEX		128
+#define HOSTBUFFER_SIZE		(128*1024*1024)
 
 u32 running = 0;
+
+vu32 *wait_label = NULL;
 
 u32 fp_offset;
 u32 *fp_buffer;
@@ -71,11 +66,12 @@ Vector4 scanlineParams(200.0f, 2.0f, 0.7f, 0.0f);
 
 SYS_PROCESS_PARAM(1001, 0x100000);
 
+static u32 sLabelValue = 0;
+
 extern "C" {
 static void program_exit_callback()
 {
-	gcmSetWaitFlip(context);
-	rsxFinish(context,1);
+	finish();
 }
 
 static void sysutil_exit_callback(u64 status,u64 param,void *usrdata)
@@ -91,6 +87,38 @@ static void sysutil_exit_callback(u64 status,u64 param,void *usrdata)
 			break;
 	}
 }
+}
+
+SMeshBuffer* createQuad(Point3 P1, Point3 P2, Point3 P3, Point3 P4)
+{
+	u32 i;
+	u32 col = 0xFFFFFFFF;
+	
+	SMeshBuffer* buffer = new SMeshBuffer();
+	const u16 u[6] = { 0,1,2,   0,3,1 };
+
+	buffer->cnt_indices = 6;
+	buffer->indices = (u16*)rsxMemalign(128, buffer->cnt_indices * sizeof(u16));
+
+	for (i = 0; i < 6; i++) buffer->indices[i] = u[i];
+
+	buffer->cnt_vertices = 4;
+	buffer->vertices = (S3DVertex*)rsxMemalign(128, buffer->cnt_vertices * sizeof(S3DVertex));
+
+	//                              position, normal,    texture
+	buffer->vertices[0] = S3DVertex(P1.getX(), P1.getY(), P1.getZ(), -1, -1, -1, 0, 1, col);
+	buffer->vertices[1] = S3DVertex(P2.getX(), P2.getY(), P2.getZ(), 1, -1, -1, 1, 0, col);
+	buffer->vertices[2] = S3DVertex(P3.getX(), P3.getY(), P3.getZ(), 1, 1, -1, 0, 0, col);
+	buffer->vertices[3] = S3DVertex(P4.getX(), P4.getY(), P4.getZ(), -1, 1, -1, 1, 1, col);
+
+
+	/*rsxAddressToOffset(&buffer->vertices[0].pos, &buffer->pos_off);
+	rsxAddressToOffset(&buffer->vertices[0].nrm, &buffer->nrm_off);
+	rsxAddressToOffset(&buffer->vertices[0].col, &buffer->col_off);
+	rsxAddressToOffset(&buffer->vertices[0].u, &buffer->uv_off);
+	rsxAddressToOffset(&buffer->indices[0], &buffer->ind_off);*/
+
+	return buffer;
 }
 
 static void init_texture()
@@ -126,7 +154,7 @@ static void setTexture(u8 textureUnit)
 
 	if (!texture_buffer) return;
 
-	rsxInvalidateTextureCache(context, GCM_INVALIDATE_TEXTURE);
+	rsxInvalidateTextureCache(gGcmContext, GCM_INVALIDATE_TEXTURE);
 
 	texture.format = (GCM_TEXTURE_FORMAT_A8R8G8B8 | GCM_TEXTURE_FORMAT_LIN);
 	texture.mipmap = 1;
@@ -146,22 +174,15 @@ static void setTexture(u8 textureUnit)
 	texture.location = GCM_LOCATION_RSX;
 	texture.pitch = pitch;
 	texture.offset = texture_offset;
-	rsxLoadTexture(context, textureUnit, &texture);
-	rsxTextureControl(context, textureUnit, GCM_TRUE, 0 << 8, 12 << 8, GCM_TEXTURE_MAX_ANISO_1);
-	rsxTextureFilter(context, textureUnit, 0, GCM_TEXTURE_LINEAR, GCM_TEXTURE_LINEAR, GCM_TEXTURE_CONVOLUTION_QUINCUNX);
-	rsxTextureWrapMode(context, textureUnit, GCM_TEXTURE_CLAMP_TO_EDGE, GCM_TEXTURE_CLAMP_TO_EDGE, GCM_TEXTURE_CLAMP_TO_EDGE, 0, GCM_TEXTURE_ZFUNC_LESS, 0);
+	rsxLoadTexture(gGcmContext, textureUnit, &texture);
+	rsxTextureControl(gGcmContext, textureUnit, GCM_TRUE, 0 << 8, 12 << 8, GCM_TEXTURE_MAX_ANISO_1);
+	rsxTextureFilter(gGcmContext, textureUnit, 0, GCM_TEXTURE_LINEAR, GCM_TEXTURE_LINEAR, GCM_TEXTURE_CONVOLUTION_QUINCUNX);
+	rsxTextureWrapMode(gGcmContext, textureUnit, GCM_TEXTURE_CLAMP_TO_EDGE, GCM_TEXTURE_CLAMP_TO_EDGE, GCM_TEXTURE_CLAMP_TO_EDGE, 0, GCM_TEXTURE_ZFUNC_LESS, 0);
 }
 
 
 static void setDrawEnv()
 {
-	rsxSetColorMask(context,GCM_COLOR_MASK_B |
-							GCM_COLOR_MASK_G |
-							GCM_COLOR_MASK_R |
-							GCM_COLOR_MASK_A);
-
-	rsxSetColorMaskMrt(context,0);
-
 	u16 x,y,w,h;
 	f32 min, max;
 	f32 scale[4],offset[4];
@@ -181,17 +202,13 @@ static void setDrawEnv()
 	offset[2] = (max + min)*0.5f;
 	offset[3] = 0.0f;
 
-	rsxSetViewport(context,x, y, w, h, min, max, scale, offset);
-	rsxSetScissor(context,x,y,w,h);
+	rsxSetCallCommand(gGcmContext, state_offset);
+	while(*wait_label != sLabelValue)
+		usleep(10);
+	sLabelValue++;
 
-	rsxSetDepthTestEnable(context, GCM_FALSE);
-	rsxSetDepthFunc(context,GCM_LESS);
-	rsxSetShadeModel(context,GCM_SHADE_MODEL_SMOOTH);
-	rsxSetDepthWriteEnable(context,1);
-	rsxSetFrontFace(context,GCM_FRONTFACE_CCW);
-	rsxSetBlendEnable(context, GCM_TRUE);
-	rsxSetBlendFunc(context, GCM_SRC_ALPHA, GCM_ONE_MINUS_SRC_ALPHA, GCM_SRC_COLOR, GCM_DST_COLOR);
-	rsxSetBlendEquation(context, GCM_FUNC_ADD, GCM_FUNC_ADD);
+	rsxSetViewport(gGcmContext,x, y, w, h, min, max, scale, offset);
+	rsxSetScissor(gGcmContext,x,y,w,h);
 }
 
 void init_shader()
@@ -223,43 +240,60 @@ void init_shader()
 
 void drawFrame()
 {
-	u32 i, offset;
+	u32 i,offset;
 	SMeshBuffer* mesh = NULL;
 
 	setDrawEnv();
 	
 	
-	rsxSetClearColor(context,0);
-	rsxSetClearDepthStencil(context,0xffffff00);
-	rsxClearSurface(context,GCM_CLEAR_R |
+	rsxSetClearColor(gGcmContext,0);
+	rsxSetClearDepthStencil(gGcmContext,0xffffff00);
+	rsxClearSurface(gGcmContext,GCM_CLEAR_R |
 							GCM_CLEAR_G |
 							GCM_CLEAR_B |
 							GCM_CLEAR_A |
 							GCM_CLEAR_S |
 							GCM_CLEAR_Z);
 
-	rsxSetZControl(context,0,1,1);
+	rsxSetZControl(gGcmContext,0,1,1);
 
 	for(i=0;i<8;i++)
-		rsxSetViewportClip(context,i,display_width,display_height);
+		rsxSetViewportClip(gGcmContext,i,display_width,display_height);
 
 	Matrix4 tempMatrix = transpose(Matrix4::identity());
 	
 	mesh = quad;
 	setTexture(textureUnit->index);
 
-	rsxBindVertexArrayAttrib(context, GCM_VERTEX_ATTRIB_POS, 0, mesh->pos_off, sizeof(S3DVertex), 3, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
-	rsxBindVertexArrayAttrib(context, GCM_VERTEX_ATTRIB_NORMAL, 0, mesh->nrm_off, sizeof(S3DVertex), 3, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
-	rsxBindVertexArrayAttrib(context, GCM_VERTEX_ATTRIB_TEX0, 0, mesh->uv_off, sizeof(S3DVertex), 2, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
+	rsxAddressToOffset(&mesh->vertices[0].pos, &offset);
+	rsxBindVertexArrayAttrib(gGcmContext, GCM_VERTEX_ATTRIB_POS, 0, offset, sizeof(S3DVertex), 3, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
+	rsxAddressToOffset(&mesh->vertices[0].nrm, &offset);
+	rsxBindVertexArrayAttrib(gGcmContext, GCM_VERTEX_ATTRIB_NORMAL, 0, offset, sizeof(S3DVertex), 3, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
+	rsxAddressToOffset(&mesh->vertices[0].u, &offset);
+	rsxBindVertexArrayAttrib(gGcmContext, GCM_VERTEX_ATTRIB_TEX0, 0, offset, sizeof(S3DVertex), 2, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
+	rsxAddressToOffset(&mesh->vertices[0].col, &offset);
+	rsxBindVertexArrayAttrib(gGcmContext, GCM_VERTEX_ATTRIB_COLOR0, 0, offset, sizeof(S3DVertex), 4, GCM_VERTEX_DATA_TYPE_U8, GCM_LOCATION_RSX);
 
-	rsxLoadVertexProgram(context, vpo, vp_ucode);
-	rsxSetVertexProgramParameter(context, vpo, projMatrix, (float*)&tempMatrix);
+	rsxLoadVertexProgram(gGcmContext, vpo, vp_ucode);
+	rsxSetVertexProgramParameter(gGcmContext, vpo, projMatrix, (float*)&tempMatrix);
 
-	rsxSetFragmentProgramParameter(context, fpo, scanlines, (float*)&scanlineParams, fp_offset, GCM_LOCATION_RSX);
-	rsxLoadFragmentProgramLocation(context, fpo, fp_offset, GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext, fpo, scanlines, (float*)&scanlineParams, fp_offset, GCM_LOCATION_RSX);
+	rsxLoadFragmentProgramLocation(gGcmContext, fpo, fp_offset, GCM_LOCATION_RSX);
+	
+	rsxSetWriteTextureLabel(gGcmContext, GCM_APP_WAIT_LABEL_INDEX, sLabelValue);
+	
+	rsxSetUserClipPlaneControl(gGcmContext, GCM_USER_CLIP_PLANE_DISABLE,
+		GCM_USER_CLIP_PLANE_DISABLE,
+		GCM_USER_CLIP_PLANE_DISABLE,
+		GCM_USER_CLIP_PLANE_DISABLE,
+		GCM_USER_CLIP_PLANE_DISABLE,
+		GCM_USER_CLIP_PLANE_DISABLE);
+
 	rsxAddressToOffset(&mesh->indices[0], &offset);
-	rsxDrawIndexArray(context, GCM_TYPE_TRIANGLES, mesh->ind_off, mesh->getIndexCount(), GCM_INDEX_TYPE_32B, GCM_LOCATION_RSX);
+	rsxDrawIndexArray(gGcmContext, GCM_TYPE_TRIANGLES, offset, mesh->cnt_indices, GCM_INDEX_TYPE_16B, GCM_LOCATION_RSX);
 
+	rsxSetWriteTextureLabel(gGcmContext, GCM_APP_WAIT_LABEL_INDEX, sLabelValue);
+	rsxFlushBuffer(gGcmContext);
 	
 }
 
@@ -267,19 +301,27 @@ int main(int argc,const char *argv[])
 {
 	padInfo padinfo;
 	padData paddata;
-	void *host_addr = memalign(HOST_ADDR_ALIGNMENT,HOSTBUFFER_SIZE);
-
+	
+	if (sysModuleLoad(SYSMODULE_PNGDEC) != 0) exit(0);
+	
 	printf("rsxtest started...\n");
 
-	init_screen(host_addr,HOSTBUFFER_SIZE);
+	initScreen(HOSTBUFFER_SIZE);
 	ioPadInit(7);
 
+	wait_label = gcmGetLabelAddress(GCM_APP_WAIT_LABEL_INDEX);
+	*wait_label = sLabelValue;
+	
 	//Init background Image
 	png = new pngData;
 	pngLoadFromBuffer(wall1_png_bin, wall1_png_bin_size, png);
 
 	//Create quad
-	quad = createQuad(Point3(-1.0, -1.0, 0), Point3(1.0, 1.0, 0), Point3(-1.0, 1.0, 0), Point3(1.0, -1.0, 0));
+	Point3 P1 = Point3(-1.0, -1.0, 0);
+	Point3 P2 = Point3(1.0, 1.0, 0);
+	Point3 P3 = Point3(-1.0, 1.0, 0);
+	Point3 P4 = Point3(1.0, -1.0, 0);
+	quad = createQuad(P1, P2, P3, P4);
 
 
 	init_shader();
@@ -291,8 +333,6 @@ int main(int argc,const char *argv[])
 	atexit(program_exit_callback);
 	sysUtilRegisterCallback(0,sysutil_exit_callback,NULL);
 
-	setDrawEnv();
-	setRenderTarget(curr_fb);
 
 	running = 1;
 	while(running) {
@@ -338,6 +378,6 @@ int main(int argc,const char *argv[])
 done:
     printf("rsxtest done...\n");
 	DebugFont::shutdown();
-	program_exit_callback();
+	finish();
     return 0;
 }
