@@ -1,5 +1,4 @@
-if($ENV{PSL1GHT} STREQUAL "")
-else()
+if(NOT $ENV{PSL1GHT} STREQUAL "")
     set(PSL1GHT $ENV{PSL1GHT})
 endif()
 
