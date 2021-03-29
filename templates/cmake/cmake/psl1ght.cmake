@@ -11,7 +11,7 @@ macro(setupPSL1GHT target)
     set(CMAKE_C_COMPILER ${PSL1GHT}/ppu/bin/powerpc64-ps3-elf-gcc)
     set(CMAKE_CXX_COMPILER ${PSL1GHT}/ppu/bin/powerpc64-ps3-elf-g++)
     target_link_directories(${target} PUBLIC ${PSL1GHT}/ppu/lib ${PSL1GHT}/spu/lib ${PSL1GHT}/portlibs/ppu/lib)
-    target_include_directories(${target} PUBLIC ${PSL1GHT}/ppu/include ${PSL1GHT}/spu/include ${PSL1GHT}/portlibs/ppu/include)
+    target_include_directories(${target} PUBLIC ${PSL1GHT}/ppu/include ${PSL1GHT}/spu/spu/include ${PSL1GHT}/portlibs/ppu/include)
     target_compile_options(${target} PUBLIC -mcpu=cell)
     target_link_libraries(${target} PUBLIC gcm_sys rsx sysutil io)
     add_custom_command( TARGET ${target}
