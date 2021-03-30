@@ -13,7 +13,7 @@ macro(setupPSL1GHT target)
     target_link_directories(${target} PUBLIC ${PSL1GHT}/ppu/lib ${PSL1GHT}/spu/lib ${PSL1GHT}/portlibs/ppu/lib)
     target_include_directories(${target} PUBLIC ${PSL1GHT}/ppu/include ${PSL1GHT}/spu/spu/include ${PSL1GHT}/portlibs/ppu/include)
     target_compile_options(${target} PUBLIC -mcpu=cell)
-    target_link_libraries(${target} PUBLIC gcm_sys rsx sysutil io)
+    target_link_libraries(${target} PUBLIC gcm_sys rsx sysutil io lv2 rt audio m)
     add_custom_command( TARGET ${target}
                         POST_BUILD
                         COMMAND echo Running PS3 specific post-build steps
