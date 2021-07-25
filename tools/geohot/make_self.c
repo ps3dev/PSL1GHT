@@ -78,7 +78,7 @@ AES_KEY aes_key;
 
 u8* input_elf_data;
 
-#define ZLIB_LEVEL 6
+#define ZLIB_LEVEL 9
 
 int def(u8 *source, int source_size, u8 **dest, int* dest_size) {
   int ret;
