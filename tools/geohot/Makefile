@@ -40,6 +40,12 @@ ifneq (,$(findstring Darwin,$(UNAME)))
 	CXXFLAGS	+=	-fvisibility=hidden
 	CFLAGS	+= -I/usr/local/include -I/usr/local/opt/libelf/include/libelf -I/usr/local/opt/openssl/include
 	LDFLAGS		+= -mmacosx-version-min=$(OSX_MIN) -Wl,-syslibroot,$(SDK) -L/opt/local/lib -L/usr/local/opt/openssl/lib -lgmp -lcrypto -lz
+
+  ifneq (,$(findstring arm,$(shell uname -p)))
+	CFLAGS	    += -I/opt/homebrew/include -I/opt/homebrew/opt/libelf/include/libelf -I/opt/homebrew/opt/openssl/include
+	LDFLAGS		+= -L/opt/homebrew/lib -L/opt/homebrew/opt/openssl/lib
+  endif
+
 endif
 
 ifneq (,$(findstring BSD,$(UNAME)))
