@@ -80,6 +80,7 @@
 #define SYSUTIL_LANG_POLISH             16  // Polish 
 #define SYSUTIL_LANG_PORTUGUESE_BR      17  // Portuguese (Brazil) 
 #define SYSUTIL_LANG_ENGLISH_GB         18  // English (United Kingdom) 
+#define SYSUTIL_LANG_TURKISH            19  // Turkish 
 
 
 #ifdef __cplusplus
