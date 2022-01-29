@@ -45,6 +45,7 @@ PACKAGE_FINALIZE	:=	package_finalize
 # Package settings - allow for user override
 TITLE			?=	Untitled PSL1GHT homebrew
 APPID			?=	UNTITLED1
+APPVER			?=	01.00
 SFOXML			?=	$(PS3DEV)/bin/sfo.xml
 ICON0			?=	$(PS3DEV)/bin/ICON0.PNG
 CONTENTID		?=	UP0001-$(APPID)_00-0000000000000000
@@ -66,11 +67,9 @@ BUILDDIR		?=	$(CURDIR)/build
 	$(VERB) mkdir -p $(BUILDDIR)/pkg/USRDIR
 	$(VERB) cp $(ICON0) $(BUILDDIR)/pkg/ICON0.PNG
 	$(VERB) $(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
-	$(VERB) $(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
+	$(VERB) $(SFO) --title "$(TITLE)" --appid "$(APPID)" --appver "$(APPVER)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
 	$(VERB) if [ -n "$(PKGFILES)" -a -d "$(PKGFILES)" ]; then cp -rf $(PKGFILES)/* $(BUILDDIR)/pkg/; fi
 	$(VERB) $(PKG) --contentid $(CONTENTID) $(BUILDDIR)/pkg/ $@ >> /dev/null
-	$(VERB) cp $@ $(basename $@).gnpdrm.pkg
-	$(VERB) $(PACKAGE_FINALIZE) $(basename $@).gnpdrm.pkg
 
 %.info: Makefile
 	$(VERB) echo "Generating $(basename $@).h"

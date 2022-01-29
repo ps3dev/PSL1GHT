@@ -169,7 +169,7 @@ def getText(nodelist):
     return (''.join(rc)).strip()
 def align(num, alignment):
 	return (num + alignment - 1) & ~(alignment-1)
-def convertToSFO(xml, sfofile, forcetitle, forceappid):
+def convertToSFO(xml, sfofile, forcetitle, forceappid, forceappver):
 	dom = parse(xml)
 	nodes = dom.getElementsByTagName("value")
 	kvs = []
@@ -187,6 +187,8 @@ def convertToSFO(xml, sfofile, forcetitle, forceappid):
 					kvs.append((name, forcetitle))
 				elif name == "TITLE_ID" and forceappid != None:
 					kvs.append((name, forceappid))
+				elif name == "APP_VER" and forceappver != None:
+					kvs.append((name, forceappver))
 				elif type == "string":
 					kvs.append((name, getText(node.childNodes)))
 				elif type == "integer":
@@ -258,12 +260,13 @@ def main():
 	fromxml = False
 	forcetitle = None
 	forceappid = None
+	forceappver = None
 	if len(sys.argv) < 1:
 		return
 	if "python" in sys.argv[0]:
 		sys.argv = sys.argv[1:]
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hdvpl:tf", ["help", "debug","version", "pretty", "list=", "toxml", "fromxml", "title=", "appid="])
+		opts, args = getopt.getopt(sys.argv[1:], "hdvpl:tf", ["help", "debug","version", "pretty", "list=", "toxml", "fromxml", "title=", "appid=", "appver="])
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
@@ -290,6 +293,8 @@ def main():
 			forcetitle = arg
 		elif opt in ("--appid"):
 			forceappid = arg
+		elif opt in ("--appver"):
+			forceappver = arg
 		else:
 			usage()
 			sys.exit(2)
@@ -299,7 +304,7 @@ def main():
 	elif toxml and not fromxml and len(args) == 2:
 		convertToXml(args[0], args[1])
 	elif fromxml and not toxml  and len(args) == 2:
-		convertToSFO(args[0], args[1], forcetitle, forceappid)
+		convertToSFO(args[0], args[1], forcetitle, forceappid, forceappver)
 	else:
 		usage()
 
