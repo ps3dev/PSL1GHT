@@ -26,14 +26,14 @@
 
 typedef struct _sys_fs_stat
 {
-	s32 st_mode;
-	s32 st_uid;
-	s32 st_gid;
-	time_t st_atime;
-	time_t st_mtime;
-	time_t st_ctime;
-	u64 st_size;
-	u64 st_blksize;
+	s32 mode;
+	s32 uid;
+	s32 gid;
+	time_t atime;
+	time_t mtime;
+	time_t ctime;
+	s64 size;
+	s64 blksize;
 } __attribute__((packed)) sysFSStat;
 
 typedef struct _sys_fs_dirent

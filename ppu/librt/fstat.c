@@ -12,14 +12,14 @@
 static void convertLv2Stat(struct stat *dst,sysFSStat *src)
 {
 	memset(dst,0,sizeof(struct stat));
-	dst->st_mode = src->st_mode;
-	dst->st_uid = src->st_uid;
-	dst->st_gid = src->st_gid;
-	dst->st_atime = src->st_atime;
-	dst->st_mtime = src->st_mtime;
-	dst->st_ctime = src->st_ctime;
-	dst->st_size = src->st_size;
-	dst->st_blksize = src->st_blksize;
+	dst->st_mode = src->mode;
+	dst->st_uid = src->uid;
+	dst->st_gid = src->gid;
+	dst->st_atime = src->atime;
+	dst->st_mtime = src->mtime;
+	dst->st_ctime = src->ctime;
+	dst->st_size = src->size;
+	dst->st_blksize = src->blksize;
 
 }
 
