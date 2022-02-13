@@ -9,18 +9,12 @@
 
 #include <sys/systime.h>
 
-int
-_DEFUN(__librt_usleep_r,(r,usec),
-	   struct _reent *r _AND
-	   useconds_t usec)
+int __librt_usleep_r(struct _reent *r, useconds_t usec)
 {
 	return lv2errno_r(r,sysUsleep(usec));
 }
 
-unsigned int
-_DEFUN(__librt_sleep_r,(r,seconds),
-	   struct _reent *r _AND
-	   unsigned int seconds)
+unsigned int __librt_sleep_r(struct _reent *r, unsigned int seconds)
 {
 	s32 ret = sysSleep(seconds);
 	if(ret) {

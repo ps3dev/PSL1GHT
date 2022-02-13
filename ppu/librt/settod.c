@@ -9,11 +9,7 @@
 
 #include <sys/systime.h>
 
-int
-_DEFUN(__librt_settod_r,(r,ptimeval,ptimezone),
-	   struct _reent *r _AND
-	   const struct timeval *ptimeval _AND
-	   const struct timezone *ptimezone)
+int __librt_settod_r(struct _reent *r, const struct timeval *ptimeval, const struct timezone *ptimezone)
 {
 	u64 sec,nsec;
 

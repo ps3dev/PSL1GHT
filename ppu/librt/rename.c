@@ -9,11 +9,7 @@
 
 #include <sys/file.h>
 
-int
-_DEFUN(__librt_rename_r,(r,old,new),
-	   struct _reent *r _AND
-	   const char *old _AND
-	   const char *new)
+int __librt_rename_r(struct _reent *r, const char *old, const char *new)
 {
 	return lv2errno_r(r,sysLv2FsRename(old,new));
 }

@@ -9,12 +9,7 @@
 #include <sys/tty.h>
 #include <sys/file.h>
 
-_ssize_t
-_DEFUN(__librt_read_r,(r,fd,ptr,len),
-	   struct _reent *r _AND
-		   int fd _AND
-		   void *ptr _AND
-		   size_t len)
+_ssize_t __librt_read_r(struct _reent *r, int fd, void *ptr, size_t len)
 {
 	int ret = 0;
 

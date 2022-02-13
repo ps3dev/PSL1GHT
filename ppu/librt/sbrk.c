@@ -99,9 +99,7 @@ static void sbrk_deinit()
 	sysMMapperFreeAddress(__sbrk_baseaddr);
 }
 
-caddr_t _DEFUN(__librt_sbrk_r, (ptr,incr),
-			   struct _reent *ptr _AND
-			   ptrdiff_t incr)
+caddr_t __librt_sbrk_r(struct _reent *ptr, ptrdiff_t incr)
 {
 	s32 ret;
 	void* result = (void*)-1;

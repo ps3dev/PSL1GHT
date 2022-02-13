@@ -9,10 +9,7 @@
 
 #include <ppu-asm.h>
 
-clock_t
-_DEFUN(__librt_times_r,(r,buf),
-	   struct _reent *r _AND
-	   struct tms *buf)
+clock_t __librt_times_r(struct _reent *r, struct tms *buf)
 {
 	u64 systime = __gettime();
 	return (clock_t)systime;

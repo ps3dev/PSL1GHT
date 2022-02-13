@@ -10,10 +10,7 @@
 
 extern int closesocket(int socket);
 
-int
-_DEFUN(__librt_close_r,(ptr,fd),
-	   struct _reent *ptr _AND
-		   int fd)
+int __librt_close_r(struct _reent *ptr, int fd)
 {
 	if(fd&SOCKET_FD_MASK)
 		return lv2errno_r(ptr,closesocket(fd));

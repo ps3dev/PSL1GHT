@@ -9,10 +9,7 @@
 
 #include <sys/file.h>
 
-int
-_DEFUN(__librt_unlink_r,(r,path),
-	   struct _reent *r _AND
-	   const char *path)
+int __librt_unlink_r(struct _reent *r, const char *path)
 {
 	return lv2errno_r(r,sysLv2FsUnlink(path));
 }

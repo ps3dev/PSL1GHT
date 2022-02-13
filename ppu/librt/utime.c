@@ -10,11 +10,7 @@
 #include <sys/file.h>
 #include <utime.h>
 
-int
-_DEFUN(__librt_utime_r,(r,path,times),
-	   struct _reent *r _AND
-	   const char *path _AND
-	   const struct utimbuf *times)
+int __librt_utime_r(struct _reent *r, const char *path, const struct utimbuf *times)
 {
 	sysFSUtimbuf t;
 	if (times)

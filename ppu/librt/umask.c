@@ -9,10 +9,7 @@
 
 mode_t g_umask = (S_IWGRP | S_IWOTH);
 
-mode_t
-_DEFUN(__librt_umask_r,(r,cmask),
-	   struct _reent *r _AND
-	   mode_t cmask)
+mode_t __librt_umask_r(struct _reent *r, mode_t cmask)
 {
 	mode_t mode = g_umask;
 	g_umask = cmask&(S_IRWXU|S_IRWXG|S_IRWXO);

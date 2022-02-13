@@ -8,10 +8,7 @@
 
 #include <sys/file.h>
 
-int
-_DEFUN(__librt_fsync_r,(ptr,fd),
-	   struct _reent *ptr _AND
-		   int fd)
+int __librt_fsync_r(struct _reent *ptr, int fd)
 {
 	return lv2errno_r(ptr,sysLv2FsFsync(fd));
 }

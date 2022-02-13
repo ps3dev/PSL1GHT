@@ -123,4 +123,3 @@ int __attribute__((weak)) closesocket(int socket)
 {
 	return lv2errno(sysNetClose(FD(socket)));
 }
-

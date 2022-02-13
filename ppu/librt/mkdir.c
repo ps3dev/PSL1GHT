@@ -13,11 +13,7 @@
 
 extern mode_t g_umask;
 
-int
-_DEFUN(__librt_mkdir_r,(r,path,mode),
-	   struct _reent *r _AND
-	   const char *path _AND
-	   mode_t mode)
+int __librt_mkdir_r(struct _reent *r, const char *path, mode_t mode)
 {
 	return lv2errno_r(r,sysLv2FsMkdir(path,UMASK(mode)));
 }

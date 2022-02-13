@@ -114,7 +114,7 @@ static int resolve_path(char *path, char *result, char *pos)
         char *slash = *path ? strchr(path, '/') : NULL;
         if (slash)
             *slash = 0;
-        
+
         if (!path[0] || (path[0] == '.' && (!path[1] || (path[1] == '.' && !path[2])))) {
             --pos;
             if (pos != result && path[0] && path[1])
@@ -166,10 +166,7 @@ char* __full_path(const char *path, char *resolved_path)
     return resolved_path;
 }
 
-int
-_DEFUN(__librt_chdir_r, (r,dirname),
-       struct _reent *r _AND
-       const char *dirname)
+int __librt_chdir_r(struct _reent *r, const char *dirname)
 {
     char *dir = flattenDirectory(dirname, "/");
     s32 fd, res = sysLv2FsOpenDir(dir, &fd);
@@ -183,11 +180,7 @@ _DEFUN(__librt_chdir_r, (r,dirname),
     return lv2errno_r(r, res);
 }
 
-char*
-_DEFUN(__librt_getcwd_r, (r,buf,size),
-       struct _reent *r _AND
-       char *buf _AND
-       size_t size)
+char* __librt_getcwd_r(struct _reent *r, char *buf, size_t size)
 {
     size_t cwd_len = strlen(__cwd);
     if (buf == NULL || size <= cwd_len) {

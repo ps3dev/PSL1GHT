@@ -7,12 +7,7 @@
 
 #include <sys/file.h>
 
-_off_t
-_DEFUN(__librt_lseek_r,(r,fd,pos,dir),
-	   struct _reent *r _AND
-		   int fd _AND
-		   _off_t pos _AND
-		   int dir)
+_off_t __librt_lseek_r(struct _reent *r, int fd, _off_t pos, int dir)
 {
 	s32 ret = 0;
 	u64 position = 0;
@@ -23,12 +18,7 @@ _DEFUN(__librt_lseek_r,(r,fd,pos,dir),
 	return (_off_t)position;
 }
 
-_off64_t
-_DEFUN(__librt_lseek64_r,(r,fd,pos,dir),
-	   struct _reent *r _AND
-	   int fd _AND
-	   _off64_t pos _AND
-	   int dir)
+_off64_t __librt_lseek64_r(struct _reent *r, int fd, _off64_t pos, int dir)
 {
 	s32 ret = 0;
 	u64 position = 0;

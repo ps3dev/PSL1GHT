@@ -13,12 +13,7 @@
 
 extern mode_t g_umask;
 
-int
-_DEFUN(__librt_open_r,(r,file,flags,mode),
-	   struct _reent *r _AND
-		   const char *file _AND
-		   int flags _AND
-		   int mode)
+int __librt_open_r(struct _reent *r, const char *file, int flags, int mode)
 {
 	int fd = -1;
 

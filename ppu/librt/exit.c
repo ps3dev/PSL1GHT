@@ -8,9 +8,7 @@
 
 extern void _fini();
 
-_VOID
-_DEFUN(__librt_exit, (rc),
-	   int rc)
+void __librt_exit(int rc)
 {
 	_fini();
 	sysProcessExit(rc);

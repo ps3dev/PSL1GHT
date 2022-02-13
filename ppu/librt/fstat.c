@@ -23,11 +23,7 @@ static void convertLv2Stat(struct stat *dst,sysFSStat *src)
 
 }
 
-int
-_DEFUN(__librt_fstat_r,(r,fd,st),
-	   struct _reent *r _AND
-	   int fd _AND
-	   struct stat *st)
+int __librt_fstat_r(struct _reent *r, int fd, struct stat *st)
 {
 	s32 ret = 0;
 	sysFSStat stat;
@@ -38,11 +34,7 @@ _DEFUN(__librt_fstat_r,(r,fd,st),
 	return lv2errno_r(r,ret);
 }
 
-int
-_DEFUN(__librt_fstat64_r,(r,fd,st),
-	   struct _reent *r _AND
-	   int fd _AND
-	   struct stat *st)
+int __librt_fstat64_r(struct _reent *r, int fd, struct stat *st)
 {
 	s32 ret = 0;
 	sysFSStat stat;
@@ -53,11 +45,7 @@ _DEFUN(__librt_fstat64_r,(r,fd,st),
 	return lv2errno_r(r,ret);
 }
 
-int
-_DEFUN(__librt_stat_r,(r,path,st),
-	   struct _reent *r _AND
-	   const char *path _AND
-	   struct stat *st)
+int __librt_stat_r(struct _reent *r, const char *path, struct stat *st)
 {
 	s32 ret = 0;
 	sysFSStat stat;
@@ -68,11 +56,7 @@ _DEFUN(__librt_stat_r,(r,path,st),
 	return lv2errno_r(r,ret);
 }
 
-int
-_DEFUN(__librt_stat64_r,(r,path,st),
-	   struct _reent *r _AND
-	   const char *path _AND
-	   struct stat *st)
+int __librt_stat64_r(struct _reent *r, const char *path, struct stat *st)
 {
 	s32 ret = 0;
 	sysFSStat stat;

@@ -9,10 +9,7 @@
 
 #include <sys/file.h>
 
-int
-_DEFUN(__librt_rmdir_r,(r,dirname),
-	   struct _reent *r _AND
-	   const char *dirname)
+int __librt_rmdir_r(struct _reent *r, const char *dirname)
 {
 	return lv2errno_r(r,sysLv2FsRmdir(dirname));
 }

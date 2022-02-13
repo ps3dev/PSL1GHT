@@ -9,20 +9,12 @@
 
 #include <sys/file.h>
 
-int
-_DEFUN(__librt_truncate_r,(r,path,len),
-	   struct _reent *r _AND
-	   const char *path _AND
-	   off_t len)
+int __librt_truncate_r(struct _reent *r, const char *path, off_t len)
 {
 	return lv2errno_r(r,sysLv2FsTruncate(path,len));
 }
 
-int
-_DEFUN(__librt_ftruncate_r,(r,fd,len),
-	   struct _reent *r _AND
-	   int fd _AND
-	   off_t len)
+int __librt_ftruncate_r(struct _reent *r, int fd, off_t len)
 {
 	return lv2errno_r(r,sysLv2FsFtruncate(fd,len));
 }
