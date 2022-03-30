@@ -78,11 +78,9 @@ AES_KEY aes_key;
 
 u8* input_elf_data;
 
-#define ZLIB_LEVEL 6
-#define DEFLATION_BUFFER_SIZE 0x1000000
-u8 def_buffer[DEFLATION_BUFFER_SIZE];
+#define ZLIB_LEVEL 9
 
-int def(u8 *source, int source_size, u8 *dest, int* dest_size) {
+int def(u8 *source, int source_size, u8 **dest, int* dest_size) {
   int ret;
   unsigned have;
   z_stream strm;
@@ -91,13 +89,17 @@ int def(u8 *source, int source_size, u8 *dest, int* dest_size) {
   strm.zalloc = Z_NULL;
   strm.zfree = Z_NULL;
   strm.opaque = Z_NULL;
-  strm.avail_in = source_size;
-  strm.next_in = source;
-  strm.avail_out = *dest_size;
-  strm.next_out = dest;
   ret = deflateInit(&strm, ZLIB_LEVEL);
   if(ret != Z_OK)
     return ret;
+
+  *dest_size = deflateBound(&strm, source_size);
+  *dest = (u8 *)malloc(*dest_size);
+
+  strm.avail_in = source_size;
+  strm.next_in = source;
+  strm.avail_out = *dest_size;
+  strm.next_out = *dest;
 
   ret = deflate(&strm, Z_FINISH);
   (*dest_size) -= strm.avail_out;
@@ -208,11 +210,12 @@ void enumerate_segments() {
     u8* in_data = &input_elf_data[in_data_offset];
 
     if(segment_ptr->compressed) {
-      int def_size = DEFLATION_BUFFER_SIZE;
-      printf("deflated...", def(in_data, segment_ptr->rlen, def_buffer, &def_size)); fflush(stdout);
+      int def_size;
+	  u8 *def_buffer;
+      printf("deflated... %s ", def(in_data, segment_ptr->rlen, &def_buffer, &def_size) == Z_OK ? "OK" : "FAIL");
+	  fflush(stdout);
       segment_ptr->len = def_size;
-      segment_ptr->data = (u8*)malloc(segment_ptr->len);
-      memcpy(segment_ptr->data, def_buffer, def_size);
+      segment_ptr->data = def_buffer;
     } else {
       segment_ptr->len = segment_ptr->rlen;
       segment_ptr->data = (u8*)malloc(segment_ptr->len);

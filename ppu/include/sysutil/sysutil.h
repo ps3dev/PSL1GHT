@@ -61,6 +61,27 @@
 #define SYSUTIL_SYSTEMPARAM_NICKNAME_SIZE                       128
 #define SYSUTIL_SYSTEMPARAM_CURRENT_USERNAME_SIZE               64
 
+#define SYSUTIL_LANG_JAPANESE           0   // Japanese 
+#define SYSUTIL_LANG_ENGLISH_US         1   // English (United States) 
+#define SYSUTIL_LANG_FRENCH             2   // French 
+#define SYSUTIL_LANG_SPANISH            3   // Spanish 
+#define SYSUTIL_LANG_GERMAN             4   // German 
+#define SYSUTIL_LANG_ITALIAN            5   // Italian 
+#define SYSUTIL_LANG_DUTCH              6   // Dutch 
+#define SYSUTIL_LANG_PORTUGUESE_PT      7   // Portuguese (Portugal) 
+#define SYSUTIL_LANG_RUSSIAN            8   // Russian 
+#define SYSUTIL_LANG_KOREAN             9   // Korean 
+#define SYSUTIL_LANG_CHINESE_T          10  // Chinese (traditional) 
+#define SYSUTIL_LANG_CHINESE_S          11  // Chinese (simplified) 
+#define SYSUTIL_LANG_FINNISH            12  // Finnish 
+#define SYSUTIL_LANG_SWEDISH            13  // Swedish 
+#define SYSUTIL_LANG_DANISH             14  // Danish 
+#define SYSUTIL_LANG_NORWEGIAN          15  // Norwegian 
+#define SYSUTIL_LANG_POLISH             16  // Polish 
+#define SYSUTIL_LANG_PORTUGUESE_BR      17  // Portuguese (Brazil) 
+#define SYSUTIL_LANG_ENGLISH_GB         18  // English (United Kingdom) 
+#define SYSUTIL_LANG_TURKISH            19  // Turkish 
+
 
 #ifdef __cplusplus
 extern "C" {
