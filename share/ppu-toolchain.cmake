@@ -12,7 +12,6 @@ set(CMAKE_SYSTEM_PROCESSOR powerpc64)
 set(TOOLCHAIN_PREFIX ppu)
 set(TOOL_OS_SUFFIX "")
 
-
 if(CMAKE_HOST_WIN32)
     set(TOOL_OS_SUFFIX ".exe")
 endif()
