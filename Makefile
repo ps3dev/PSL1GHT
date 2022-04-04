@@ -28,6 +28,7 @@ install-ctrl:
 	@cp -frv ppu_rules  $(PSL1GHT)
 	@cp -frv spu_rules  $(PSL1GHT)
 	@cp -frv data_rules $(PSL1GHT)
+	@cp -frv share $(PSL1GHT)
 
 install-socat:
 	@$(MAKE) -C tools install-socat --no-print-directory
