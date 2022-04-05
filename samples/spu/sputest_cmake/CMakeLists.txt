@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(test_cxx C)
+project(test_c C)
+
+set(TITLE "Test C + SPU + CMake PSL1GHT")
+set(TITLE_ID "UNTITSPU1")
+set(VERSION "0.0.1")
+set(LICENSE "MIT LICENSE")
 
 include($ENV{PS3DEV}/contrib/ppu-helpers.cmake)
 
@@ -17,7 +22,7 @@ add_custom_command(
 )
 
 add_ps3_build_steps(test_c)
-setup_ps3_pkg(test_c "Untitled C SPU" UNTITSPU1 ${PS3DEV_DIR}/bin/sfo.xml UP0001-UNTITLXX1_00-0000000000000000 ${PS3DEV_DIR}/bin/ICON0.PNG ${CMAKE_CURRENT_SOURCE_DIR}/content)
+setup_ps3_pkg(test_c ${TITLE} ${TITLE_ID} UP0001-${TITLE_ID}_00-0000000000000000 ${PS3DEV_DIR}/bin/ICON0.PNG ${CMAKE_CURRENT_SOURCE_DIR}/content/)
 
 target_link_libraries(test_c rsx gcm_sys io sysutil m)
 
