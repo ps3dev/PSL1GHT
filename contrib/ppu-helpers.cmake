@@ -16,6 +16,9 @@ function(add_ps3_build_steps target)
             COMMAND ${PS3DEV_DIR}/bin/make_self $<TARGET_FILE:${target}>.elf $<TARGET_FILE:${target}>.self # Convert it into a .self file
             COMMAND ${PS3DEV_DIR}/bin/fself $<TARGET_FILE:${target}>.elf $<TARGET_FILE:${target}>.fake.self # Convert the .self file info a .fake.self
        )
+
+       target_include_directories(${target} PUBLIC ${PS3DEV_DIR}/ppu/include/ ${PS3DEV_DIR}/portlibs/ppu/include/)
+       target_link_directories(${target} PUBLIC ${PS3DEV_DIR}/ppu/lib/ ${PS3DEV_DIR}/portlibs/ppu/lib/)
 endfunction()
 
 # Setup PS3 Package Generation
@@ -74,6 +77,17 @@ function(psl1ght_pkg_step3 target title icon appid sfoxml contentid)
         COMMAND ${PS3DEV_DIR}/bin/pkg.py --contentid ${contentid} ${CMAKE_BINARY_DIR}/${target}_pkg/ ${CMAKE_BINARY_DIR}/${target}.pkg # Create the PKG file
         COMMAND cp ${CMAKE_BINARY_DIR}/${target}.pkg ${CMAKE_BINARY_DIR}/${target}.gnpdrm.pkg # Copy that PKG file to a new PKG file for finalization
         COMMAND ${PS3DEV_DIR}/bin/package_finalize ${CMAKE_BINARY_DIR}/${target}.gnpdrm.pkg # Finalize that PKG file to get a GNPDRM PKG
+    )
+endfunction()
+
+function(add_spu_project path target_name)
+    add_custom_command(
+        OUTPUT  ${target_name}.elf
+        COMMENT "Building SPU Project"
+        COMMAND mkdir ${path}/build -p
+        COMMAND cmake -S ${path} -B ${path}/build -DCMAKE_TOOLCHAIN_FILE="${PS3DEV_DIR}/contrib/spu-toolchain.cmake"
+        COMMAND cmake --build ${path}/build
+        COMMAND cmake -E copy ${path}/build/${target_name}.elf ${CMAKE_BINARY_DIR}
     )
 endfunction()
 

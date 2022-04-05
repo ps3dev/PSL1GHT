@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(test_cxx CXX)
 
-include($ENV{PS3DEV}/contrib/psl1ght.cmake)
+include($ENV{PS3DEV}/contrib/ppu-helpers.cmake)
 
 add_executable(test_cxx test.cpp)
 add_ps3_build_steps(test_cxx)
