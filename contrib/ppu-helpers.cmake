@@ -22,25 +22,28 @@ function(add_ps3_build_steps target)
 endfunction()
 
 # Setup PS3 Package Generation
-function(setup_ps3_pkg target title appid sfoxml contentid icon contentfolder)
-    psl1ght_pkg_step1(${target} ${title} ${icon} ${appid} ${sfoxml} ${contentid})
+function(setup_ps3_pkg target title appid contentid icon contentfolder)
+    psl1ght_pkg_step1(${target} ${title} ${icon} ${appid} ${contentid})
     psl1ght_pkg_step2(${target} ${contentfolder})
-    psl1ght_pkg_step3(${target} ${title} ${icon} ${appid} ${sfoxml} ${contentid})
+    psl1ght_pkg_step3(${target} ${title} ${icon} ${appid} ${contentid})
 
     add_dependencies(${target}_pkg ${target}_ps3_pkg_step3)
 endfunction()
 
 # Setup PS3 Package Generation with no content (nc)
-function(setup_ps3_pkg_nc target title appid sfoxml contentid icon)
-    psl1ght_pkg_step1(${target} ${title} ${icon} ${appid} ${sfoxml} ${contentid})
-    psl1ght_pkg_step3(${target} ${title} ${icon} ${appid} ${sfoxml} ${contentid})
+function(setup_ps3_pkg_nc target title appid contentid icon)
+    psl1ght_pkg_step1(${target} ${title} ${icon} ${appid} ${contentid})
+    psl1ght_pkg_step3(${target} ${title} ${icon} ${appid} ${contentid})
 
     add_dependencies(${target}_pkg ${target}_ps3_pkg_step3)
 endfunction()
 
 # This function makes the staging directory, copies the icon into it, makes the .self into a npdrm self (EBOOT.BIN) and generates the PARAM.SFO
-function(psl1ght_pkg_step1 target title icon appid sfoxml contentid)
+function(psl1ght_pkg_step1 target title icon appid contentid)
     add_custom_target(${target}_pkg)
+
+    set(APP_VER ${VERSION})
+    configure_file(${PS3DEV_DIR}/contrib/sfo-template.xml ${CMAKE_BINARY_DIR}/sfo.xml)
 
     add_custom_target(${target}_ps3_pkg_step1 DEPENDS ${target})
     add_custom_command(
@@ -49,7 +52,7 @@ function(psl1ght_pkg_step1 target title icon appid sfoxml contentid)
         COMMAND mkdir -p ${CMAKE_BINARY_DIR}/${target}_pkg/USRDIR # Make the staging directory
         COMMAND cp ${icon} ${CMAKE_BINARY_DIR}/${target}_pkg/USRDIR/ICON0.PNG # Copy the icon into the staging directory
         COMMAND ${PS3DEV_DIR}/bin/make_self_npdrm "$<TARGET_FILE:${target}>.elf" "${CMAKE_BINARY_DIR}/${target}_pkg/USRDIR/EBOOT.BIN" ${contentid} # Make the MNDRM self file
-        COMMAND ${PS3DEV_DIR}/bin/sfo.py --title "${title}" --appid "${appid}" -f "${sfoxml}" ${CMAKE_BINARY_DIR}/${target}_pkg/PARAM.SFO # Generate the PARAM.SFO from the given sfo.xml file
+        COMMAND ${PS3DEV_DIR}/bin/sfo.py --title "${title}" --appid "${appid}" -f "${CMAKE_BINARY_DIR}/sfo.xml" ${CMAKE_BINARY_DIR}/${target}_pkg/PARAM.SFO # Generate the PARAM.SFO from the given sfo.xml file
     )
 endfunction()
 
@@ -64,7 +67,7 @@ function(psl1ght_pkg_step2 target contentfolder)
 endfunction()
 
 # This function builds the PKG before finalizing it for gnpdrm
-function(psl1ght_pkg_step3 target title icon appid sfoxml contentid)
+function(psl1ght_pkg_step3 target title icon appid contentid)
     if (DEFINED ${target}_ps3_pkg_step2)
         add_custom_target(${target}_ps3_pkg_step3 DEPENDS ${target}_ps3_pkg_step2)
     else()
