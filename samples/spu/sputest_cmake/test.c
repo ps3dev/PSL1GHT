@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include <sys/spu.h>
+#include <spu_data.h>
 
 int main(int argc,char *argv[])
 {
@@ -18,8 +19,8 @@ int main(int argc,char *argv[])
 	printf("Initializing raw SPU...\n");
 	sysSpuRawCreate(&spu_id,NULL);
 
-	printf("Opening spu image...\n");
-	sysSpuImageOpen(&image,"test_spu.elf");
+	printf("Importing spu image...\n");
+	sysSpuImageImport(&image,spu_elf,SPU_IMAGE_PROTECT);
 
 	printf("Loading spu image into SPU %d...\n",spu_id);
 	sysSpuRawImageLoad(spu_id,&image);
