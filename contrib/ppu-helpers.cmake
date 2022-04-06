@@ -42,7 +42,9 @@ endfunction()
 function(psl1ght_pkg_step1 target title icon appid contentid)
     add_custom_target(${target}_pkg)
 
-    set(APP_VER ${VERSION})
+    if(NOT DEFINED APP_VER)
+        set(APP_VER "01.00")
+    endif()
     configure_file(${PS3DEV_DIR}/contrib/sfo-template.xml ${CMAKE_BINARY_DIR}/sfo.xml)
 
     add_custom_target(${target}_ps3_pkg_step1 DEPENDS ${target})

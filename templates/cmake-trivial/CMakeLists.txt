@@ -4,7 +4,7 @@ project(test C)
 
 set(TITLE "Test C CMake PSL1GHT")
 set(TITLE_ID "UNTITLED1")
-set(VERSION "0.0.1")
+set(VERSION "01.00")
 set(LICENSE "MIT LICENSE")
 
 include($ENV{PS3DEV}/contrib/ppu-helpers.cmake)
