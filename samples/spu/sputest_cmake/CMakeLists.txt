@@ -22,7 +22,7 @@ add_custom_command(
 )
 
 add_ps3_build_steps(test_c)
-setup_ps3_pkg(test_c ${TITLE} ${TITLE_ID} UP0001-${TITLE_ID}_00-0000000000000000 ${PS3DEV_DIR}/bin/ICON0.PNG ${CMAKE_CURRENT_SOURCE_DIR}/content/)
+setup_ps3_pkg(test_c ${TITLE} ${TITLE_ID} UP0001-${TITLE_ID}_00-0000000000000000 ${PS3DEV_DIR}/bin/ICON0.PNG content/)
 
 target_link_libraries(test_c rsx gcm_sys io sysutil m)
 
