@@ -45,6 +45,7 @@ function(psl1ght_pkg_step1 target title icon appid contentid)
     if(NOT DEFINED APP_VER)
         set(APP_VER "01.00")
     endif()
+
     configure_file(${PS3DEV_DIR}/contrib/sfo-template.xml ${CMAKE_BINARY_DIR}/sfo.xml)
 
     add_custom_target(${target}_ps3_pkg_step1 DEPENDS ${target})
@@ -52,7 +53,7 @@ function(psl1ght_pkg_step1 target title icon appid contentid)
         TARGET ${target}_ps3_pkg_step1
         COMMENT "Running initial PKG setup"
         COMMAND mkdir -p ${CMAKE_BINARY_DIR}/${target}_pkg/USRDIR # Make the staging directory
-        COMMAND cp ${icon} ${CMAKE_BINARY_DIR}/${target}_pkg/USRDIR/ICON0.PNG # Copy the icon into the staging directory
+        COMMAND cp ${icon} ${CMAKE_BINARY_DIR}/${target}_pkg/ICON0.PNG # Copy the icon into the staging directory
         COMMAND ${PS3DEV_DIR}/bin/make_self_npdrm "$<TARGET_FILE:${target}>.elf" "${CMAKE_BINARY_DIR}/${target}_pkg/USRDIR/EBOOT.BIN" ${contentid} # Make the MNDRM self file
         COMMAND ${PS3DEV_DIR}/bin/sfo.py --title "${title}" --appid "${appid}" -f "${CMAKE_BINARY_DIR}/sfo.xml" ${CMAKE_BINARY_DIR}/${target}_pkg/PARAM.SFO # Generate the PARAM.SFO from the given sfo.xml file
     )
