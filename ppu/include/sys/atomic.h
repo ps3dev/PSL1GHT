@@ -298,7 +298,7 @@ __cmpxchg(volatile void *ptr, u64 oldv, u64 newv,
   })
 
 #define sysAtomicCompareAndSwap(v, o, n) (cmpxchg(&((v)->counter), (o), (n)))
-#define sysAtomicSwap(v, new) (xchg(&((v)->counter), newv))
+#define sysAtomicSwap(v, newv) (xchg(&((v)->counter), newv))
 
 /**
  * atomic_add_unless - add unless the number is a given value
@@ -530,7 +530,7 @@ static inline u64 sysAtomic64DecIfPositive(atomic64_t *v)
 }
 
 #define sysAtomic64CompareAndSwap(v, o, n) (cmpxchg(&((v)->counter), (o), (n)))
-#define sysAtomic64Swap(v, new) (xchg(&((v)->counter), newv))
+#define sysAtomic64Swap(v, newv) (xchg(&((v)->counter), newv))
 
 /**
  * atomic64_add_unless - add unless the number is a given value
