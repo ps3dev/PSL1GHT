@@ -35,6 +35,8 @@
 #define SYSUTIL_OSK_DONE                        0x0503
 /*! \brief On-screen keyboard has been unloaded. */
 #define SYSUTIL_OSK_UNLOADED                    0x0504
+/*! \brief On-screen keyboard user entered input. */
+#define SYSUTIL_OSK_INPUT_ENTERED               0x0505
 /*! \brief On-screen keyboard has canceled input. */
 #define SYSUTIL_OSK_INPUT_CANCELED              0x0506
 
