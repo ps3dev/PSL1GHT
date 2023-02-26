@@ -1,5 +1,0 @@
-#! /bin/sh
-for python in python2.7 python2.6 python2 python; do
-  which "$python" >/dev/null 2>&1 && break
-done
-echo "$python"

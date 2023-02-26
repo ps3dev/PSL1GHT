@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-from __future__ import with_statement
+#!/usr/bin/env python3
 from Struct import Struct
 import struct
 import getopt
@@ -115,7 +114,7 @@ def align(address, alignment):
 
 def padding(address, alignment):
 	padding = alignment - (address % alignment)
-	return "\0" * padding
+	return b"\0" * padding
 
 def readElf(infile):
 	with open(infile, 'rb') as fp:
@@ -243,11 +242,11 @@ def createFself(npdrm, infile, outfile="EBOOT.BIN"):
 
 
 def usage():
-	print """fself.py usage:
+	print("""fself.py usage:
 	fself.py [options] input.elf output.self
 	If output file is not specified, fself.py will default to EBOOT.BIN
 	Options:
-		--npdrm: will output a file for use with pkg.py."""
+		--npdrm: will output a file for use with pkg.py.""")
 def main():
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "hn", ["help", "npdrm"])

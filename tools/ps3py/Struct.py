@@ -13,7 +13,7 @@ class StructException(Exception):
 	pass
 
 class Struct(object):
-	__slots__ = ('__attrs__', '__baked__', '__defs__', '__endian__', '__next__', '__sizes__', '__values__')
+	__slots__ = ('__attrs__', '__baked__', '__defs__', '__next__', '__sizes__', '__values__')
 	int8 = StructType(('b', 1))
 	uint8 = StructType(('B', 1))
 	
@@ -49,7 +49,7 @@ class Struct(object):
 		else:
 			sys.settrace(self.__trace__)
 			func()
-			for name in func.func_code.co_varnames:
+			for name in func.__code__.co_varnames:
 				value = self.__frame__.f_locals[name]
 				self.__setattr__(name, value)
 		
@@ -231,7 +231,7 @@ class Struct(object):
 	def pack(self):
 		arraypos, arrayname = None, None
 		
-		ret = ''
+		ret = b''
 		for i in range(len(self.__defs__)):
 			sdef, size, attrs = self.__defs__[i], self.__sizes__[i], self.__attrs__[i]
 			

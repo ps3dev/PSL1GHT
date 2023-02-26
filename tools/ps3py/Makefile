@@ -17,7 +17,7 @@ endif
 all: pkgcrypt.so
 
 pkgcrypt.so: crypt.c setup.py
-	@`./find-python2` setup.py build_ext $(COMPILER)
+	@python3 setup.py build_ext $(COMPILER)
 	@cp build/lib.*/pkgcrypt.* .
 
 clean:
@@ -27,5 +27,5 @@ clean:
 install: all
 	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
 	@echo Installing ICON0.PNG sfo.xml pkgcrypt.* fself.py Struct.py sfo.py pkg.py
-	@install -m 644 ICON0.PNG sfo.xml pkgcrypt.* $(PS3DEV)/bin
-	@./install-scripts $(PS3DEV)/bin/ fself.py Struct.py sfo.py pkg.py
+	@install -m 644 ICON0.PNG sfo.xml pkgcrypt.* Struct.py $(PS3DEV)/bin
+	@install -m 755 fself.py sfo.py pkg.py $(PS3DEV)/bin/

@@ -1,3 +1,4 @@
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 static PyObject *sha1_callback = NULL;
@@ -25,32 +26,46 @@ static void manipulate(uint8_t *key) {
 }
 
 static PyObject* pkg_crypt(PyObject *self, PyObject *args) {
-	uint8_t *key, *input, *ret;
-	int key_length, input_length, length;
-	int remaining, i, offset=0;
+	const uint8_t *rokey, *input;
+	uint8_t *ret;
+	uint8_t key[0x40];
+	Py_ssize_t key_length, input_length, length;
+	Py_ssize_t remaining, i, offset=0;
 
 	PyObject *arglist;
 	PyObject *result;
 
-	if (!PyArg_ParseTuple(args, "s#s#i", &key, &key_length, &input, &input_length, &length))
+	(void) self;
+
+	if (!PyArg_ParseTuple(args, "y#y#n", &rokey, &key_length, &input, &input_length, &length))
 		return NULL;
+
+	if (key_length != 0x40)
+		return NULL;
+
+	if (input_length < length)
+		return NULL;
+
+	memcpy(key, rokey, sizeof(key));
+
 	ret = malloc(length);
 	remaining = length;
-	
+
 	while (remaining > 0) {
-		int bytes_to_dump = remaining;
+		Py_ssize_t bytes_to_dump = remaining;
 		if (bytes_to_dump > 0x10) 
 			bytes_to_dump = 0x10;
 
 		// outhash = SHA1(listToString(key)[0:0x40])
 		uint8_t *outHash; 
 		{
-			arglist = Py_BuildValue("(s#)", key, 0x40);
+			arglist = Py_BuildValue("(y#)", key, 0x40);
 			result = PyObject_CallObject(sha1_callback, arglist);
 			Py_DECREF(arglist);
 			if (!result) return NULL;
-			int outHash_length;
-			if (!PyArg_Parse(result, "s#", &outHash, &outHash_length)) return NULL;
+			Py_ssize_t outHash_length;
+			if (!PyArg_Parse(result, "y#", &outHash, &outHash_length)) return NULL;
+			if (outHash_length < 0x10) return NULL;
 		}
 		for(i = 0; i < bytes_to_dump; i++) {
 			ret[offset] = outHash[i] ^ input[offset];
@@ -60,9 +75,9 @@ static PyObject* pkg_crypt(PyObject *self, PyObject *args) {
 		manipulate(key);
 		remaining -= bytes_to_dump;
 	}
-	
+
 	// Return the encrypted data
-	PyObject *py_ret = Py_BuildValue("s#", ret, length);
+	PyObject *py_ret = Py_BuildValue("y#y#", ret, length, key, sizeof(key));
 	free(ret);
 	return py_ret;
 }
@@ -70,6 +85,8 @@ static PyObject* pkg_crypt(PyObject *self, PyObject *args) {
 static PyObject *register_sha1_callback(PyObject *self, PyObject *args) {
 	PyObject *result = NULL;
 	PyObject *temp;
+
+	(void) self;
 
 	if (PyArg_ParseTuple(args, "O:set_callback", &temp)) {
         	if (!PyCallable_Check(temp)) {
@@ -92,8 +109,20 @@ static PyMethodDef cryptMethods[] = {
 	{NULL, NULL, 0, NULL}
 };
 
-PyMODINIT_FUNC initpkgcrypt(void) {
-	(void) Py_InitModule("pkgcrypt", cryptMethods);
+static struct PyModuleDef moduledef = {
+	PyModuleDef_HEAD_INIT,
+	"pkgcrypt",          /* m_name */
+	NULL,                /* m_doc */
+	-1,                  /* m_size */
+	cryptMethods,        /* m_methods */
+	NULL,                /* m_reload */
+	NULL,                /* m_traverse */
+	NULL,                /* m_clear */
+	NULL,                /* m_free */
+};
+
+PyMODINIT_FUNC PyInit_pkgcrypt(void) {
+	return PyModule_Create(&moduledef);
 }
 
 
