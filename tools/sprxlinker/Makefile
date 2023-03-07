@@ -62,8 +62,8 @@ all: $(TARGET)
 
 install: all
 	@echo Installing $(TARGET)
-	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
-	@install -m 755 $(TARGET) $(PS3DEV)/bin
+	@[ -d $(DESTDIR)$(PS3DEV)/bin ] || mkdir -p $(DESTDIR)$(PS3DEV)/bin
+	@install -m 755 $(TARGET) $(DESTDIR)$(PS3DEV)/bin
 
 clean:
 	@echo clean ...

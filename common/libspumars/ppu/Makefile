@@ -80,15 +80,15 @@ ppu:
 #---------------------------------------------------------------------------------
 install-header:
 #---------------------------------------------------------------------------------
-	@[ -d $(PSL1GHT)/ppu/include ] || mkdir -p $(PSL1GHT)/ppu/include
-	@cp -frv $(CURDIR)/../include/common/mars $(PSL1GHT)/ppu/include
-	@cp -frv $(CURDIR)/../include/ppu/mars $(PSL1GHT)/ppu/include
+	@[ -d $(DESTDIR)$(PSL1GHT)/ppu/include ] || mkdir -p $(DESTDIR)$(PSL1GHT)/ppu/include
+	@cp -frv $(CURDIR)/../include/common/mars $(DESTDIR)$(PSL1GHT)/ppu/include
+	@cp -frv $(CURDIR)/../include/ppu/mars $(DESTDIR)$(PSL1GHT)/ppu/include
 
 #---------------------------------------------------------------------------------
 install: all install-header
 #---------------------------------------------------------------------------------
-	@[ -d $(PSL1GHT)/ppu/lib ] || mkdir -p $(PSL1GHT)/ppu/lib
-	@cp -frv $(CURDIR)/lib/ppu/*.a $(PSL1GHT)/ppu/lib
+	@[ -d $(DESTDIR)$(PSL1GHT)/ppu/lib ] || mkdir -p $(DESTDIR)$(PSL1GHT)/ppu/lib
+	@cp -frv $(CURDIR)/lib/ppu/*.a $(DESTDIR)$(PSL1GHT)/ppu/lib
 
 #---------------------------------------------------------------------------------
 DEPENDS	:=	$(OBJSBASE:.o=.d) \

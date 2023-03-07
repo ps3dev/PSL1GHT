@@ -24,8 +24,8 @@ clean:
 
 install: all
 	@echo Installing $(TARGET)
-	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
-	@cp $(TARGET) $(PS3DEV)/bin/
+	@[ -d $(DESTDIR)$(PS3DEV)/bin ] || mkdir -p $(DESTDIR)$(PS3DEV)/bin
+	@cp $(TARGET) $(DESTDIR)$(PS3DEV)/bin/
 
 $(TARGET): $(CFILES)
 	@$(CC) $(CFLAGS) $< -o $@

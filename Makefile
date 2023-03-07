@@ -23,11 +23,11 @@ doc:
 	@doxygen doxygen.conf
 
 install-ctrl:
-	@[ -d $(PSL1GHT) ] || mkdir -p $(PSL1GHT)
-	@cp -frv base_rules $(PSL1GHT)
-	@cp -frv ppu_rules  $(PSL1GHT)
-	@cp -frv spu_rules  $(PSL1GHT)
-	@cp -frv data_rules $(PSL1GHT)
+	@[ -d $(DESTDIR)$(PSL1GHT) ] || mkdir -p $(DESTDIR)$(PSL1GHT)
+	@cp -frv base_rules $(DESTDIR)$(PSL1GHT)
+	@cp -frv ppu_rules  $(DESTDIR)$(PSL1GHT)
+	@cp -frv spu_rules  $(DESTDIR)$(PSL1GHT)
+	@cp -frv data_rules $(DESTDIR)$(PSL1GHT)
 
 install-socat:
 	@$(MAKE) -C tools install-socat --no-print-directory

@@ -31,8 +31,8 @@ all:
 	@$(MAKE) -C fself --no-print-directory
 
 install-socat:
-	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
-	@cp -frv $(CURDIR)/socat/$(host)/* $(PS3DEV)/bin
+	@[ -d $(DESTDIR)$(PS3DEV)/bin ] || mkdir -p $(DESTDIR)$(PS3DEV)/bin
+	@cp -frv $(CURDIR)/socat/$(host)/* $(DESTDIR)$(PS3DEV)/bin
 
 install:
 	@$(MAKE) -C geohot install --no-print-directory

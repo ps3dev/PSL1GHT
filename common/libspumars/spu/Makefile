@@ -87,15 +87,15 @@ spu:
 #---------------------------------------------------------------------------------
 install-header:
 #---------------------------------------------------------------------------------
-	@[ -d $(PSL1GHT)/spu/include ] || mkdir -p $(PSL1GHT)/spu/include
-	@cp -frv $(CURDIR)/../include/common/mars $(PSL1GHT)/spu/include
-	@cp -frv $(CURDIR)/../include/spu/mars $(PSL1GHT)/spu/include
+	@[ -d $(DESTDIR)$(PSL1GHT)/spu/include ] || mkdir -p $(DESTDIR)$(PSL1GHT)/spu/include
+	@cp -frv $(CURDIR)/../include/common/mars $(DESTDIR)$(PSL1GHT)/spu/include
+	@cp -frv $(CURDIR)/../include/spu/mars $(DESTDIR)$(PSL1GHT)/spu/include
 
 #---------------------------------------------------------------------------------
 install: all install-header
 #---------------------------------------------------------------------------------
-	@[ -d $(PSL1GHT)/spu/lib ] || mkdir -p $(PSL1GHT)/spu/lib
-	@cp -frv $(CURDIR)/lib/spu/*.a $(PSL1GHT)/spu/lib
+	@[ -d $(DESTDIR)$(PSL1GHT)/spu/lib ] || mkdir -p $(DESTDIR)$(PSL1GHT)/spu/lib
+	@cp -frv $(CURDIR)/lib/spu/*.a $(DESTDIR)$(PSL1GHT)/spu/lib
 
 #---------------------------------------------------------------------------------
 DEPENDS	:=	$(OBJS_KERNEL:.o=.d) $(OBJS_LIB_BASE:.o=.d) \

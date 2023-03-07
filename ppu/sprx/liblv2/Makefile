@@ -72,8 +72,8 @@ ppu:
 #---------------------------------------------------------------------------------
 install: all
 #---------------------------------------------------------------------------------
-	@[ -d $(PSL1GHT)/ppu/lib ] || mkdir -p $(PSL1GHT)/ppu/lib
-	@cp -frv $(CURDIR)/lib/ppu/*.a $(PSL1GHT)/ppu/lib
+	@[ -d $(DESTDIR)$(PSL1GHT)/ppu/lib [ -d $(DESTDIR)$(PSL1GHT)/ppu/lib ] || mkdir -p $(DESTDIR)$(PSL1GHT)/ppu/lib
+	@cp -frv $(CURDIR)/lib/ppu/*.a $(DESTDIR)$(PSL1GHT)/ppu/lib
 
 #---------------------------------------------------------------------------------
 $(LIBRARY).a: sprx.o thread_wrapper.o spu_printf_wrapper.o process_wrapper.o \

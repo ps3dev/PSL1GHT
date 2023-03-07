@@ -72,14 +72,14 @@ spu:
 #---------------------------------------------------------------------------------
 install-header:
 #---------------------------------------------------------------------------------
-	@[ -d $(PSL1GHT)/spu/include/simdmath ] || mkdir -p $(PSL1GHT)/spu/include/simdmath
-	@cp -frv $(CURDIR)/../common/simdmath.h $(PSL1GHT)/spu/include/simdmath
+	@[ -d $(DESTDIR)$(PSL1GHT)/spu/include/simdmath ] || mkdir -p $(DESTDIR)$(PSL1GHT)/spu/include/simdmath
+	@cp -frv $(CURDIR)/../common/simdmath.h $(DESTDIR)$(PSL1GHT)/spu/include/simdmath
 
 #---------------------------------------------------------------------------------
 install: all install-header
 #---------------------------------------------------------------------------------
-	@[ -d $(PSL1GHT)/spu/lib ] || mkdir -p $(PSL1GHT)/spu/lib
-	@cp -frv $(CURDIR)/lib/spu/*.a $(PSL1GHT)/spu/lib
+	@[ -d $(DESTDIR)$(PSL1GHT)/spu/lib ] || mkdir -p $(DESTDIR)$(PSL1GHT)/spu/lib
+	@cp -frv $(CURDIR)/lib/spu/*.a $(DESTDIR)$(PSL1GHT)/spu/lib
 
 #---------------------------------------------------------------------------------
 $(LIBRARY).a: $(OBJS)

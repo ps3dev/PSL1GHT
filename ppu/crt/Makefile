@@ -60,8 +60,9 @@ ppu:
 #---------------------------------------------------------------------------------
 install: all
 #---------------------------------------------------------------------------------
-	@cp -frv $(CURDIR)/ppu/lv2-*.o $(PS3DEV)/ppu/ppu/lib
-	@cp -frv $(CURDIR)/lv2.ld $(PS3DEV)/ppu/ppu/lib
+	@[ -d $(DESTDIR)$(PSL1GHT)/ppu/ppu/lib ] || mkdir -p $(DESTDIR)$(PSL1GHT)/ppu/ppu/lib
+	@cp -frv $(CURDIR)/ppu/lv2-*.o $(DESTDIR)$(PS3DEV)/ppu/ppu/lib
+	@cp -frv $(CURDIR)/lv2.ld $(DESTDIR)$(PS3DEV)/ppu/ppu/lib
 
 .PHONY: crts ppu install
 

@@ -119,8 +119,8 @@ clean:
 #---------------------------------------------------------------------------------
 install: $(BUILD)
 	@echo Installing $(TARGET)$(EXEEXT)
-	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
-	@install -m 755 $(OUTPUT) $(PS3DEV)/bin
+	@[ -d $(DESTDIR)$(PS3DEV)/bin ] || mkdir -p $(DESTDIR)$(PS3DEV)/bin
+	@install -m 755 $(OUTPUT) $(DESTDIR)$(PS3DEV)/bin
 
 #---------------------------------------------------------------------------------
 run:
