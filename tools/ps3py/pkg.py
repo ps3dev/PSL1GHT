@@ -233,13 +233,25 @@ def setContextNum(key, tmpnum):
 	key[0x3e] = ord(tmpchrs[6:7])
 	key[0x3f] = ord(tmpchrs[7:8])
 
+def SHA1(data):
+	m = hashlib.sha1()
+	m.update(data)
+	return m.digest()
+
 import pkgcrypt
+pkgcrypt.register_sha1_callback(SHA1)
+
+def fastcrypt(key, inbuf, length):
+	keystr = listToString(key)
+	result = pkgcrypt.pkgcrypt(keystr, inbuf, length)
+	key[:] = list(keystr)[:]
+	return result
 
 def crypt(key, inbuf, length):
 	if not isinstance(key, list):
 		return ""
 	# Call our ultra fast c implemetation
-	return pkgcrypt.pkgcrypt(listToString(key), inbuf, length);
+	return fastcrypt(key, inbuf, length)
 
 	# Original python (slow) implementation
 	ret = ""
@@ -255,13 +267,7 @@ def crypt(key, inbuf, length):
 		manipulate(key)
 		length -= bytes_to_dump
 	return ret
-def SHA1(data):
-	m = hashlib.sha1()
-	m.update(data)
-	return m.digest()
 
-pkgcrypt.register_sha1_callback(SHA1)
-	
 def listPkg(filename):
 	with open(filename, 'rb') as fp:
 		data = fp.read()
