@@ -2,7 +2,7 @@
 libjpgdec is used by Eyetoy in Playstation 3 only support JPG format... IPU is away :P
  */ 
 
-#include <psl1ght/lv2.h>
+#include <ppu-lv2.h>
 
 #include <stdio.h>
 #include <malloc.h>
@@ -11,24 +11,24 @@ libjpgdec is used by Eyetoy in Playstation 3 only support JPG format... IPU is a
 #include <unistd.h>
 
 #include <sysutil/video.h>
-#include <rsx/gcm.h>
-#include <rsx/reality.h>
+#include <rsx/gcm_sys.h>
+#include <rsx/rsx.h>
 
 #include <io/pad.h>
-#include <io/cam.h>
+#include <io/camera.h>
 
-#include <psl1ght/lv2.h>
 #include <sysmodule/sysmodule.h>
 #include <jpgdec/jpgdec.h>
 
 #include <stdarg.h>
 
 #include <arpa/inet.h>
-#include "sysutil/events.h"
+#include <sysutil/sysutil.h>
+#include <ppu-asm.h>
 
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
-VideoResolution res; // Screen Resolution
+videoResolution res; // Screen Resolution
 
 int currentBuffer = 0;
 u32 *buffer[2]; // The buffer we will be drawing into.
@@ -42,7 +42,7 @@ void waitFlip() { // Block the PPU thread untill the previous flip operation has
 
 void flip(s32 buffer) {
 	assert(gcmSetFlip(context, buffer) == 0);
-	realityFlushBuffer(context);
+	rsxFlushBuffer(context);
 	gcmSetWaitFlip(context); // Prevent the RSX from continuing until the flip has finished.
 }
 
@@ -53,10 +53,10 @@ void init_screen() {
 	assert(host_addr != NULL);
 
 	// Initilise Reality, which sets up the command buffer and shared IO memory
-	context = realityInit(0x10000, 1024*1024, host_addr); 
+	rsxInit(&context, 0x10000, 1024*1024, host_addr); 
 	assert(context != NULL);
 
-	VideoState state;
+	videoState state;
 	assert(videoGetState(0, 0, &state) == 0); // Get the state of the display
 	assert(state.state == 0); // Make sure display is enabled
 
@@ -64,8 +64,8 @@ void init_screen() {
 	assert(videoGetResolution(state.displayMode.resolution, &res) == 0);
 	
 	// Configure the buffer format to xRGB
-	VideoConfiguration vconfig;
-	memset(&vconfig, 0, sizeof(VideoConfiguration));
+	videoConfiguration vconfig;
+	memset(&vconfig, 0, sizeof(videoConfiguration));
 	vconfig.resolution = state.displayMode.resolution;
 	vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
 	vconfig.pitch = res.width * 4;
@@ -79,13 +79,13 @@ void init_screen() {
 	gcmSetFlipMode(GCM_FLIP_VSYNC); // Wait for VSYNC to flip
 
 	// Allocate two buffers for the RSX to draw to the screen (double buffering)
-	buffer[0] = rsxMemAlign(16, buffer_size);
-	buffer[1] = rsxMemAlign(16, buffer_size);
+	buffer[0] = rsxMemalign(16, buffer_size);
+	buffer[1] = rsxMemalign(16, buffer_size);
 	assert(buffer[0] != NULL && buffer[1] != NULL);
 
 	u32 offset[2];
-	assert(realityAddressToOffset(buffer[0], &offset[0]) == 0);
-	assert(realityAddressToOffset(buffer[1], &offset[1]) == 0);
+	assert(rsxAddressToOffset(buffer[0], &offset[0]) == 0);
+	assert(rsxAddressToOffset(buffer[1], &offset[1]) == 0);
 	// Setup the display buffers
 	assert(gcmSetDisplayBuffer(0, offset[0], res.width * 4, res.width, res.height) == 0);
 	assert(gcmSetDisplayBuffer(1, offset[1], res.width * 4, res.width, res.height) == 0);
@@ -103,9 +103,9 @@ void fillFrame(u32 *buffer, u32 color) {
 
 }
 void appCleanup(){
-	SysUnloadModule(SYSMODULE_JPGDEC);
-	SysUnloadModule(SYSMODULE_CAM);
-	sysUnregisterCallback(EVENT_SLOT0);
+	sysModuleUnload(SYSMODULE_JPGDEC);
+	sysModuleUnload(SYSMODULE_CAMERA);
+	sysUtilUnregisterCallback(SYSUTIL_EVENT_SLOT0);
 	printf("Exiting for real.\n");
 }
 
@@ -168,59 +168,59 @@ int decode_jpg(u8 *buf, s32 size)
 	int mHandle;
 	int sHandle;
 
-	JpgDecThreadInParam InThdParam;
-	JpgDecThreadOutParam OutThdParam;
+	jpgDecThreadInParam InThdParam;
+	jpgDecThreadOutParam OutThdParam;
 
-	JpgDecInParam inParam;
-	JpgDecOutParam outParam;
+	jpgDecInParam inParam;
+	jpgDecOutParam outParam;
 	
-	JpgDecSrc src; 
+	jpgDecSource src; 
 	uint32_t space_allocated;
 
-	JpgDecInfo DecInfo;
+	jpgDecInfo DecInfo;
 	
 	uint64_t bytes_per_line;
-	JpgDecDataInfo DecDataInfo;
+	jpgDecDataInfo DecDataInfo;
 
-	InThdParam.enable   = 0;
+	InThdParam.spu_enable   = 0;
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
-	InThdParam.addr_malloc_func  = (u32)(u64) OPD32(jpg_malloc); // (see sysmodule.h)
-	InThdParam.addr_malloc_arg   = 0; // no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
-	InThdParam.addr_free_func    = (u32)(u64) OPD32(jpg_free);  // (see sysmodule.h)
-	InThdParam.addr_free_arg    =  0; // no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
+	InThdParam.malloc_func  = (jpgCbCtrlMalloc)__get_opd32(jpg_malloc); // (see sysmodule.h)
+	InThdParam.malloc_arg   = 0; // no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
+	InThdParam.free_func    = (jpgCbCtrlFree)__get_opd32(jpg_free);  // (see sysmodule.h)
+	InThdParam.free_arg    =  0; // no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
 
 
-	ret= JpgDecCreate(&mHandle, &InThdParam, &OutThdParam);
+	ret= jpgDecCreate(&mHandle, &InThdParam, &OutThdParam);
 
 
 	if(ret == 0) {
 		
-		memset(&src, 0, sizeof(JpgDecSrc));
+		memset(&src, 0, sizeof(jpgDecSource));
 			
-		src.stream_select = JPGDEC_BUFFER;
-		src.addr_stream_ptr  = (u32)(u64) buf;
+		src.stream_sel = JPGDEC_BUFFER;
+		src.stream_ptr  = (u32)(u64) buf;
 		src.stream_size    = size;
-		src.enable  = JPGDEC_DISABLE;
+		src.spu_enable  = JPGDEC_SPU_THREAD_DISABLE;
 			
-		ret= JpgDecOpen(mHandle, &sHandle, &src, &space_allocated);
+		ret= jpgDecOpen(mHandle, &sHandle, &src, &space_allocated);
 			
 		if(ret == 0) {
 			
-			ret = JpgDecReadHeader(mHandle, sHandle, &DecInfo);
+			ret = jpgDecReadHeader(mHandle, sHandle, &DecInfo);
 			
 			if(ret==0 && DecInfo.color_space==0) ret=-1; // unsupported color
 
 			if(ret == 0) {	
 		
-				inParam.addr_cmd_ptr = 0;
-				inParam.downscale	 = 1;
-				inParam.quality		 = JPGDEC_LOW_QUALITY; // fast
-				inParam.mode         = JPGDEC_TOP_TO_BOTTOM;
+				inParam.cmd_ptr      = 0;
+				inParam.down_scale   = 1;
+				inParam.quality_mode = JPGDEC_FAST; // fast
+				inParam.output_mode  = JPGDEC_TOP_TO_BOTTOM;
 				inParam.color_space  = JPGDEC_ARGB;
-				inParam.color_alpha  = 0xFF;
+				inParam.alpha  	     = 0xFF;
 
-				ret = JpgDecSetParameter(mHandle, sHandle, &inParam, &outParam);
+				ret = jpgDecSetParameter(mHandle, sHandle, &inParam, &outParam);
 				}
 				
 			if(ret == 0) {
@@ -233,19 +233,19 @@ int decode_jpg(u8 *buf, s32 size)
 
 					//memset(bmp_out, 0, bytes_per_line * outParam.height);
 						
-					ret = JpgDecDecodeData(mHandle, sHandle, bmp_out, &bytes_per_line, &DecDataInfo);
+					ret = jpgDecDecodeData(mHandle, sHandle, bmp_out, &bytes_per_line, &DecDataInfo);
 
-					if((ret == 0) && (DecDataInfo.status == 0)){
+					if((ret == 0) && (DecDataInfo.decode_status == 0)){
 							
 							ret=0; // ok :)
 					}
 				}
 				
-			JpgDecClose(mHandle, sHandle);
+			jpgDecClose(mHandle, sHandle);
 			}
 
 		
-			JpgDecDestroy(mHandle);
+			jpgDecDestroy(mHandle);
 			
 		}
 
@@ -255,7 +255,7 @@ return ret;
 static void eventHandle(u64 status, u64 param, void * userdata) {
     (void)param;
     (void)userdata;
-	if(status == EVENT_REQUEST_EXITAPP){
+	if(status == SYSUTIL_EXIT_GAME){
 		printf("Quit game requested\n");
 		exit(0);
 	}else{
@@ -265,25 +265,25 @@ static void eventHandle(u64 status, u64 param, void * userdata) {
 
 s32 main(s32 argc, const char* argv[])
 {
-	PadInfo padinfo;
-	PadData paddata;
+	padInfo padinfo;
+	padData paddata;
 
-	SysLoadModule(SYSMODULE_CAM);
-	SysLoadModule(SYSMODULE_JPGDEC);
+	sysModuleLoad(SYSMODULE_CAMERA);
+	sysModuleLoad(SYSMODULE_JPGDEC);
 	
 	atexit(appCleanup);
 	
-	sysRegisterCallback(EVENT_SLOT0, eventHandle, NULL);
+	sysUtilRegisterCallback(SYSUTIL_EVENT_SLOT0, eventHandle, NULL);
 	
 	int i, j, ret;
 	int running = 1, cameraSetup = 0;
 	
 	sys_mem_container_t container;
 	
-	ret = lv2MemContinerCreate(&container, 0x200000);
+	ret = sysMemContainerCreate(&container, 0x200000);
 	printf("lv2MemContinerCreate() returned %d\n", ret);
-	CameraType type;
-	CameraInfoEx cameraInfo;
+	cameraType type;
+	cameraInfoEx cameraInfo;
 	
 	
 	init_screen();
@@ -387,7 +387,7 @@ s32 main(s32 argc, const char* argv[])
 		
 		flip(currentBuffer); // Flip buffer onto screen
 		currentBuffer = !currentBuffer;
-		sysCheckCallback();
+		sysUtilCheckCallback();
 	}
 	
 	cameraStop(0);
@@ -395,6 +395,6 @@ s32 main(s32 argc, const char* argv[])
 	cameraClose(0);
 	cameraEnd();
   
-	lv2MemContinerDestroy(container);
+	sysMemContainerDestroy(container);
 	return 0;
 }

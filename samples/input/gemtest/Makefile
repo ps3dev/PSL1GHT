@@ -24,7 +24,6 @@ INCLUDES	:=	include
 TITLE		:=	Gem Test - PSL1GHT
 APPID		:=	TEST0GEM0
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
-PKGFILES	:=	release
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -115,6 +114,7 @@ clean:
 run:
 	ps3load $(OUTPUT).self
 
+pkg:	$(BUILD) $(OUTPUT).pkg
 
 #---------------------------------------------------------------------------------
 else
@@ -125,12 +125,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).self: $(OUTPUT).elf
-	@make_fself $(OUTPUT).elf $(OUTPUT).self
-$(OUTPUT).elf: $(OUTPUT)
-	@cp $(OUTPUT) $(OUTPUT).elf
-	@sprxlinker $(OUTPUT).elf
-$(OUTPUT):	$(OFILES)
-	$(VERB) $(LD)  $^ $(LDFLAGS) $(LIBPATHS) $(LIBS) -o $@
+$(OUTPUT).elf:	$(OFILES)
 
 
 #---------------------------------------------------------------------------------

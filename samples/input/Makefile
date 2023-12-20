@@ -1,7 +1,9 @@
-TARGETS := # camera gemtest kbtest padtest
+TARGETS := gemtest gemsample kbtest padtest # camera
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET; done
 
 clean:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET clean; done
+pkg:
+	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET pkg; done

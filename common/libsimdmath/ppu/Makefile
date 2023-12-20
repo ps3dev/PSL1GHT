@@ -16,14 +16,14 @@ ifeq ($(strip $(PLATFORM)),)
 #---------------------------------------------------------------------------------
 export BASEDIR		:= $(CURDIR)
 export DEPS			:= $(BASEDIR)/deps
-export LIBS			:=	$(BASEDIR)/lib
+export LIBS			:= $(BASEDIR)/lib
 
 #---------------------------------------------------------------------------------
 else
 #---------------------------------------------------------------------------------
 
 export LIBDIR		:= $(LIBS)/$(PLATFORM)
-export DEPSDIR		:=	$(DEPS)/$(PLATFORM)
+export DEPSDIR		:= $(DEPS)/$(PLATFORM)
 
 #---------------------------------------------------------------------------------
 endif

@@ -2,7 +2,7 @@
 // network and send a small message. It will try sending it with both
 // TCP and UDP.
 
-#include <psl1ght/lv2/net.h>
+#include <net/net.h>
 
 #include <stdio.h>
 #include <unistd.h>

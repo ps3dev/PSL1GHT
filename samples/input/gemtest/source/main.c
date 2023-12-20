@@ -144,7 +144,7 @@ init_screen ()
   assert (host_addr != NULL);
 
   // Initilise RSX, which sets up the command buffer and shared IO memory
-  context = rsxInit (0x10000, 1024 * 1024, host_addr);
+  rsxInit (&context,0x10000, 1024 * 1024, host_addr);
   assert (context != NULL);
 
   videoState state;
@@ -217,7 +217,7 @@ appCleanup ()
 
   sysMemContainerDestroy (container);
   sysModuleUnload (SYSMODULE_GEM);
-  sysModuleUnload (SYSMODULE_CAM);
+  sysModuleUnload (SYSMODULE_CAMERA);
   sysUtilUnregisterCallback (SYSUTIL_EVENT_SLOT0);
   printf ("Exiting for real.\n");
 }
@@ -686,7 +686,7 @@ main (s32 argc, const char *argv[])
 
   int p;
 
-  p = sysModuleLoad (SYSMODULE_CAM);
+  p = sysModuleLoad (SYSMODULE_CAMERA);
   printf ("cam return %X\n", p);
   p = sysModuleLoad (SYSMODULE_GEM);
   printf ("move return %X\n", p);
