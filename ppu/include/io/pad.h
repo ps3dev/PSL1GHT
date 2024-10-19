@@ -373,6 +373,10 @@ s32 ioPadGetCapabilityInfo(u32 port, padCapabilityInfo* capabilities);
     \param port Pad port.
     \param data Pointer to the pad data structure.
     \return zero if no error occured, nonzero otherwise.
+
+    \note The padData structure is only filled if there is a change in the input since the last call.
+    If there is no change, the structure is zero filled. If the member 'len' is zero, it indicates 
+    that there was no new input.
 */
 s32 ioPadGetData(u32 port, padData* data);
 
@@ -459,6 +463,10 @@ s32 ioPadPeriphGetInfo(padPeriphInfo* periphInfo);
     \param port Pad port.
     \param periphData Pointer to the pad peripheral data structure.
     \return zero if no error occured, nonzero otherwise.
+
+    \note The padPeriphData structure is only filled if there is a change in the input since the last call.
+    If there is no change, the structure is partially updated. If the member 'len' is zero, it indicates 
+    that there was no new input.
 */
 s32 ioPadPeriphGetData(u32 port, padPeriphData* periphData);
 
