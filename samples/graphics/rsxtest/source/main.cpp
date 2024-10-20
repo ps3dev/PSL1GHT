@@ -451,7 +451,7 @@ void drawFrame()
 							GCM_CLEAR_S |
 							GCM_CLEAR_Z);
 
-	rsxSetZMinMaxControl(context,0,1,1);
+	rsxSetZMinMaxControl(context,GCM_FALSE, GCM_TRUE, GCM_FALSE);
 
 	for(i=0;i<8;i++)
 		rsxSetViewportClip(context,i,display_width,display_height);
