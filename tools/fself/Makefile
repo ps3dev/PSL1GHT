@@ -51,7 +51,7 @@ ifneq (,$(findstring Darwin,$(UNAME)))
 	OSXCFLAGS	:= -mmacosx-version-min=$(OSX_MIN)
 	OSXCXXFLAGS	:=	$(OSXCFLAGS)
 	CXXFLAGS	+=	-fvisibility=hidden
-	CFLAGS		+= -I/usr/local/include
+	CFLAGS		+= -I/usr/local/include -I/opt/homebrew/include
 	LDFLAGS		+= -mmacosx-version-min=$(OSX_MIN) -Wl,-syslibroot,$(SDK) -L/opt/local/lib -lz
 endif
 
