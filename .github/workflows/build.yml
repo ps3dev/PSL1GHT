@@ -1,0 +1,40 @@
+name: Build PSL1GHT
+
+on: [ push, pull_request, workflow_dispatch ]
+
+jobs:
+  build_psl1ght:
+    runs-on: ubuntu-22.04
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set env vars
+      id: slug
+      run: |
+        echo "sha_name=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
+        sudo apt install python2.7
+        sudo apt-get -y install autoconf automake bison flex make texinfo patch wget zlib1g-dev libtool-bin bzip2 pkg-config python2-dev python-dev-is-python3
+
+      # using pre-compiled sdk
+      # to do: replace toolchain link
+    - name: Download PSL1GHT Toolchain
+      run: |
+        curl -sL https://github.com/bucanero/ps3toolchain/releases/download/ubuntu-latest-fad3b5fb/ps3dev-ubuntu-latest-2020-08-31.tar.gz | tar xvz -C ./
+        curl -sL https://github.com/ps3dev/PSL1GHT/raw/master/ppu/include/sysutil/sysutil.h -o ps3dev/ppu/include/sysutil/sysutil.h
+        curl -sL https://gist.github.com/bucanero/150ec41325894bbd1b4513ecb9e1cfb6/raw/1814600a1b3c804209c4f71dd6316779e160cb25/utime.h -o ps3dev/ppu/ppu/include/sys/utime.h
+        echo "PS3DEV=${GITHUB_WORKSPACE}/ps3dev" >> $GITHUB_ENV
+        echo "PSL1GHT=${GITHUB_WORKSPACE}/ps3dev" >> $GITHUB_ENV
+
+    - name: Build PSL1GHT
+      run: |
+        make
+        7z a psl1ght.zip $PSL1GHT/bin
+
+    - name: Push package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: psl1ght-build_${{ env.sha_name }}
+        path: psl1ght.zip
+        if-no-files-found: error
