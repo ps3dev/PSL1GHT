@@ -31,8 +31,9 @@ ifneq (,$(findstring CYGWIN,$(UNAME)))
 endif
 
 ifneq (,$(findstring Darwin,$(UNAME)))
-	CFLAGS	+= -I/opt/local/include -I/usr/local/opt/libelf/include/libelf
-	LDFLAGS	+= -L/opt/local/lib -lelf
+	BREW_PREFIX := $(shell brew --prefix 2>/dev/null)
+	CFLAGS	+= -I${BREW_PREFIX}/include -I${BREW_PREFIX}/opt/libelf/include/libelf
+	LDFLAGS	+= -L${BREW_PREFIX}/lib -lelf
 	OS		:= Mac
 endif
 
