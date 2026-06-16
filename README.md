@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/github/license/ps3dev/PSL1GHT.svg)](./LICENSE)
+[![CI](https://github.com/ps3dev/PSL1GHT/actions/workflows/build.yml/badge.svg)](https://github.com/ps3dev/PSL1GHT/actions/workflows/build.yml)
+
 PSL1GHT
 =======
 
@@ -14,7 +17,7 @@ Credits
     Tempus      - PSL1GHT Logo
     lousyphreak - libaudio
     Hermes      - sysmodule, libpngdec, libjpgdec
-    BigBoss       - EyeToy support added to libcamera sample, libgem sample.
+    BigBoss     - EyeToy support added to libcamera sample, libgem sample.
     ooPo        - ps3libraries
     ElSemi      - Vertex Program Compiler
     zerkman     - SPU sample code
