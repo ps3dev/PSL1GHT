@@ -37,9 +37,16 @@ ifneq (,$(findstring Darwin,$(UNAME)))
 	OSX_MIN 	:= $(shell defaults read $(shell xcrun --show-sdk-platform-path 2> /dev/null)/Info MinimumSDKVersion 2> /dev/null || xcrun --show-sdk-version 2> /dev/null || echo 10.4)
 	OSXCFLAGS	:= -mmacosx-version-min=$(OSX_MIN)
 	OSXCXXFLAGS	:=	$(OSXCFLAGS)
+	BREW_PREFIX := $(shell brew --prefix 2>/dev/null)
 	CXXFLAGS	+=	-fvisibility=hidden
-	CFLAGS	+= -I/usr/local/include -I/usr/local/opt/libelf/include/libelf -I/usr/local/opt/openssl/include
-	LDFLAGS		+= -mmacosx-version-min=$(OSX_MIN) -Wl,-syslibroot,$(SDK) -L/opt/local/lib -L/usr/local/opt/openssl/lib -lgmp -lcrypto -lz
+	CFLAGS	    += -I$(BREW_PREFIX)/include \
+                   -I$(BREW_PREFIX)/opt/libelf/include/libelf \
+				   -I$(BREW_PREFIX)/opt/openssl/include
+	LDFLAGS		+= -mmacosx-version-min=$(OSX_MIN) \
+	               -Wl,-syslibroot,$(SDK) \
+				   -L$(BREW_PREFIX)/lib \
+				   -L$(BREW_PREFIX)/opt/openssl/lib \
+				   -lgmp -lcrypto -lz
 endif
 
 ifneq (,$(findstring BSD,$(UNAME)))

@@ -23,8 +23,8 @@ MACHDEP			=	-mhard-float -fmodulo-sched -ffunction-sections -fdata-sections
 include $(PSL1GHT)/base_rules
 include $(PSL1GHT)/data_rules
 
-PKG			:=	pkg.py
-SFO			:=	sfo.py
+PKG			:=	pkg
+SFO			:=	sfo
 
 SPRX			:=	sprxlinker$(POSTFIX)
 CGCOMP			:=	cgcomp$(POSTFIX)

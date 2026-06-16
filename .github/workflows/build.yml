@@ -1,0 +1,37 @@
+name: Build PSL1GHT
+
+on: [ push, pull_request, workflow_dispatch ]
+
+jobs:
+  build_psl1ght:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set env vars
+      id: slug
+      run: |
+        echo "sha_name=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
+        sudo apt-get -y install autoconf automake bison flex gcc libelf-dev make texinfo patch wget zlib1g-dev libtool-bin bzip2 pkg-config
+
+      # using pre-compiled sdk
+      # to do: replace toolchain link
+    - name: Download PSL1GHT Toolchain
+      run: |
+        curl -sL https://github.com/ps3dev/ps3toolchain/releases/download/2026-06-09/ps3dev-92534e60-ubuntu-latest.tar.gz | tar xvz -C ./
+        echo "PS3DEV=${GITHUB_WORKSPACE}/ps3dev" >> $GITHUB_ENV
+        echo "PSL1GHT=${GITHUB_WORKSPACE}/ps3dev" >> $GITHUB_ENV
+
+    - name: Build PSL1GHT
+      run: |
+        make
+        7z a psl1ght.zip $PSL1GHT/bin
+
+    - name: Push package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: psl1ght-build_${{ env.sha_name }}
+        path: psl1ght.zip
+        if-no-files-found: error

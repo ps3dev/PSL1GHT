@@ -131,6 +131,24 @@ LV2_SYSCALL sysLv2FsLink(const char *oldpath,const char *newpath)
 	lv2syscall2(810,(u64)oldpath,(u64)newpath);
 	return_to_user_prog(s32);
 }
+	
+LV2_SYSCALL sysLv2FsMount(const char *deviceName, const char *deviceFileSystem, const char *devicePath, int writeProt) 
+{
+	lv2syscall8(837, (u64) deviceName, (u64) deviceFileSystem, (u64) devicePath, 0, (u64) writeProt, 0, 0, 0);
+	return_to_user_prog(int);
+}
+
+LV2_SYSCALL sysLv2FsUnmount(const char *devicePath) 
+{
+	lv2syscall3(838, (u64) devicePath, 0, 0);
+	return_to_user_prog(int);
+}
+
+LV2_SYSCALL sysLv2FsChown(const char *path, s32 uid, s32 gid)
+{
+	lv2syscall3(835, (u64) path, (u64) uid, (u64) gid);
+	return_to_user_prog(int);
+}
 
 #ifdef __cplusplus
 	}
