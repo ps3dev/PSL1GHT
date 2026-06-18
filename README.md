@@ -65,7 +65,7 @@ Current Status
 ### Graphics
 
 PSL1GHT supports hardware accelerated 3d graphics.
-Vertex shaders are a work in progress and Fragment shaders don't exist yet.
+Vertex and Fragment shaders are a work in progress.
 
 ### Input
 
