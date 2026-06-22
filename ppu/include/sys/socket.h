@@ -30,6 +30,18 @@ LV2_SYSCALL sysNetConnect(int socket,const struct sockaddr *addr,socklen_t addr_
 	return_to_user_prog(s32);
 }
 
+LV2_SYSCALL sysNetGetPeerName(int socket, struct sockaddr* address, socklen_t* address_len)
+{
+    lv2syscall3(703, socket, (u64)address, (u64)address_len);
+    return_to_user_prog(s32);
+}
+
+LV2_SYSCALL sysNetGetSockName(int socket, struct sockaddr* address, socklen_t* address_len)
+{
+    lv2syscall3(704, socket, (u64)address, (u64)address_len);
+    return_to_user_prog(s32);
+}
+
 LV2_SYSCALL sysNetListen(int socket,int backlog)
 {
 	lv2syscall2(706,socket,backlog);
@@ -64,6 +76,12 @@ LV2_SYSCALL sysNetClose(int socket)
 {
 	lv2syscall1(714,socket);
 	return_to_user_prog(s32);
+}
+
+LV2_SYSCALL sysNetSelect(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct timeval* timeout) 
+{  
+    lv2syscall5(716, nfds, (u64)readfds, (u64)writefds, (u64)errorfds, (u64)timeout);
+    return_to_user_prog(s32);
 }
 
 #ifdef __cplusplus
