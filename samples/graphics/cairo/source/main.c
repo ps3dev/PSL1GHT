@@ -139,8 +139,6 @@ main (s32 argc, const char* argv[])
         }
     }
 
-    setRenderTarget(context, &buffers[currentBuffer]);
-
     DEBUG ("Drawing frame %d\n", frame);
     waitFlip ();
     drawFrame (&buffers[currentBuffer], frame++); // Draw into the unused buffer
