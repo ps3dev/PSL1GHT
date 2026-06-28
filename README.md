@@ -3,9 +3,9 @@
 
 # PSL1GHT
 
-PSL1GHT is an open-source PlayStation 3 homebrew SDK. It uses the PS3
-toolchain to compile applications for GameOS as SELF executables or
-PKG packages.
+PSL1GHT is an open-source PlayStation 3 homebrew SDK. It provides libraries
+and build tools for creating GameOS homebrew applications as SELF executables
+and installable PKG packages.
 
 > [!NOTE]
 > This is the SDK repository.
@@ -19,22 +19,16 @@ the toolchain, libraries and PSL1GHT into a complete environment; this is the
 recommended way for most users to get started with PSL1GHT.
 
 PSL1GHT is built and tested with the toolchain provided by
-[ps3toolchain](http://github.com/ps3dev/ps3toolchain). The toolchain supplies
+[ps3toolchain](https://github.com/ps3dev/ps3toolchain). The toolchain supplies
 compilers for the PPU and SPU, patched newlib environment, binutils, signing
 tools and other programs required by PSL1GHT.
 
-Nvidia's [Cg Toolkit](http://developer.nvidia.com/object/cg_toolkit.html)
-is required for compiling vertex programs. The signing tools require libgmp.
-Most PSL1GHT samples require various libraries from
-[ps3libraries](http://github.com/ps3dev/ps3libraries) to be installed.
-
-
 ## Building
 
-This is useful when developing PSL1GHT itself or testing changes. A working
-PS3 toolchain must already  be installed.
+Building PSL1GHT directly is useful when developing PSL1GHT itself or testing changes.
+A working PS3 toolchain must already be installed.
 
-```
+```sh
 git clone https://github.com/ps3dev/PSL1GHT.git
 cd PSL1GHT
 make install-ctrl
@@ -42,9 +36,9 @@ make
 make install
 ```
 
-make install-ctrl installs the shared build rules required during the SDK build.
-make install installs the completed headers, libraries, rules, and host utilities
-into $PSL1GHT and $PS3DEV.
+`make install-ctrl` installs the shared build rules required during the SDK build.
+`make install` installs the completed headers, libraries, rules, and host utilities
+into `$PSL1GHT` and `$PS3DEV`.
 
 To remove generated build files:
 ```
@@ -54,39 +48,45 @@ make clean
 ## Building Applications
 
 PSL1GHT programs are built using their Makefile. The repository currently provides
-samples organised by sub-system, such as `audio`, `graphics` and `input`.
+samples organised by subsystem, such as `audio`, `graphics` and `input`.
 
 To build an individual sample:
 ```
 cd samples/<category>/<sample>
 make
 ```
-Depending on the sample, `.elf`, `.self` and/or `.pkg` files may be generated. Samples
-that provide a package target can be packaged with `make pkg`. Package metadata is set
+A typical sample build produces `.elf` and `.self` outputs. Samples that define a package
+target can be packaged with
+```sh
+make pkg
+```
+Package metadata is set
 by the application's Makefile.
 
 ## Optional Dependencies
 
 ### ps3libraries
 
-Though not required, many samples and applications use libraries from
+Some samples and applications use libraries from
 [ps3libraries](https://github.com/ps3dev/ps3libraries/). It is a collection of libraries
 ported to the PS3 such as SDL and zlib.
 
-### NVidia CgToolkit
+### NVidia Cg Toolkit
 
-The current shader workflow relies upon the NVidia Cg Toolkit when compiling `.vcg`
-and `.fcg` shader sources. Cg is proprietary and discontinued and cannot be included
-in the PS3DEV environment - it must be installed separately. It is not required for
-applications that don't need shaders.
+The current shader workflow relies upon the discontinued proprietary NVidia Cg Toolkit
+when compiling `.vcg` and `.fcg` shader sources. Cg Toolkit cannot be included in the
+PS3DEV environment - it must be installed separately. It is not required for applications
+that don't need shaders.
 
 ## Documentation
 
 There is a [DeepWiki](https://deepwiki.com/ps3dev/PSL1GHT) set up for PSL1GHT that
-contains information about the SDK and allows you to ask it questions. 
+contains information about the SDK and allows you to ask it questions. This can
+provide a start for basic questions; the source code and public headers remain the
+authority.
 
 The public headers contain Doxygen documentation for many APIs. Generate it with:
-```
+```sh
 make doc
 ```
 
@@ -94,12 +94,13 @@ Doxygen must be installed.
 
 ## Current Status
 
-PSL1GHT is mostly historical code that is known to have problems building on modern
-toolchains. CI needs to be expanded and made more robust to test the veracity of 
-PSL1GHT's samples.
+The core PSL1GHT SDK is built in CI with the PS3 toolchain.
+Coverage of samples is currently incomplete - some samples are excluded from the
+top sample build script, and CI does not yet verify anything beyond a top-level 
+`make`.
 
-Contributions are welcome. Before submitting a pull request, please verify the code
-is hardware-compatible and includes a description so that it can be replicated.
+Contributions that improve compatibility, sample coverage and documentation are welcome.
+For runtime changes, please describe the toolchain and hardware used for testing. 
 
 ## Credits
 
@@ -116,3 +117,6 @@ is hardware-compatible and includes a description so that it can be replicated.
     zerkman     - SPU sample code
     shagkur     - Author
     miigotu     - Author
+
+Thanks to all [contributors](https://github.com/ps3dev/PSL1GHT/graphs/contributors) who have
+helped to maintain and improve PSL1GHT over the years.
