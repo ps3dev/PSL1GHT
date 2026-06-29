@@ -82,10 +82,12 @@ ported to the PS3 such as SDL and zlib.
 
 ### NVidia Cg Toolkit
 
-The current shader workflow relies upon the discontinued proprietary NVidia Cg Toolkit
+The current shader workflow relies upon the discontinued proprietary [NVidia Cg Toolkit](https://developer.nvidia.com/cg-toolkit)
 when compiling `.vcg` and `.fcg` shader sources. Cg Toolkit cannot be included in the
 PS3DEV environment - it must be installed separately. It is not required for applications
 that don't need shaders.
+
+You can download the Cg Toolkit from: https://developer.nvidia.com/cg-toolkit-download
 
 ## Documentation
 
