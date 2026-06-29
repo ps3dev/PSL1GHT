@@ -34,7 +34,7 @@ jobs:
       shell: bash
       run: |
         set -Eeuo pipefail
-        make VERBOSE=1 \
+        make VERBOSE=1 -k \
           -C samples \
           SHELL=/bin/bash \
           '.SHELLFLAGS=-e -o pipefail -c' \
