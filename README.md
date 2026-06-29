@@ -1,15 +1,120 @@
 [![License](https://img.shields.io/github/license/ps3dev/PSL1GHT.svg)](./LICENSE)
 [![CI](https://github.com/ps3dev/PSL1GHT/actions/workflows/build.yml/badge.svg)](https://github.com/ps3dev/PSL1GHT/actions/workflows/build.yml)
 
-PSL1GHT
-=======
+# PSL1GHT
 
-PSL1GHT is a lightweight PlayStation 3 homebrew SDK that uses the open-source
-PlayStation 3 toolchains to compile user applications that will run from the
-XMB menu (GameOS homebrew).
+PSL1GHT is an open-source PlayStation 3 homebrew SDK. It provides libraries for
+GameOS homebrew applications created using the PS3 toolchain.
 
-Credits
--------
+> [!NOTE]
+> This is the SDK repository.
+> For the full development environment, please use
+> [ps3dev](https://github.com/ps3dev/ps3dev).
+
+## Environment
+
+The master repository, [ps3dev](https://github.com/ps3dev/ps3dev), combines
+the toolchain, libraries and PSL1GHT into a complete environment; this is the
+recommended way for most users to get started with PSL1GHT.
+
+PSL1GHT is built and tested with the toolchain provided by
+[ps3toolchain](https://github.com/ps3dev/ps3toolchain). The toolchain supplies
+compilers for the PPU and SPU, patched newlib environment, binutils, signing
+tools and other programs required by PSL1GHT.
+
+## Building
+
+Building PSL1GHT directly is useful when developing PSL1GHT itself or testing changes.
+A working PS3 toolchain must already be installed.
+
+> [!NOTE]
+> `make install` will overwrite the global PSL1GHT installation.
+> If you do not want this, you may want to temporarily change $PSL1GHT to a separate location
+> while working on a locally modified version.
+>
+> `make install` also installs parts into $PS3DEV; however, you cannot point $PS3DEV to an
+> empty location, as the Makefiles will then fail to find the toolchain.
+
+```sh
+git clone https://github.com/ps3dev/PSL1GHT.git
+cd PSL1GHT
+make install-ctrl
+make
+make install
+```
+
+`make install-ctrl` installs the shared build rules required during the SDK build.
+`make install` installs the completed headers, libraries, rules, and host utilities
+into `$PSL1GHT` and `$PS3DEV`.
+
+To remove generated build files:
+```sh
+make clean
+```
+
+## Building Applications
+
+PSL1GHT programs are built using their Makefile. The repository currently provides
+samples organised by subsystem, such as `audio`, `graphics` and `input`.
+
+To build an individual sample:
+```sh
+cd samples/<category>/<sample>
+make
+```
+A typical sample build produces `.elf` and `.self` outputs. Samples that define a package
+target can be packaged with
+```sh
+make pkg
+```
+
+Package metadata is set by the application's Makefile. Quitting from the XMB requires the
+application to register a callback to handle the event; an example can be found in the
+camera sample.
+
+## Optional Dependencies
+
+### ps3libraries
+
+Some samples and applications use libraries from
+[ps3libraries](https://github.com/ps3dev/ps3libraries/). It is a collection of libraries
+ported to the PS3 such as SDL and zlib.
+
+### NVidia Cg Toolkit
+
+The current shader workflow relies upon the discontinued proprietary [NVidia Cg Toolkit](https://developer.nvidia.com/cg-toolkit)
+when compiling `.vcg` and `.fcg` shader sources. Cg Toolkit cannot be included in the
+PS3DEV environment - it must be installed separately. It is not required for applications
+that don't need shaders.
+
+You can download the Cg Toolkit from: https://developer.nvidia.com/cg-toolkit-download
+
+## Documentation
+
+There is a [DeepWiki](https://deepwiki.com/ps3dev/PSL1GHT) set up for PSL1GHT that
+contains information about the SDK and allows you to ask it questions. This can
+provide a start for basic questions; the source code and public headers remain the
+authority.
+
+The public headers contain Doxygen documentation for many APIs. Generate it with:
+```sh
+make doc
+```
+
+Doxygen must be installed. 
+
+## Current Status
+
+The core PSL1GHT SDK is built in CI with the PS3 toolchain.
+Coverage of samples is currently incomplete - some samples are excluded from the
+top sample build script, and CI does not yet verify anything beyond a top-level 
+`make`.
+
+Contributions that improve compatibility, sample coverage and documentation are welcome.
+For runtime changes, please describe the toolchain and hardware used for testing. 
+
+## Credits
+
 
     AerialX     - Founder, Author
     Parlane     - Author
@@ -24,98 +129,5 @@ Credits
     shagkur     - Author
     miigotu     - Author
 
-Environment
------------
-
-A GCC toolchain that supports the PowerPC 64bit architecture is required to
-build PSL1GHT and its samples. It also requires the toolchain to provide
-a patched newlib environment; at the moment only one toolchain does so:
-
-* [ps3toolchain](http://github.com/ps3dev/ps3toolchain)
-
-The SDK also includes a few standalone tools to help compilation. A host gcc
-is required to build raw2h, ps3load, and sprxlinker requires libelf. ps3load
-requires zlib installed. Python 2.x is required to run fself.py, sfo.py, and
-pkg.py. Nvidia's [Cg Toolkit](http://developer.nvidia.com/object/cg_toolkit.html)
-is required for compiling vertex programs. The signing tools require libgmp.
-
-Most of the PSL1GHT samples included in the samples/ directory require various
-libraries from [ps3libraries](http://github.com/ps3dev/ps3libraries) to be
-installed.
-
-Building
---------
-
-Run make install in the psl1ght directory to build it all, and make sure to
-set the environment variable $PSL1GHT to the folder where you wish to
-install it to, for example...
-
-    cd /path/to/psl1ght.git/
-    export PSL1GHT=/path/to/psl1ght.git/build
-    make install-ctrl
-    make
-    make install
-
-... for a local build of it. Ensure that $PSL1GHT is set when you are
-building any of the examples or other apps that use PSL1GHT.
-
-Current Status
---------------
-
-### Graphics
-
-PSL1GHT supports hardware accelerated 3d graphics.
-Vertex and Fragment shaders are a work in progress.
-
-### Input
-
-PS3 controllers are fully supported, and pressing the PS button brings up the
-in-game XMB menu, assuming the framebuffer is working.
-
-Quitting from the XMB requires the application to register a callback to handle the event. An example using this is the camera example.
-
-### Filesystem Access
-
-Full filesystem support is available, with access to the internal PS3 hard
-drive, game disc contents, and external devices like USB drives. Only directory
-iteration is missing, though it can be done using the lv2 filesystem interface
-directly (see include/psl1ght/lv2/filesystem.h)
-
-### Networking
-
-Berkeley sockets are available for use in PSL1GHT, though some
-implementation remains incomplete at this time (hostname lookups, for example).
-
-### STDOUT Debugging
-
-By default, PSL1GHT applications redirect stdout and stderr to the lv2 TTY
-interface. Kammy's ethdebug module can be used to retrieve this live debugging
-information over UDP broadcast packets.
-See [Kammy](http://github.com/AerialX/Kammy) for more information and a
-precompiled ethdebug hook loader.
-
-### SPUs
-
-PSL1GHT provides access to running programs on the raw SPUs, and communication
-with it from the PPU. See sputest in the samples directory for a simple
-example.
-
-### SPRX Linking
-
-Any dynamic libraries available to normal PS3 applications can be used with
-PSL1GHT, they just need to be made into a stub library and have the exports
-filled out. See any of the examples in sprx/ for information on the
-creation of SPRX stub libraries.
-
-The following libraries are currently supported:
-
-* libio
-    * libpad
-    * libmouse
-* liblv2
-* libsysutil
-* libgcm_sys
-* libsysmodule
-* libpngdec
-* libjpgdec
-* libgem
+Thanks to all [contributors](https://github.com/ps3dev/PSL1GHT/graphs/contributors) who have
+helped to maintain and improve PSL1GHT over the years.
