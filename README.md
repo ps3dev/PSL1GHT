@@ -3,9 +3,8 @@
 
 # PSL1GHT
 
-PSL1GHT is an open-source PlayStation 3 homebrew SDK. It provides libraries
-and build tools for creating GameOS homebrew applications as SELF executables
-and installable PKG packages.
+PSL1GHT is an open-source PlayStation 3 homebrew SDK. It provides libraries for
+GameOS homebrew applications created using the PS3 toolchain.
 
 > [!NOTE]
 > This is the SDK repository.
@@ -28,6 +27,14 @@ tools and other programs required by PSL1GHT.
 Building PSL1GHT directly is useful when developing PSL1GHT itself or testing changes.
 A working PS3 toolchain must already be installed.
 
+> [!NOTE]
+> `make install` will overwrite the global PSL1GHT installation.
+> If you do not want this, you may want to temporarily change $PSL1GHT to a separate location
+> while working on a locally modified version.
+>
+> `make install` also installs parts into $PS3DEV; however, you cannot point $PS3DEV to an
+> empty location, as the Makefiles will then fail to find the toolchain.
+
 ```sh
 git clone https://github.com/ps3dev/PSL1GHT.git
 cd PSL1GHT
@@ -41,7 +48,7 @@ make install
 into `$PSL1GHT` and `$PS3DEV`.
 
 To remove generated build files:
-```
+```sh
 make clean
 ```
 
@@ -51,7 +58,7 @@ PSL1GHT programs are built using their Makefile. The repository currently provid
 samples organised by subsystem, such as `audio`, `graphics` and `input`.
 
 To build an individual sample:
-```
+```sh
 cd samples/<category>/<sample>
 make
 ```
@@ -60,8 +67,10 @@ target can be packaged with
 ```sh
 make pkg
 ```
-Package metadata is set
-by the application's Makefile.
+
+Package metadata is set by the application's Makefile. Quitting from the XMB requires the
+application to register a callback to handle the event; an example can be found in the
+camera sample.
 
 ## Optional Dependencies
 
