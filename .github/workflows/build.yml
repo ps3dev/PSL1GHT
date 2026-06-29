@@ -26,8 +26,58 @@ jobs:
 
     - name: Build PSL1GHT
       run: |
+        make install-ctrl
         make
-        7z a psl1ght.zip $PSL1GHT/bin
+        make install
+
+    - name: Build PSL1GHT samples
+      shell: bash
+      run: |
+        set -Eeuo pipefail
+        make VERBOSE=1 -k \
+          -C samples \
+          SHELL=/bin/bash \
+          '.SHELLFLAGS=-e -o pipefail -c' \
+          2>&1 | tee "$RUNNER_TEMP/psl1ght-samples.log"
+
+    - name: Validate sample outputs
+      shell: bash
+      run: |
+        set -Eeuo pipefail
+
+        test -f \
+          samples/sys/threadtest/threadtest.elf
+
+        test -f \
+          samples/sys/threadtest/threadtest.self
+
+        test -f \
+          samples/spu/sputest/sputest.elf
+
+        test -f \
+          samples/spu/sputest/sputest.self
+
+        ppu-readelf \
+          -h \
+          samples/sys/threadtest/threadtest.elf
+
+        echo
+        echo "Generated sample binaries:"
+
+        find samples \
+          -type f \
+          \( \
+            -name '*.elf' -o \
+            -name '*.self' -o \
+            -name '*.fake.self' -o \
+            -name '*.pkg' \
+          \) \
+          -print \
+          | LC_ALL=C sort
+
+    - name: Upload sample build results
+      run: |
+        7z a psl1ght.zip ./common ./ppu ./samples ./sprx ./spu ./tools psl1ght-samples.log
 
     - name: Push package artifact
       uses: actions/upload-artifact@v4
