@@ -5,6 +5,7 @@ from fself import SelfHeader, AppInfo
 
 import struct
 import sys
+import tempfile
 import hashlib
 import os
 import getopt
@@ -235,6 +236,26 @@ def setContextNum(key, tmpnum):
 
 import pkgcrypt
 
+def cryptfile(key, infile, outfile):
+	if not isinstance(key, list):
+		return b""
+	# Call our ultra fast c implemetation
+	infile.seek(0, 2)
+	length = infile.tell()
+	infile.seek(0)
+	offset = 0
+	BS = 8 * 1024 * 1024
+	while length:
+		len = length
+		if len > BS:
+			len = BS
+		inbuf = infile.read(len)
+		data, new_key = pkgcrypt.pkgcrypt(listToString(key), inbuf, len);
+		outfile.write(data)
+		length = length - len
+		offset = offset + len
+		key[:] = new_key
+
 def crypt(key, inbuf, length):
 	if not isinstance(key, list):
 		return ""
@@ -427,7 +448,7 @@ def pack(folder, contentid, outname=None):
 	files = []
 	getFiles(files, folder, folder)
 	header.itemCount = len(files)
-	dataToEncrypt = b""
+	tmpFile = tempfile.TemporaryFile()
 	fileDescLength = 0
 	fileOff = 0x20 * len(files)
 	for file in files:
@@ -437,12 +458,12 @@ def pack(folder, contentid, outname=None):
 	for file in files:
 		file.fileOff = fileOff
 		fileOff += (file.fileSize + 0x0F) & ~0x0F
-		dataToEncrypt += file.pack()
+		tmpFile.write(file.pack())
 	for file in files:
 		alignedSize = (file.fileNameLength + 0x0F) & ~0x0F
-		dataToEncrypt += file.fileName
-		dataToEncrypt += b"\0" * (alignedSize-file.fileNameLength)
-	fileDescLength = len(dataToEncrypt)
+		tmpFile.write(file.fileName)
+		tmpFile.write(b"\0" * (alignedSize-file.fileNameLength))
+	fileDescLength = tmpFile.tell()
 	for file in files:
 		if not file.flags & 0xFF == TYPE_DIRECTORY:
 			path = os.path.join(folder, file.fileNameStr())
@@ -469,7 +490,7 @@ def pack(folder, contentid, outname=None):
 						break
 				digestOff += len(digest)
 				if appheader.appType == 8 and found:
-					dataToEncrypt += fileData[0:digestOff]
+					tmpFile.write(fileData[0:digestOff])
 					
 					meta = EbootMeta()
 					meta.magic = 0x4E504400
@@ -486,20 +507,22 @@ def pack(folder, contentid, outname=None):
 						else:
 							meta.notXORKLSHA1[i] 	= (0 ^ meta.notSHA1[i] ^ 0xAA) & 0xFF
 						meta.nulls[i] 			= 0
-					dataToEncrypt += meta.pack()
-					dataToEncrypt += fileData[digestOff + 0x80:]
+					tmpFile.write(meta.pack())
+					tmpFile.write(fileData[digestOff + 0x80:])
 				else:
-					dataToEncrypt += fileData
+					tmpFile.write(fileData)
 			else:
-				dataToEncrypt += fileData
+				tmpFile.write(fileData)
 			
-			dataToEncrypt += b'\0' * (((file.fileSize + 0x0F) & ~0x0F) - len(fileData))
-	header.dataSize = len(dataToEncrypt)
+			tmpFile.write(b'\0' * (((file.fileSize + 0x0F) & ~0x0F) - len(fileData)))
+	tmpFile.seek(0, 2)
+	header.dataSize = tmpFile.tell()
 	metaBlock.dataSize 	= header.dataSize
 	header.packageSize = header.dataSize + 0x1A0
 	head = header.pack()
 	qadigest.update(head)
-	qadigest.update(dataToEncrypt[0:fileDescLength])
+	tmpFile.seek(0)
+	qadigest.update(tmpFile.read(fileDescLength))
 	QA_Digest = qadigest.digest()
 	
 	for i in range(0, 0x10):
@@ -539,8 +562,7 @@ def pack(folder, contentid, outname=None):
 	outFile.write(metaBlockSHAPadEnc)
 	
 	context = keyToContext(header.QADigest)
-	encData = crypt(context, dataToEncrypt, header.dataSize)
-	outFile.write(encData)
+	cryptfile(context, tmpFile, outFile)
 	outFile.write(b'\0' * 0x60)
 	outFile.close()
 	print(header)
