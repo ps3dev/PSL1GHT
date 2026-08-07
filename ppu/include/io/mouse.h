@@ -3,10 +3,10 @@
 
 #include <ppu-types.h>
 
-#define MAX_MICE				127
-#define MOUSE_MAX_CODES			64
+#define CELL_MAX_MICE				127
+#define CELL_MOUSE_MAX_CODES			64
 
-#define MOUSE_MAX_DATA_LIST		(8)
+#define CELL_MOUSE_MAX_DATA_LIST		(8)
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,22 +18,22 @@ typedef struct _mouse_info
 	u32 max;					/* max mice allowed to connect */
 	u32 connected;				/* how many mice connected */
 	u32 info;					/* bit 0 lets the system intercept pad? other bits are reserved */
-	u16 vendor_id[MAX_MICE];	/* vendor id */
-	u16 product_id[MAX_MICE];	/* product id */
-	u8  status[MAX_MICE];		/* 0: Not connected, 1: Connected, 5: Connected to custom controller.*/
-} mouseInfo;
+	u16 vendor_id[CELL_MAX_MICE];	/* vendor id */
+	u16 product_id[CELL_MAX_MICE];	/* product id */
+	u8  status[CELL_MAX_MICE];		/* 0: Not connected, 1: Connected, 5: Connected to custom controller.*/
+} CellMouseInfo;
 
 typedef struct _mouse_info_tablet
 {
 	u32 supported;
 	u32 mode;
-} mouseInfoTablet;
+} CellMouseInfoTablet;
 
 typedef struct _mouse_raw_data
 {
 	s32 len;
-	u8 data[MOUSE_MAX_CODES];
-} mouseRawData;
+	u8 data[CELL_MOUSE_MAX_CODES];
+} CellMouseRawData;
 
 typedef struct _mouse_data
 {
@@ -43,36 +43,36 @@ typedef struct _mouse_data
 	s8 y_axis;
 	s8 wheel;
 	s8 tilt;	
-} mouseData;
+} CellMouseData;
 
 typedef struct _mouse_data_list
 {
 	u32 count;
-	mouseData list[MOUSE_MAX_DATA_LIST];
-}mouseDataList;
+	CellMouseData list[CELL_MOUSE_MAX_DATA_LIST];
+} CellMouseDataList;
 
 typedef struct _mouse_tablet_data
 {
 	s32 len;
-	u8 data[MOUSE_MAX_CODES];
-} mouseTabletData;
+	u8 data[CELL_MOUSE_MAX_CODES];
+} CellMouseTabletData;
 
 typedef struct _mouse_tablet_data_list
 {
 	u32 count;
-	mouseTabletData list[MOUSE_MAX_DATA_LIST];
-} mouseTabletDataList;
+	CellMouseTabletData list[CELL_MOUSE_MAX_DATA_LIST];
+} CellMouseTabletDataList;
 
-s32 ioMouseInit(u32 max);
-s32 ioMouseEnd();
-s32 ioMouseClearBuf(u32 port);
-s32 ioMouseGetInfo(mouseInfo* info);
-s32 ioMouseGetRawData(u32 port, mouseRawData* rawData);
-s32 ioMouseGetData(u32 port, mouseData* data);
-s32 ioMouseGetDataList(u32 port, mouseDataList* dataList);
-s32 ioMouseGetTabletDataList(u32 port, mouseTabletDataList* tabletDataList);
-s32 ioMouseInfoTabletMode(u32 port, mouseInfoTablet* infoTablet);
-s32 ioMouseSetTabletMode(u32 port, u32 mode);
+s32 cellMouseInit(u32 max);
+s32 cellMouseEnd();
+s32 cellMouseClearBuf(u32 port);
+s32 cellMouseGetInfo(CellMouseInfo* info);
+s32 cellMouseGetRawData(u32 port, CellMouseRawData* rawData);
+s32 cellMouseGetData(u32 port, CellMouseData* data);
+s32 cellMouseGetDataList(u32 port, CellMouseDataList* dataList);
+s32 cellMouseGetTabletDataList(u32 port, CellMouseTabletDataList* tabletDataList);
+s32 cellMouseInfoTabletMode(u32 port, CellMouseInfoTablet* infoTablet);
+s32 cellMouseSetTabletMode(u32 port, u32 mode);
 
 
 #ifdef __cplusplus

@@ -9,23 +9,23 @@
 	
 		
 
-s32 spursAttributeInitialize(SpursAttribute *attr, u8 nSpus,s32 spuPriority,s32 ppuPriority,bool exitIfNoWork);
-s32	spursInitializeWithAttribute (Spurs*, const SpursAttribute*);
-s32	spursInitializeWithAttribute2 (Spurs2*, const SpursAttribute*);
-s32 spursInitialize(Spurs* spurs,unsigned nSpus,int spuPriority,int ppuPriority,bool exitIfNoWork);
-s32 spursFinalize(Spurs*);
-s32 spursWakeUp(Spurs*);
-s32 spursGetNumSpuThread(Spurs*, unsigned *nThreads);
-s32 spursSetMaxContention(Spurs*,unsigned,unsigned int maxContention);
-s32 spursSetPriorities(Spurs*,unsigned,const u8 priorities[SPURS_MAX_SPU]);
-s32 spursGetSpuThreadId(Spurs*, sys_spu_thread_t*, unsigned *nThreads);
-s32 spursGetSpuThreadGroupId(Spurs*, sys_spu_group_t*);
-s32 spursGetInfo(Spurs*, SpursInfo *info);
-s32 spursGetSpuGuid(const void* pSpuGUID, uint64_t *dest);
-s32 spursAttributeSetNamePrefix(SpursAttribute* attr,const char* name,size_t size);
-s32 spursAttributeSetSpuThreadGroupType(SpursAttribute* attr, int type);
-s32 spursAttributeEnableSpuPrintfIfAvailable(SpursAttribute* attr);
-s32	spursAttributeSetMemoryContainerForSpuThread(SpursAttribute* attr,sys_mem_container_t container);
+s32 cellSpursAttributeInitialize(CellSpursAttribute *attr, u8 nSpus,s32 spuPriority,s32 ppuPriority,bool exitIfNoWork);
+s32	cellSpursInitializeWithAttribute (CellSpurs*, const CellSpursAttribute*);
+s32	cellSpursInitializeWithAttribute2 (CellSpurs2*, const CellSpursAttribute*);
+s32 cellSpursInitialize(CellSpurs* spurs,unsigned nSpus,int spuPriority,int ppuPriority,bool exitIfNoWork);
+s32 cellSpursFinalize(CellSpurs*);
+s32 cellSpursWakeUp(CellSpurs*);
+s32 cellSpursGetNumSpuThread(CellSpurs*, unsigned *nThreads);
+s32 cellSpursSetMaxContention(CellSpurs*,unsigned,unsigned int maxContention);
+s32 cellSpursSetPriorities(CellSpurs*,unsigned,const u8 priorities[CELL_SPURS_MAX_SPU]);
+s32 cellSpursGetSpuThreadId(CellSpurs*, sys_spu_thread_t*, unsigned *nThreads);
+s32 cellSpursGetSpuThreadGroupId(CellSpurs*, sys_spu_group_t*);
+s32 cellSpursGetInfo(CellSpurs*, CellSpursInfo *info);
+s32 cellSpursGetSpuGuid(const void* pSpuGUID, uint64_t *dest);
+s32 cellSpursAttributeSetNamePrefix(CellSpursAttribute* attr,const char* name,size_t size);
+s32 cellSpursAttributeSetSpuThreadGroupType(CellSpursAttribute* attr, int type);
+s32 cellSpursAttributeEnableSpuPrintfIfAvailable(CellSpursAttribute* attr);
+s32	cellSpursAttributeSetMemoryContainerForSpuThread(CellSpursAttribute* attr,sys_mem_container_t container);
 
 #ifdef __cplusplus
 	}

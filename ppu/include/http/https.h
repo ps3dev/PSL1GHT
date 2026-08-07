@@ -19,14 +19,14 @@ typedef struct _https_data
 {
   char *ptr ATTRIBUTE_PRXPTR;
   u32 size;
-} httpsData;
+} CellHttpsData;
 
 
 /*
  * callbacks
  */
 
-typedef int (*httpsSslCallback)(s32 verErr,sslCert const sslCerts[],int certNum,const char *host,httpSslId id,void *arg);
+typedef int (*CellHttpsSslCallback)(s32 verErr,CellSslCert const sslCerts[],int certNum,const char *host,CellHttpSslId id,void *arg);
 
 
 /*
@@ -34,14 +34,14 @@ typedef int (*httpsSslCallback)(s32 verErr,sslCert const sslCerts[],int certNum,
  */
 
 /* initialization */
-s32 httpsInit(u32 caCertNum,const httpsData *caList);
-s32 httpsEnd(void);
+s32 cellHttpsInit(u32 caCertNum,const CellHttpsData *caList);
+s32 cellHttpsEnd(void);
 
 /* SSL certificate */
-s32 httpClientSetSslClientCertificate(httpClientId cid,const httpsData *cert,const httpsData *privKey);
+s32 cellHttpClientSetSslClientCertificate(CellHttpClientId cid,const CellHttpsData *cert,const CellHttpsData *privKey);
 
 /* SSL callback */
-s32 httpClientSetSslCallback(httpClientId cid,httpsSslCallback cb,void *arg);
+s32 cellHttpClientSetSslCallback(CellHttpClientId cid,CellHttpsSslCallback cb,void *arg);
 
 
 #ifdef __cplusplus

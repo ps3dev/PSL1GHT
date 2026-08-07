@@ -10,86 +10,86 @@
 #include <sysutil/video.h>
 
 /* sysUtil functions */
-extern s32 sysUtilRegisterCallbackEx(s32 slot,opd32 *opd,void *usrdata);
+extern s32 cellSysutilRegisterCallbackEx(s32 slot,opd32 *opd,void *usrdata);
 
-/* msgDialog functions */
-extern s32 msgDialogOpenEx(msgType type,const char *msg,opd32 *func,void *usrData,void *unused);
-extern s32 msgDialogOpen2Ex(msgType type,const char *msg,opd32 *func,void *usrData,void *unused);
-extern s32 msgDialogOpenErrorCodeEx(u32 errorCode,opd32 *func,void *usrData,void *unused);
+/* cellMsgDialog functions */
+extern s32 cellMsgDialogOpenEx(CellMsgDialogType type,const char *msg,opd32 *func,void *usrData,void *unused);
+extern s32 cellMsgDialogOpen2Ex(CellMsgDialogType type,const char *msg,opd32 *func,void *usrData,void *unused);
+extern s32 cellMsgDialogOpenErrorCodeEx(u32 errorCode,opd32 *func,void *usrData,void *unused);
 
-/* sysSave functions */
-extern s32 sysSaveListLoad2Ex (u32 version, sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings, opd32 *listCb, opd32 *statusCb,
+/* CellSaveData functions */
+extern s32 cellSaveDataListLoad2Ex (u32 version, CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings, opd32 *listCb, opd32 *statusCb,
     opd32 *fileCb, sys_mem_container_t container, void *user_data);
-extern s32 sysSaveListSave2Ex (u32 version, sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings, opd32 *listCb, opd32 *statusCb,
+extern s32 cellSaveDataListSave2Ex (u32 version, CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings, opd32 *listCb, opd32 *statusCb,
     opd32 *fileCb, sys_mem_container_t container, void *user_data);
-extern s32 sysSaveListAutoLoadEx (u32 version, sysSaveErrorDialogMode errorDialogMode,
-    sysSaveListSettings *listSettings, sysSaveBufferSettings *bufferSettings,
+extern s32 cellSaveDataListAutoLoadEx (u32 version, CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataListSettings *listSettings, CellSaveDataBufferSettings *bufferSettings,
     opd32 *fixedCb, opd32 *statusCb, opd32 *fileCb,
     sys_mem_container_t container,  void *user_data);
-extern s32 sysSaveListAutoSaveEx (u32 version, sysSaveErrorDialogMode errorDialogMode,
-    sysSaveListSettings *listSettings, sysSaveBufferSettings *bufferSettings,
+extern s32 cellSaveDataListAutoSaveEx (u32 version, CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataListSettings *listSettings, CellSaveDataBufferSettings *bufferSettings,
     opd32 *fixedCb, opd32 *statusCb, opd32 *fileCb,
     sys_mem_container_t container, void *user_data);
-extern s32 sysSaveFixedLoad2Ex (u32 version, sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings, opd32 *fixedCb, opd32 *statusCb,
+extern s32 cellSaveDataFixedLoad2Ex (u32 version, CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings, opd32 *fixedCb, opd32 *statusCb,
     opd32 *fileCb, sys_mem_container_t container, void *user_data);
-extern s32 sysSaveFixedSave2Ex (u32 version, sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings, opd32 *fixedCb, opd32 *statusCb,
+extern s32 cellSaveDataFixedSave2Ex (u32 version, CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings, opd32 *fixedCb, opd32 *statusCb,
     opd32 *fileCb, sys_mem_container_t container, void *user_data);
-extern s32 sysSaveAutoLoad2Ex (s32 version, const char *directoryName,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveBufferSettings *bufferSettings, opd32 *statusCb, opd32 *fileCb,
+extern s32 cellSaveDataAutoLoad2Ex (s32 version, const char *directoryName,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataBufferSettings *bufferSettings, opd32 *statusCb, opd32 *fileCb,
     sys_mem_container_t container, void *user_data);
-extern s32 sysSaveAutoSave2Ex (s32 version, const char *directoryName,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveBufferSettings *bufferSettings,
+extern s32 cellSaveDataAutoSave2Ex (s32 version, const char *directoryName,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataBufferSettings *bufferSettings,
     opd32 *statusCb, opd32 *fileCb, sys_mem_container_t container, void *user_data);
 
 /* sysGame functions */
-extern s32 sysGameThemeInstallFromBufferEx(u32 fileSize, u32 bufSize, void *buf, opd32 *themeCb, u32 option);
-extern s32 sysGameDiscRegisterDiscChangeCallbackEx(sysGameDiscEjectCallback cbEject,sysGameDiscInsertCallback cbInsert);
+extern s32 cellGameThemeInstallFromBufferEx(u32 fileSize, u32 bufSize, void *buf, opd32 *themeCb, u32 option);
+extern s32 cellGameRegisterDiscChangeCallbackEx(CellGameDiscEjectCallback cbEject,CellGameDiscInsertCallback cbInsert);
 
 /* Disc utility support */
-extern s32 sysDiscRegisterDiscChangeCallbackEx(opd32 *cbEject,opd32 *cbInsert);
+extern s32 cellDiscGameRegisterDiscChangeCallbackEx(opd32 *cbEject,opd32 *cbInsert);
 
 /* video system function */
-extern s32 videoRegisterCallbackEx(u32 slot, opd32 *cbVideo, void *userData);
+extern s32 cellVideoOutRegisterCallbackEx(u32 slot, opd32 *cbVideo, void *userData);
 
-/* sysUtil wrapper functions */
-s32 sysUtilRegisterCallback(s32 slot,sysutilCallback cb,void *usrdata)
+/* cellSysutil wrapper functions */
+s32 cellSysutilRegisterCallback(s32 slot,CellSysutilCallback cb,void *usrdata)
 {
-	return sysUtilRegisterCallbackEx(slot, (opd32*)__get_opd32(cb),usrdata);
+	return cellSysutilRegisterCallbackEx(slot, (opd32*)__get_opd32(cb),usrdata);
 }
 
-/* msgDialog wraper functions */
-s32 msgDialogOpen(msgType type,const char *msg,msgDialogCallback cb,void *usrData,void *unused)
+/* cellMsgDialog wraper functions */
+s32 cellMsgDialogOpen(CellMsgDialogType type,const char *msg,CellMsgDialogCallback cb,void *usrData,void *unused)
 {
-	return msgDialogOpenEx(type,msg,(opd32*)__get_opd32(cb),usrData,unused);
+	return cellMsgDialogOpenEx(type,msg,(opd32*)__get_opd32(cb),usrData,unused);
 }
 
-s32 msgDialogOpen2(msgType type,const char *msg,msgDialogCallback cb,void *usrData,void *unused)
+s32 cellMsgDialogOpen2(CellMsgDialogType type,const char *msg,CellMsgDialogCallback cb,void *usrData,void *unused)
 {
-	return msgDialogOpen2Ex(type,msg,(opd32*)__get_opd32(cb),usrData,unused);
+	return cellMsgDialogOpen2Ex(type,msg,(opd32*)__get_opd32(cb),usrData,unused);
 }
 
-s32 msgDialogOpenErrorCode(u32 errorCode,msgDialogCallback cb,void *usrData,void *unused)
+s32 cellMsgDialogOpenErrorCode(u32 errorCode,CellMsgDialogCallback cb,void *usrData,void *unused)
 {
-	return msgDialogOpenErrorCodeEx(errorCode,(opd32*)__get_opd32(cb),usrData,unused);
+	return cellMsgDialogOpenErrorCodeEx(errorCode,(opd32*)__get_opd32(cb),usrData,unused);
 }
 
-/* sysSave wrapper functions */
-s32 sysSaveListLoad2 (u32 version,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveListCallback listCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+/* CellSaveData wrapper functions */
+s32 cellSaveDataListLoad2 (u32 version,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataListCallback listCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data)
 {
-  return sysSaveListLoad2Ex(version,
+  return cellSaveDataListLoad2Ex(version,
       listSettings, bufferSettings,
       (opd32*) __get_opd32(listCb),
       (opd32*) __get_opd32(statusCb),
@@ -97,16 +97,16 @@ s32 sysSaveListLoad2 (u32 version,
       container, user_data);
 }
 
-s32 sysSaveListSave2 (u32 version,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveListCallback listCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataListSave2 (u32 version,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataListCallback listCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data)
 {
-  return sysSaveListSave2Ex (version,
+  return cellSaveDataListSave2Ex (version,
       listSettings, bufferSettings,
       (opd32*) __get_opd32(listCb),
       (opd32*) __get_opd32(statusCb),
@@ -114,17 +114,17 @@ s32 sysSaveListSave2 (u32 version,
       container, user_data);
 }
 
-s32 sysSaveListAutoLoad (u32 version,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveFixedCallback fixedCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataListAutoLoad (u32 version,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataFixedCallback fixedCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data)
 {
-  return sysSaveListAutoLoadEx (version,
+  return cellSaveDataListAutoLoadEx (version,
       errorDialogMode,listSettings, bufferSettings,
       (opd32*) __get_opd32(fixedCb),
       (opd32*) __get_opd32(statusCb),
@@ -132,17 +132,17 @@ s32 sysSaveListAutoLoad (u32 version,
       container, user_data);
 }
 
-s32 sysSaveListAutoSave (u32 version,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveFixedCallback fixedCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataListAutoSave (u32 version,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataFixedCallback fixedCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data)
 {
-  return sysSaveListAutoSaveEx (version,
+  return cellSaveDataListAutoSaveEx (version,
       errorDialogMode, listSettings, bufferSettings,
       (opd32*) __get_opd32(fixedCb),
       (opd32*) __get_opd32(statusCb),
@@ -150,16 +150,16 @@ s32 sysSaveListAutoSave (u32 version,
       container, user_data);
 }
 
-s32 sysSaveFixedLoad2 (u32 version,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveFixedCallback fixedCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataFixedLoad2 (u32 version,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataFixedCallback fixedCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data)
 {
-  return sysSaveFixedLoad2Ex (version,
+  return cellSaveDataFixedLoad2Ex (version,
       listSettings, bufferSettings,
       (opd32*) __get_opd32(fixedCb),
       (opd32*) __get_opd32(statusCb),
@@ -167,16 +167,16 @@ s32 sysSaveFixedLoad2 (u32 version,
       container, user_data);
 }
 
-s32 sysSaveFixedSave2 (u32 version,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveFixedCallback fixedCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataFixedSave2 (u32 version,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataFixedCallback fixedCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data)
 {
-  return sysSaveFixedSave2Ex (version,
+  return cellSaveDataFixedSave2Ex (version,
       listSettings, bufferSettings,
       (opd32*) __get_opd32(fixedCb),
       (opd32*) __get_opd32(statusCb),
@@ -184,32 +184,32 @@ s32 sysSaveFixedSave2 (u32 version,
       container, user_data);
 }
 
-s32 sysSaveAutoLoad2 (s32 version,
+s32 cellSaveDataAutoLoad2 (s32 version,
     const char *directoryName,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data)
 {
-  return sysSaveAutoLoad2Ex (version,
+  return cellSaveDataAutoLoad2Ex (version,
       directoryName, errorDialogMode, bufferSettings,
       (opd32*) __get_opd32(statusCb),
       (opd32*) __get_opd32(fileCb),
       container, user_data);
 }
 
-s32 sysSaveAutoSave2 (s32 version,
+s32 cellSaveDataAutoSave2 (s32 version,
     const char *directoryName,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data)
 {
-  return sysSaveAutoSave2Ex (version,
+  return cellSaveDataAutoSave2Ex (version,
       directoryName, errorDialogMode, bufferSettings,
       (opd32*) __get_opd32(statusCb),
       (opd32*) __get_opd32(fileCb),
@@ -217,24 +217,24 @@ s32 sysSaveAutoSave2 (s32 version,
 }
 
 /* game utility support */
-s32 sysGameThemeInstallFromBuffer(u32 fileSize, u32 bufSize, void *buf, sysGameThemeInstallCallback themeCb, u32 option)
+s32 cellGameThemeInstallFromBuffer(u32 fileSize, u32 bufSize, void *buf, CellGameThemeInstallCallback themeCb, u32 option)
 {
-	return sysGameThemeInstallFromBufferEx(fileSize,bufSize,buf,(opd32*)__get_opd32(themeCb),option);
+	return cellGameThemeInstallFromBufferEx(fileSize,bufSize,buf,(opd32*)__get_opd32(themeCb),option);
 }
 
-s32 sysGameDiscRegisterDiscChangeCallback(sysDiscEjectCallback cbEject,sysDiscInsertCallback cbInsert)
+s32 cellGameRegisterDiscChangeCallback(CellDiscGameEjectCallback cbEject,CellDiscGameInsertCallback cbInsert)
 {
-        return sysDiscRegisterDiscChangeCallbackEx((opd32*)__get_opd32(cbEject),(opd32*)__get_opd32(cbInsert));
+        return cellGameRegisterDiscChangeCallbackEx((opd32*)__get_opd32(cbEject),(opd32*)__get_opd32(cbInsert));
 }
 
 /* Disc utility support */
-s32 sysDiscRegisterDiscChangeCallback(sysDiscEjectCallback cbEject,sysDiscInsertCallback cbInsert)
+s32 cellDiscGameRegisterDiscChangeCallback(CellDiscGameEjectCallback cbEject,CellDiscGameInsertCallback cbInsert)
 {
-	return sysDiscRegisterDiscChangeCallbackEx((opd32*)__get_opd32(cbEject),(opd32*)__get_opd32(cbInsert));
+	return cellDiscGameRegisterDiscChangeCallbackEx((opd32*)__get_opd32(cbEject),(opd32*)__get_opd32(cbInsert));
 }
 
 /* video system functions */
-s32 videoRegisterCallback(u32 slot, videoCallback cbVideo, void *userData)
+s32 cellVideoOutRegisterCallback(u32 slot, CellVideoOutCallback cbVideo, void *userData)
 {
-    return videoRegisterCallbackEx(slot, (opd32*)__get_opd32(cbVideo), userData);
+    return cellVideoOutRegisterCallbackEx(slot, (opd32*)__get_opd32(cbVideo), userData);
 }

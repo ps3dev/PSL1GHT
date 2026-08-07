@@ -3,46 +3,46 @@
 
 #include <ppu-types.h>
 
-#define VDEC_ERROR_ARG					0x80610101
-#define VDEC_ERROR_SEQ					0x80610102
-#define VDEC_ERROR_BUSY					0x80610103
-#define VDEC_ERROR_EMPTY				0x80610104
-#define VDEC_ERROR_AU					0x80610105
-#define VDEC_ERROR_PIC					0x80610106
+#define CELL_VDEC_ERROR_ARG					0x80610101
+#define CELL_VDEC_ERROR_SEQ					0x80610102
+#define CELL_VDEC_ERROR_BUSY				0x80610103
+#define CELL_VDEC_ERROR_EMPTY				0x80610104
+#define CELL_VDEC_ERROR_AU					0x80610105
+#define CELL_VDEC_ERROR_PIC					0x80610106
 
-#define VDEC_TS_INVALID					0xffffffff
+#define CELL_VDEC_TS_INVALID				0xffffffff
 
-#define	VDEC_CODEC_TYPE_MPEG2			0
-#define	VDEC_CODEC_TYPE_H264			1
+#define	CELL_VDEC_CODEC_TYPE_MPEG2			0
+#define	CELL_VDEC_CODEC_TYPE_H264			1
 
-#define VDEC_CALLBACK_AUDONE			0
-#define VDEC_CALLBACK_PICOUT			1
-#define VDEC_CALLBACK_SEQDONE			2
-#define VDEC_CALLBACK_ERROR				3
+#define CELL_VDEC_CALLBACK_AUDONE			0
+#define CELL_VDEC_CALLBACK_PICOUT			1
+#define CELL_VDEC_CALLBACK_SEQDONE			2
+#define CELL_VDEC_CALLBACK_ERROR			3
 
-#define VDEC_DECODER_MODE_NORMAL		0
-#define VDEC_DECODER_MODE_SKIP_NON_REF	1
+#define CELL_VDEC_DECODER_MODE_NORMAL		0
+#define CELL_VDEC_DECODER_MODE_SKIP_NON_REF	1
 
-#define VDEC_PICFMT_ARGB32				0
-#define VDEC_PICFMT_RGBA32				1
-#define VDEC_PICFMT_UYVY422				2
-#define VDEC_PICFMT_YUV420P				3
+#define CELL_VDEC_PICFMT_ARGB32				0
+#define CELL_VDEC_PICFMT_RGBA32				1
+#define CELL_VDEC_PICFMT_UYVY422			2
+#define CELL_VDEC_PICFMT_YUV420P			3
 
-#define VDEC_COLOR_MATRIX_BT601			0
-#define VDEC_COLOR_MATRIX_BT709			1
+#define CELL_VDEC_COLOR_MATRIX_BT601		0
+#define CELL_VDEC_COLOR_MATRIX_BT709		1
 
-#define VDEC_PICTURE_NORMAL				0
-#define VDEC_PICTURE_SKIPPED			1
+#define CELL_VDEC_PICTURE_NORMAL			0
+#define CELL_VDEC_PICTURE_SKIPPED			1
 
-#define VDEC_MPEG2_MP_LL				0
-#define VDEC_MPEG2_MP_ML				1
-#define VDEC_MPEG2_MP_H14				2
-#define VDEC_MPEG2_MP_HL				3
+#define CELL_VDEC_MPEG2_MP_LL				0
+#define CELL_VDEC_MPEG2_MP_ML				1
+#define CELL_VDEC_MPEG2_MP_H14				2
+#define CELL_VDEC_MPEG2_MP_HL				3
 
-#define VDEC_MPEG2_ARI_SAR_1_1			1
-#define VDEC_MPEG2_ARI_DAR_4_3			2
-#define VDEC_MPEG2_ARI_DAR_16_9			3
-#define VDEC_MPEG2_ARI_DAR_2P21_1		4
+#define CELL_VDEC_MPEG2_ARI_SAR_1_1			1
+#define CELL_VDEC_MPEG2_ARI_DAR_4_3			2
+#define CELL_VDEC_MPEG2_ARI_DAR_16_9		3
+#define CELL_VDEC_MPEG2_ARI_DAR_2P21_1		4
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,7 +52,7 @@ typedef struct _vdec_type
 {
 	u32 codec_type;
 	u32 profile_level;
-} vdecType;
+} CellVdecType;
 
 
 typedef struct _vdec_attr
@@ -61,7 +61,7 @@ typedef struct _vdec_attr
 	u8 cmd_depth;
 	u32 ver_major;
 	u32 ver_minor;
-} vdecAttr;
+} CellVdecAttr;
 
 typedef struct _vdec_config
 {
@@ -71,18 +71,18 @@ typedef struct _vdec_config
 	u32 ppu_thread_stack_size;
 	u32 spu_thread_prio;
 	u32 num_spus;
-} vdecConfig;
+} CellVdecConfig;
 
 typedef struct _vdec_closure
 {
   u32 fn;
   u32 arg;
-} vdecClosure;
+} CellVdecClosure;
 
 typedef struct _vdec_ts 
 {
 	u32 low,hi;
-} vdecTS;
+} CellVdecTS;
 
 typedef struct _vdec_au
 {
@@ -92,7 +92,7 @@ typedef struct _vdec_au
 	vdecTS dts;
 	u64 userdata;
 	u64 reserved;
-} vdecAU;
+} CellVdecAU;
 
 typedef struct _vdec_picture
 {
@@ -106,7 +106,7 @@ typedef struct _vdec_picture
 	u32 status;
 	u32 attr;
 	u32 codec_specific_addr;
-} vdecPicture;
+} CellVdecPicture;
 
 
 typedef struct _vdec_picture_format 
@@ -114,7 +114,7 @@ typedef struct _vdec_picture_format
 	u32 format_type;
 	u32 color_matrix;
 	u8 alpha;
-} vdecPictureFormat;
+} CellVdecPictureFormat;
 
 typedef struct _vdec_mpeg2_info
 {
@@ -147,7 +147,7 @@ typedef struct _vdec_mpeg2_info
 	u32 headerPresentFlags;
 	u32 headerRetentionFlags;
 	bool mpeg1Flag;
-} vdecMPEG2Info;
+} CellVdecMPEG2Info;
 
 typedef struct _vdec_h264_info 
 {
@@ -175,18 +175,18 @@ typedef struct _vdec_h264_info
 	bool low_delay_hrd_flag;
 	bool entropy_coding_mode_flag;
 	u16 nalUnitPresentFlags;
-} vdecH264Info;
+} CellVdecH264Info;
 
-typedef u32 (*vdecCallback)(u32 handle,u32 msgtype,u32 msgdata,u32 arg);
+typedef u32 (*CellVdecCallback)(u32 handle,u32 msgtype,u32 msgdata,u32 arg);
 
-s32 vdecQueryAttr(const vdecType *type,vdecAttr *attr);
-s32 vdecOpen(const vdecType *type,const vdecConfig *config,const vdecClosure *c,u32 *handleptr);
-s32 vdecClose(u32 handle);
-s32 vdecStartSequence(u32 handle);
-s32 vdecEndSequence(u32 handle);
-s32 vdecDecodeAu(u32 handle,s32 mode,const vdecAU *auInfo);
-s32 vdecGetPicture(u32 handle,const vdecPictureFormat *format,void *buffer);
-s32 vdecGetPicItem(u32 handle,u32 *pic_item_addr_p);
+s32 cellVdecQueryAttr(const CellVdecType *type,CellVdecAttr *attr);
+s32 cellVdecOpen(const vdecType *type,const CellVdecConfig *config,const CellVdecClosure *c,u32 *handleptr);
+s32 cellVdecClose(u32 handle);
+s32 cellVdecStartSeq(u32 handle);
+s32 cellVdecEndSeq(u32 handle);
+s32 cellVdecDecodeAu(u32 handle,s32 mode,const CellVdecAU *auInfo);
+s32 cellVdecGetPicture(u32 handle,const CellVdecPictureFormat *format,void *buffer);
+s32 cellVdecGetPicItem(u32 handle,u32 *pic_item_addr_p);
 
 
 #ifdef __cplusplus

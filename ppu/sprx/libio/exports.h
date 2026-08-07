@@ -9,51 +9,51 @@ EXPORT(sys_config_register_service, 0x78f058a2);
 EXPORT(sys_config_unregister_service, 0x5f81900c);
 
 /* Pad */
-EXPORT(ioPadInit, 0x1cf98800);
-EXPORT(ioPadEnd, 0x4d9b75d5);
-EXPORT(ioPadClearBuf, 0x0d5f2c14);
-EXPORT(ioPadInfoPressMode, 0x0e2dfaad);
-EXPORT(ioPadLddRegisterController, 0x20a97ba2);
-EXPORT(ioPadGetInfo, 0x3aaad464);
-EXPORT(ioPadGetRawData, 0x3f797dff);
-EXPORT(ioPadGetDataExtra, 0x6bc09c61);
-EXPORT(ioPadInfoSensorMode, 0x78200559);
-EXPORT(ioPadGetData, 0x8b72cda1);
-EXPORT(ioPadLddGetPortNo, 0x8b8231e5);
-EXPORT(ioPadLddDataInsert, 0xbafd6409);
-EXPORT(ioPadSetSensorMode, 0xbe5be3ba);
-EXPORT(ioPadGetCapabilityInfo, 0xdbf4c59c);
-EXPORT(ioPadLddUnregisterController, 0xe442faa8);
-EXPORT(ioPadSetActDirect, 0xf65544ee);
-EXPORT(ioPadSetPressMode, 0xf83f8182);
+EXPORT(cellPadInit, 0x1cf98800);
+EXPORT(cellPadEnd, 0x4d9b75d5);
+EXPORT(cellPadClearBuf, 0x0d5f2c14);
+EXPORT(cellPadInfoPressMode, 0x0e2dfaad);
+EXPORT(cellPadLddRegisterController, 0x20a97ba2);
+EXPORT(cellPadGetInfo, 0x3aaad464);
+EXPORT(cellPadGetRawData, 0x3f797dff);
+EXPORT(cellPadGetDataExtra, 0x6bc09c61);
+EXPORT(cellPadInfoSensorMode, 0x78200559);
+EXPORT(cellPadGetData, 0x8b72cda1);
+EXPORT(cellPadLddGetPortNo, 0x8b8231e5);
+EXPORT(cellPadLddDataInsert, 0xbafd6409);
+EXPORT(cellPadSetSensorMode, 0xbe5be3ba);
+EXPORT(cellPadGetCapabilityInfo, 0xdbf4c59c);
+EXPORT(cellPadLddUnregisterController, 0xe442faa8);
+EXPORT(cellPadSetActDirect, 0xf65544ee);
+EXPORT(cellPadSetPressMode, 0xf83f8182);
 
-EXPORT(ioPadPeriphGetInfo, 0x4cc9b68d);
-EXPORT(ioPadSetPortSetting, 0x578e3c98);
-EXPORT(ioPadPeriphGetData, 0x8a00f264);
-EXPORT(ioPadGetInfo2, 0xa703a51d);
+EXPORT(cellPadPeriphGetInfo, 0x4cc9b68d);
+EXPORT(cellPadSetPortSetting, 0x578e3c98);
+EXPORT(cellPadPeriphGetData, 0x8a00f264);
+EXPORT(cellPadGetInfo2, 0xa703a51d);
 
 /* Mouse */
-EXPORT(ioMouseInit, 0xc9030138);
-EXPORT(ioMouseEnd, 0xe10183ce);
-EXPORT(ioMouseClearBuf, 0x3ef66b95);
-EXPORT(ioMouseGetInfo, 0x5baf30fb);
-EXPORT(ioMouseGetTabletDataList, 0x21a62e9b);
-EXPORT(ioMouseSetTabletMode, 0x2d16da4f);
-EXPORT(ioMouseGetData, 0x3138e632);
-EXPORT(ioMouseInfoTabletMode, 0x4d0b3b1f);
-EXPORT(ioMouseGetRawData, 0xa328cc35);
-EXPORT(ioMouseGetDataList, 0x6bd131f0);
+EXPORT(cellMouseInit, 0xc9030138);
+EXPORT(cellMouseEnd, 0xe10183ce);
+EXPORT(cellMouseClearBuf, 0x3ef66b95);
+EXPORT(cellMouseGetInfo, 0x5baf30fb);
+EXPORT(cellMouseGetTabletDataList, 0x21a62e9b);
+EXPORT(cellMouseSetTabletMode, 0x2d16da4f);
+EXPORT(cellMouseGetData, 0x3138e632);
+EXPORT(cellMouseInfoTabletMode, 0x4d0b3b1f);
+EXPORT(cellMouseGetRawData, 0xa328cc35);
+EXPORT(cellMouseGetDataList, 0x6bd131f0);
 
 /* Keyboard */
-EXPORT(ioKbInit, 0x433f6ec0);
-EXPORT(ioKbEnd, 0xbfce3285);
-EXPORT(ioKbRead, 0xff0a21b7);
-EXPORT(ioKbSetReadMode, 0xdeefdfa7);
-EXPORT(ioKbSetCodeType, 0xa5f85e4d);
-EXPORT(ioKbCnvRawCode, 0x4ab1fa77);
-EXPORT(ioKbSetLEDStatus, 0x3f72c56e);
-EXPORT(ioKbGetInfo, 0x2f1774d5);
-EXPORT(ioKbGetConfiguration, 0x1f71ecbe);
-EXPORT(ioKbClearBuf, 0x2073b7f6);
+EXPORT(cellKbInit, 0x433f6ec0);
+EXPORT(cellKbEnd, 0xbfce3285);
+EXPORT(cellKbRead, 0xff0a21b7);
+EXPORT(cellKbSetReadMode, 0xdeefdfa7);
+EXPORT(cellKbSetCodeType, 0xa5f85e4d);
+EXPORT(cellKbCnvRawCode, 0x4ab1fa77);
+EXPORT(cellKbSetLEDStatus, 0x3f72c56e);
+EXPORT(cellKbGetInfo, 0x2f1774d5);
+EXPORT(cellKbGetConfiguration, 0x1f71ecbe);
+EXPORT(cellKbClearBuf, 0x2073b7f6);
 
 #endif

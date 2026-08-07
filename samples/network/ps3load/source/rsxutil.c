@@ -8,8 +8,8 @@
 
 #define GCM_LABEL_INDEX		255
 
-videoResolution res;
-gcmContextData *context = NULL;
+CellVideoOutResolution res;
+CellGcmContextData *context = NULL;
 
 u32 curr_fb = 0;
 u32 first_fb = 1;
@@ -33,7 +33,7 @@ static void wait_finish()
 
 	rsxFlushBuffer(context);
 
-	while(*(vu32*)gcmGetLabelAddress(GCM_LABEL_INDEX)!=sLabelVal)
+	while(*(vu32*)cellGcmGetLabelAddress(GCM_LABEL_INDEX)!=sLabelVal)
 		usleep(30);
 
 	++sLabelVal;
@@ -51,17 +51,17 @@ static void wait_rsx_idle()
 
 void set_render_target(u32 index)
 {
-	gcmSurface sf;
+	CellGcmSurface sf;
 
-	sf.colorFormat		= GCM_SURFACE_X8R8G8B8;
-	sf.colorTarget		= GCM_SURFACE_TARGET_0;
-	sf.colorLocation[0]	= GCM_LOCATION_RSX;
+	sf.colorFormat		= CELL_GCM_SURFACE_X8R8G8B8;
+	sf.colorTarget		= CELL_GCM_SURFACE_TARGET_0;
+	sf.colorLocation[0]	= CELL_GCM_LOCATION_RSX;
 	sf.colorOffset[0]	= color_offset[index];
 	sf.colorPitch[0]	= color_pitch;
 
-	sf.colorLocation[1]	= GCM_LOCATION_RSX;
-	sf.colorLocation[2]	= GCM_LOCATION_RSX;
-	sf.colorLocation[3]	= GCM_LOCATION_RSX;
+	sf.colorLocation[1]	= CELL_GCM_LOCATION_RSX;
+	sf.colorLocation[2]	= CELL_GCM_LOCATION_RSX;
+	sf.colorLocation[3]	= CELL_GCM_LOCATION_RSX;
 	sf.colorOffset[1]	= 0;
 	sf.colorOffset[2]	= 0;
 	sf.colorOffset[3]	= 0;
@@ -69,13 +69,13 @@ void set_render_target(u32 index)
 	sf.colorPitch[2]	= 64;
 	sf.colorPitch[3]	= 64;
 
-	sf.depthFormat		= GCM_SURFACE_ZETA_Z16;
-	sf.depthLocation	= GCM_LOCATION_RSX;
+	sf.depthFormat		= CELL_GCM_SURFACE_ZETA_Z16;
+	sf.depthLocation	= CELL_GCM_LOCATION_RSX;
 	sf.depthOffset		= depth_offset;
 	sf.depthPitch		= depth_pitch;
 
-	sf.type				= GCM_TEXTURE_LINEAR;
-	sf.antiAlias		= GCM_SURFACE_CENTER_1;
+	sf.type				= CELL_GCM_TEXTURE_LINEAR;
+	sf.antiAlias		= CELL_GCM_SURFACE_CENTER_1;
 
 	sf.width			= display_width;
 	sf.height			= display_height;
@@ -89,24 +89,24 @@ void init_screen(void *host_addr,u32 size)
 {
 	rsxInit(&context, CB_SIZE,size,host_addr);
 
-	videoState state;
-	videoGetState(0,0,&state);
+	CellVideoOutState state;
+	cellVideoOutGetState(0,0,&state);
 
-	videoGetResolution(state.displayMode.resolution,&res);
+	cellVideoOutGetResolution(state.displayMode.resolution,&res);
 
-	videoConfiguration vconfig;
-	memset(&vconfig,0,sizeof(videoConfiguration));
+	CellVideoOutConfiguration vconfig;
+	memset(&vconfig,0,sizeof(CellVideoOutConfiguration));
 
 	vconfig.resolution = state.displayMode.resolution;
-	vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
+	vconfig.format = CELL_VIDEO_OUT_BUFFER_FORMAT_XRGB;
 	vconfig.pitch = res.width*sizeof(u32);
 
 	wait_rsx_idle();
 
-	videoConfigure(0,&vconfig,NULL,0);
-	videoGetState(0,0,&state);
+	cellVideoOutConfigure(0,&vconfig,NULL,0);
+	cellVideoOutGetState(0,0,&state);
 
-	gcmSetFlipMode(GCM_FLIP_VSYNC);
+	cellGcmSetFlipMode(CELL_GCM_FLIP_VSYNC);
 
 	display_width = res.width;
 	display_height = res.height;
@@ -118,8 +118,8 @@ void init_screen(void *host_addr,u32 size)
 	rsxAddressToOffset(color_buffer[0],&color_offset[0]);
 	rsxAddressToOffset(color_buffer[1],&color_offset[1]);
 
-	gcmSetDisplayBuffer(0,color_offset[0],color_pitch,display_width,display_height);
-	gcmSetDisplayBuffer(1,color_offset[1],color_pitch,display_width,display_height);
+	cellGcmSetDisplayBuffer(0,color_offset[0],color_pitch,display_width,display_height);
+	cellGcmSetDisplayBuffer(1,color_offset[1],color_pitch,display_width,display_height);
 
 	depth_pitch = display_width*sizeof(u32);
 	depth_buffer = (u32*)rsxMemalign(64,(display_height*depth_pitch)*2);
@@ -128,20 +128,20 @@ void init_screen(void *host_addr,u32 size)
 
 void waitflip()
 {
-	while(gcmGetFlipStatus()!=0)
+	while(cellGcmGetFlipStatus()!=0)
 		usleep(200);
-	gcmResetFlipStatus();
+	cellGcmResetFlipStatus();
 }
 
 void flip()
 {
 	if(!first_fb) waitflip();
-	else gcmResetFlipStatus();
+	else cellGcmResetFlipStatus();
 
-	gcmSetFlip(context,curr_fb);
+	cellGcmSetFlip(context,curr_fb);
 	rsxFlushBuffer(context);
 
-	gcmSetWaitFlip(context);
+	cellGcmSetWaitFlip(context);
 
 	curr_fb ^= 1;
 	set_render_target(curr_fb);

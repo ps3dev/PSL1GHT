@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-extern gcmContextData *context;
+extern CellGcmContextData *context;
 extern u32 display_width;
 extern u32 display_height;
 extern u32 curr_fb;

@@ -4,15 +4,15 @@
 
 #include <lv2/sysfs.h>
 
-extern s32 sysFsAioReadEx(void *aio,s32 *id,opd32 *opd);
-extern s32 sysFsAioWriteEx(void *aio,s32 *id,opd32 *opd);
+extern s32 cellFsAioReadEx(void *aio,s32 *id,opd32 *opd);
+extern s32 cellFsAioWriteEx(void *aio,s32 *id,opd32 *opd);
 
-s32 sysFsAioRead(sysFSAio *aio,s32 *id,sysFsAioCallback cb)
+s32 cellFsAioRead(CellFsAio *aio,s32 *id,CellFsAioCallback cb)
 {
-	return sysFsAioReadEx(aio,id,(opd32*)__get_opd32(cb));
+	return cellFsAioReadEx(aio,id,(opd32*)__get_opd32(cb));
 }
 
-s32 sysFsAioWrite(sysFSAio *aio,s32 *id,sysFsAioCallback cb)
+s32 cellFsAioWrite(CellFsAio *aio,s32 *id,CellFsAioCallback cb)
 {
-	return sysFsAioWriteEx(aio,id,(opd32*)__get_opd32(cb));
+	return cellFsAioWriteEx(aio,id,(opd32*)__get_opd32(cb));
 }

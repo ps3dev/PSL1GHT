@@ -16,7 +16,7 @@ _DEFUN(__librt_utime_r,(r,path,times),
 	   const char *path _AND
 	   const struct utimbuf *times)
 {
-	sysFSUtimbuf t;
+	CellFsUtimbuf t;
 	if (times)
 	{
 		t.actime = times->actime;

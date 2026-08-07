@@ -19,102 +19,102 @@
 extern "C" {
 #endif
 
-typedef struct _pngdec_stream_info pngDecStreamInfo;
-typedef struct _pngdec_stream_param pngDecStreamParam;
-typedef struct _pngdec_disp_info pngDecDispInfo;
-typedef struct _pngdec_disp_param pngDecDispParam;
+typedef struct _pngdec_stream_info CellPngDecStreamInfo;
+typedef struct _pngdec_stream_param CellPngDecStreamParam;
+typedef struct _pngdec_disp_info CellPngDecDispInfo;
+typedef struct _pngdec_disp_param CellPngDecDispParam;
 
-typedef void* (*pngCbCtrlMalloc)(u32 size,void *cbCtrlArg);
-typedef void (*pngCbCtrlFree)(void *ptr,void *cbCtrlArg);
+typedef void* (*CellPngCbCtrlMalloc)(u32 size,void *cbCtrlArg);
+typedef void (*CellPngCbCtrlFree)(void *ptr,void *cbCtrlArg);
 
-typedef s32 (*pngCbCtrlStrm)(pngDecStreamInfo *strmInfo,pngDecStreamParam *strmParam,void *cbStrmArg);
+typedef s32 (*CellPngCbCtrlStrm)(CellPngDecStreamInfo *strmInfo,CellPngDecStreamParam *strmParam,void *cbStrmArg);
 
-typedef s32 (*pngCbCtrlDisp)(pngDecDispInfo *dispInfo,pngDecDispParam *dispParam,void *cbDispArg);
-
-typedef enum
-{
-	PNGDEC_SPU_THREAD_DISABLE = 0,
-	PNGDEC_SPU_THREAD_ENABLE = 1
-} pngSpuThreadEna;
+typedef s32 (*CellPngCbCtrlDisp)(CellPngDecDispInfo *dispInfo,CellPngDecDispParam *dispParam,void *cbDispArg);
 
 typedef enum
 {
-	PNGDEC_FILE		= 0,
-	PNGDEC_BUFFER	= 1
-} pngStreamSel;
+	CELL_PNGDEC_SPU_THREAD_DISABLE = 0,
+	CELL_PNGDEC_SPU_THREAD_ENABLE = 1
+} CellPngSpuThreadEna;
 
 typedef enum
 {
-	PNGDEC_GRAYSCALE		= 1,
-	PNGDEC_RGB				= 2,
-	PNGDEC_PALETTE			= 4,
-	PNGDEC_GRAYSCALE_ALPHA	= 9,
-	PNGDEC_RGBA				= 10,
-	PNGDEC_ARGB				= 20
-} pngColorSpace;
+	CELL_PNGDEC_FILE		= 0,
+	CELL_PNGDEC_BUFFER	= 1
+} CellPngStreamSel;
 
 typedef enum
 {
-	PNGDEC_NO_INTERLACE = 0,
-	PNGDEC_ADAM7_INTERLACE = 1
-} pngInterlaceMode;
+	CELL_PNGDEC_GRAYSCALE		= 1,
+	CELL_PNGDEC_RGB				= 2,
+	CELL_PNGDEC_PALETTE			= 4,
+	CELL_PNGDEC_GRAYSCALE_ALPHA	= 9,
+	CELL_PNGDEC_RGBA				= 10,
+	CELL_PNGDEC_ARGB				= 20
+} CellPngColorSpace;
 
 typedef enum
 {
-	PNGDEC_STATUS_FINISH = 0,
-	PNGDEC_STATUS_STOP = 1
-} pngDecodeStatus;
+	CELL_PNGDEC_NO_INTERLACE = 0,
+	CELL_PNGDEC_ADAM7_INTERLACE = 1
+} CellPngInterlaceMode;
 
 typedef enum
 {
-	PNGDEC_CONTINUE = 0,
-	PNGDEC_STOP = 1
-} pngCommand;
+	CELL_PNGDEC_STATUS_FINISH = 0,
+	CELL_PNGDEC_STATUS_STOP = 1
+} CellPngDecodeStatus;
 
 typedef enum
 {
-	PNGDEC_TOP_TO_BOTTOM = 0,
-	PNGDEC_BOTTOM_TO_TOP = 1
-} pngOutputMode;
+	CELL_PNGDEC_CONTINUE = 0,
+	CELL_PNGDEC_STOP = 1
+} CellPngCommand;
 
 typedef enum
 {
-	PNGDEC_1BYTE_PER_NPIXEL = 0,
-	PNGDEC_1BYTE_PER_1PIXEL = 1
-} pngPackFlag;
+	CELL_PNGDEC_TOP_TO_BOTTOM = 0,
+	CELL_PNGDEC_BOTTOM_TO_TOP = 1
+} CellPngOutputMode;
 
 typedef enum
 {
-	PNGDEC_STREAM_ALPHA = 0,
-	PNGDEC_FIX_ALPHA = 1
-} pngAlphaSelect;
+	CELL_PNGDEC_1BYTE_PER_NPIXEL = 0,
+	CELL_PNGDEC_1BYTE_PER_1PIXEL = 1
+} CellPngPackFlag;
 
 typedef enum
 {
-	PNGDEC_LINE_MODE = 1					/*! \brief LINE mode.<br>Decode the number of lines specified with <i>output_counts</i> at one time. */
-} pngBufferMode;
+	CELL_PNGDEC_STREAM_ALPHA = 0,
+	CELL_PNGDEC_FIX_ALPHA = 1
+} CellPngAlphaSelect;
 
 typedef enum
 {
-	PNGDEC_RECEIVE_EVENT = 0,				/*! \brief Decoder uses \ref spursQueuePopBegin to wait for termination of Disp callback function.<br>Transistion to WAITING state and may be affected by the behavior of other SPU threads. */
-	PNGDEC_TRYRECEIVE_EVENT = 1				/*! \brief Decoder uses \ref spursQueueTryPopBegin to wait for termination of Disp callback function.<br>Since there is no state transistion, it is not affected by the behavior of other SPU threads. */
-} pngSpuMode;
+	CELL_PNGDEC_LINE_MODE = 1					/*! \brief LINE mode.<br>Decode the number of lines specified with <i>output_counts</i> at one time. */
+} CellPngBufferMode;
+
+typedef enum
+{
+	CELL_PNGDEC_RECEIVE_EVENT = 0,				/*! \brief Decoder uses \ref spursQueuePopBegin to wait for termination of Disp callback function.<br>Transistion to WAITING state and may be affected by the behavior of other SPU threads. */
+	CELL_PNGDEC_TRYRECEIVE_EVENT = 1				/*! \brief Decoder uses \ref spursQueueTryPopBegin to wait for termination of Disp callback function.<br>Since there is no state transistion, it is not affected by the behavior of other SPU threads. */
+} CellPngSpuMode;
 
 typedef struct _pngdec_thread_in_param
 {
 	u32 spu_enable;
 	u32 ppu_prio;
 	u32 spu_prio;
-	pngCbCtrlMalloc malloc_func ATTRIBUTE_PRXPTR;
+	CellPngCbCtrlMalloc malloc_func ATTRIBUTE_PRXPTR;
 	void *malloc_arg ATTRIBUTE_PRXPTR;
-	pngCbCtrlFree free_func ATTRIBUTE_PRXPTR;
+	CellPngCbCtrlFree free_func ATTRIBUTE_PRXPTR;
 	void *free_arg ATTRIBUTE_PRXPTR;
-} pngDecThreadInParam;
+} CellPngDecThreadInParam;
 
 typedef struct _pngdec_thread_out_param
 {
 	u32 version;
-} pngDecThreadOutParam;
+} CellPngDecThreadOutParam;
 
 typedef struct _pngdec_src
 {
@@ -129,7 +129,7 @@ typedef struct _pngdec_src
 	void *stream_ptr ATTRIBUTE_PRXPTR;
 	u32 stream_size;
 	u32 spu_enable;
-} pngDecSource;
+} CellPngDecSource;
 
 typedef struct _pngdec_info
 {
@@ -140,7 +140,7 @@ typedef struct _pngdec_info
 	u32 bit_depth;
 	u32 interlace_mode;
 	u32 chunk_info;
-} pngDecInfo;
+} CellPngDecInfo;
 
 typedef struct _pngdec_data_info
 {
@@ -148,7 +148,7 @@ typedef struct _pngdec_data_info
 	u32 num_text;
 	u32 num_unk_chunk;
 	u32 decode_status;
-} pngDecDataInfo;
+} CellPngDecDataInfo;
 
 typedef struct _pngdec_in_param
 {
@@ -159,7 +159,7 @@ typedef struct _pngdec_in_param
 	u32 pack_flag;
 	u32 alpha_select;
 	u32 alpha;
-} pngDecInParam;
+} CellPngDecInParam;
 
 typedef struct _pngdec_out_param
 {
@@ -171,33 +171,33 @@ typedef struct _pngdec_out_param
 	u32 output_mode;
 	u32 color_space;
 	u32 use_memory_space;
-} pngDecOutParam;
+} CellPngDecOutParam;
 
 typedef struct _pngdec_datactrl_param
 {
 	u64 output_bytes_per_line;
-} pngDecDataCtrlParam;
+} CellPngDecDataCtrlParam;
 
 typedef struct _pngdec_opn_info
 {
 	u32 init_space_allocated;
-} pngDecOpnInfo;
+} CellPngDecOpnInfo;
 
 typedef struct _pngdec_opn_param
 {
 	u32 select_chunk;
-} pngDecOpnParam;
+} CellPngDecOpnParam;
 
 typedef struct _pngdec_ctrl_strm
 {
-	pngCbCtrlStrm stream_func ATTRIBUTE_PRXPTR;
+	CellPngCbCtrlStrm stream_func ATTRIBUTE_PRXPTR;
 	void *stream_arg ATTRIBUTE_PRXPTR;
-} pngDecCtrlStrm;
+} CellPngDecCtrlStrm;
 
 typedef struct _pngdec_ext_info
 {
 	u64 reserved;
-} pngDecExtInfo;
+} CellPngDecExtInfo;
 
 typedef struct _pngdec_extin_param
 {
@@ -207,19 +207,19 @@ typedef struct _pngdec_extin_param
 	u32 buffer_mode;
 	u32 output_counts;
 	u32 spu_mode;
-}  pngDecExtInParam;
+}  CellPngDecExtInParam;
 
 typedef struct _pngdec_extout_param
 {
 	u64 output_width_bytes;
 	u32 output_height;
-} pngDecExtOutParam;
+} CellPngDecExtOutParam;
 
 typedef struct _pngdec_ctrl_disp
 {
-	pngCbCtrlDisp disp_func ATTRIBUTE_PRXPTR;
+	CellPngCbCtrlDisp disp_func ATTRIBUTE_PRXPTR;
 	void *disp_arg ATTRIBUTE_PRXPTR;
-} pngDecCtrlDisp;
+} CellPngDecCtrlDisp;
 
 struct _pngdec_stream_info
 {
@@ -259,23 +259,23 @@ typedef struct _png_data
 	u32 pitch;
 	u32 width;
 	u32 height;
-} pngData;
+} CellPngData;
 
-s32 pngDecCreate(s32 *handle,pngDecThreadInParam *in,pngDecThreadOutParam *out);
-s32 pngDecOpen(s32 handle,s32 *subhandle,const pngDecSource *src,pngDecOpnInfo *open_info);
-s32 pngDecReadHeader(s32 handle,s32 subhandle,pngDecInfo *info);
-s32 pngDecSetParameter(s32 handle,s32 subhandle,const pngDecInParam *in,pngDecOutParam *out);
-s32 pngDecDecodeData(s32 handle,s32 subhandle,u8 *data,const pngDecDataCtrlParam *dataCtrlParam,pngDecDataInfo *info);
-s32 pngDecClose(s32 handle,s32 subhandle);
-s32 pngDecDestroy(s32 handle);
+s32 cellPngDecCreate(s32 *handle,CellPngDecThreadInParam *in,CellPngDecThreadOutParam *out);
+s32 cellPngDecOpen(s32 handle,s32 *subhandle,const CellPngDecSource *src,CellPngDecOpnInfo *open_info);
+s32 cellPngDecReadHeader(s32 handle,s32 subhandle,CellPngDecInfo *info);
+s32 cellPngDecSetParameter(s32 handle,s32 subhandle,const CellPngDecInParam *in,CellPngDecOutParam *out);
+s32 cellPngDecDecodeData(s32 handle,s32 subhandle,u8 *data,const CellPngDecDataCtrlParam *dataCtrlParam,CellPngDecDataInfo *info);
+s32 cellPngDecClose(s32 handle,s32 subhandle);
+s32 cellPngDecDestroy(s32 handle);
 
-s32 pngDecExtOpen(s32 handle,s32 *subhandle,const pngDecSource *src,pngDecOpnInfo *open_info,const pngDecCtrlStrm *cbCtrlStrm,const pngDecOpnParam *opnParam);
-s32 pngDecExtReadHeader(s32 handle,s32 subhandle,pngDecInfo *info,pngDecExtInfo *extInfo);
-s32 pngDecExtSetParameter(s32 handle,s32 subhandle,const pngDecInParam *inParam,pngDecOutParam *outParam,const pngDecExtInParam *extInParam,pngDecExtOutParam *extOutParam);
-s32 pngDecExtDecodeData(s32 handle,s32 subhandle,u8 *data,const pngDecDataCtrlParam *dataCtrlParam,pngDecDataInfo *dataOutInfo,const pngDecCtrlDisp *cbCtrlDisp,pngDecDispParam *dispParam);
+s32 cellPngDecExtOpen(s32 handle,s32 *subhandle,const CellPngDecSource *src,CellPngDecOpnInfo *open_info,const CellPngDecCtrlStrm *cbCtrlStrm,const CellPngDecOpnParam *opnParam);
+s32 cellPngDecExtReadHeader(s32 handle,s32 subhandle,CellPngDecInfo *info,CellPngDecExtInfo *extInfo);
+s32 cellPngDecExtSetParameter(s32 handle,s32 subhandle,const CellPngDecInParam *inParam,CellPngDecOutParam *outParam,const CellPngDecExtInParam *extInParam,CellPngDecExtOutParam *extOutParam);
+s32 cellPngDecExtDecodeData(s32 handle,s32 subhandle,u8 *data,const CellPngDecDataCtrlParam *dataCtrlParam,CellPngDecDataInfo *dataOutInfo,const CellPngDecCtrlDisp *cbCtrlDisp,CellPngDecDispParam *dispParam);
 
-s32 pngLoadFromFile(const char *filename,pngData *out);
-s32 pngLoadFromBuffer(const void *buffer,u32 size,pngData *out);
+s32 cellPngLoadFromFile(const char *filename,CellPngData *out);
+s32 cellPngLoadFromBuffer(const void *buffer,u32 size,CellPngData *out);
 
 #ifdef __cplusplus
 	}

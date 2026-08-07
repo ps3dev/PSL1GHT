@@ -18,7 +18,7 @@ typedef struct
 {
     void* http_pool;
     void* ssl_pool;
-    httpsData* caList;
+    CellHttpsData* caList;
     void* cert_buffer;
 } t_http_pools;
 
@@ -43,9 +43,9 @@ int http_init(void)
 	u8 ssl_init=HTTP_NO;
 
 	//init
-	ret = sysModuleLoad(SYSMODULE_NET);
+	ret = cellSysmoduleLoadModule(CELL_SYSMODULE_NET);
 	if (ret < 0) {
-		printf("Error : sysModuleLoad(SYSMODULE_NET) HTTP_FAILED (%x)", ret);
+		printf("Error : cellSysmoduleLoadModule(CELL_SYSMODULE_NET) HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	} else module_net_loaded=HTTP_YES;
@@ -57,9 +57,9 @@ int http_init(void)
 		goto end;
 	} else net_init=HTTP_YES;
 
-	ret = sysModuleLoad(SYSMODULE_HTTP);
+	ret = cellSysmoduleLoadModule(CELL_SYSMODULE_HTTP);
 	if (ret < 0) {
-		printf("Error : sysModuleLoad(SYSMODULE_HTTP) HTTP_FAILED (%x)", ret);
+		printf("Error : cellSysmoduleLoadModule(CELL_SYSMODULE_HTTP) HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	} else module_http_loaded=HTTP_YES;
@@ -71,23 +71,23 @@ int http_init(void)
 		goto end;
 	}
 
-	ret = httpInit(http_pools.http_pool, 0x10000);
+	ret = cellHttpInit(http_pools.http_pool, 0x10000);
 	if (ret < 0) {
-		printf("Error : httpInit HTTP_FAILED (%x)", ret);
+		printf("Error : cellHttpInit HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	} else http_init=HTTP_YES;
 
-	ret = sysModuleLoad(SYSMODULE_HTTPS);
+	ret = cellSysmoduleLoadModule(CELL_SYSMODULE_HTTPS);
 	if (ret < 0) {
-		printf("Error : sysModuleLoad(SYSMODULE_HTTP) HTTP_FAILED (%x)", ret);
+		printf("Error : cellSysmoduleLoadModule(CELL_SYSMODULE_HTTP) HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	} else module_https_loaded=HTTP_YES;
 
-	ret = sysModuleLoad(SYSMODULE_SSL);
+	ret = cellSysmoduleLoadModule(CELL_SYSMODULE_SSL);
 	if (ret < 0) {
-		printf("Error : sysModuleLoad(SYSMODULE_HTTP) HTTP_FAILED (%x)", ret);
+		printf("Error : cellSysmoduleLoadModule(CELL_SYSMODULE_HTTP) HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	} else module_ssl_loaded=HTTP_YES;
@@ -99,17 +99,17 @@ int http_init(void)
 		goto end;
 	}
 
-	ret = sslInit(http_pools.ssl_pool, 0x40000);
+	ret = cellSslInit(http_pools.ssl_pool, 0x40000);
 	if (ret < 0) {
-		printf("Error : sslInit HTTP_FAILED (%x)", ret);
+		printf("Error : cellSslInit HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	} else ssl_init=HTTP_YES;
 
-	http_pools.caList = (httpsData *)malloc(sizeof(httpsData));
-	ret = sslCertificateLoader(SSL_LOAD_CERT_ALL, NULL, 0, &cert_size);
+	http_pools.caList = (CellHttpsData *)malloc(sizeof(CellHttpsData));
+	ret = cellSslCertificateLoader(CELL_SLL_LOAD_CERT_ALL, NULL, 0, &cert_size);
 	if (ret < 0) {
-		printf("Error : sslCertificateLoader HTTP_FAILED (%x)", ret);
+		printf("Error : cellSslCertificateLoader HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	}
@@ -121,9 +121,9 @@ int http_init(void)
 		goto end;
 	}
 
-	ret = sslCertificateLoader(SSL_LOAD_CERT_ALL, http_pools.cert_buffer, cert_size, NULL);
+	ret = cellSslCertificateLoader(CELL_SLL_LOAD_CERT_ALL, http_pools.cert_buffer, cert_size, NULL);
 	if (ret < 0) {
-		printf("Error : sslCertificateLoader HTTP_FAILED (%x)", ret);
+		printf("Error : cellSslCertificateLoader HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	}
@@ -131,9 +131,9 @@ int http_init(void)
 	(&http_pools.caList[0])->ptr = http_pools.cert_buffer;
 	(&http_pools.caList[0])->size = cert_size;
 
-	ret = httpsInit(1, (httpsData *) http_pools.caList);
+	ret = cellHttpsInit(1, (CellHttpsData *) http_pools.caList);
 	if (ret < 0) {
-		printf("Error : httpsInit HTTP_FAILED (%x)", ret);
+		printf("Error : cellHttpsInit HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	} else https_init=HTTP_YES;
@@ -142,15 +142,15 @@ int http_init(void)
 
 end:
 	if(http_pools.caList) free(http_pools.caList);
-	if(https_init) httpsEnd();
-	if(ssl_init) sslEnd();
-	if(http_init) httpEnd();
+	if(https_init) cellHttpsEnd();
+	if(ssl_init) cellSslEnd();
+	if(http_init) cellHttpEnd();
 	if(net_init) netDeinitialize();
 	
-	if(module_http_loaded) sysModuleUnload(SYSMODULE_HTTP);
-	if(module_https_loaded) sysModuleUnload(SYSMODULE_HTTPS);
-	if(module_ssl_loaded) sysModuleUnload(SYSMODULE_SSL);
-	if(module_net_loaded) sysModuleUnload(SYSMODULE_NET);
+	if(module_http_loaded) cellSysmoduleUnloadModule(CELL_SYSMODULE_HTTP);
+	if(module_https_loaded) cellSysmoduleUnloadModule(CELL_SYSMODULE_HTTPS);
+	if(module_ssl_loaded) cellSysmoduleUnloadModule(CELL_SYSMODULE_SSL);
+	if(module_net_loaded) cellSysmoduleUnloadModule(CELL_SYSMODULE_NET);
 	
 	if(http_pools.http_pool) free(http_pools.http_pool);
 	if(http_pools.ssl_pool) free(http_pools.ssl_pool);
@@ -162,15 +162,15 @@ end:
 void http_end(void)
 {
 	if(http_pools.caList) free(http_pools.caList);
-	httpsEnd();
-	sslEnd();
-	httpEnd();
+	cellHttpsEnd();
+	cellSslEnd();
+	cellHttpEnd();
 	netDeinitialize();
 	
-	sysModuleUnload(SYSMODULE_HTTP);
-	sysModuleUnload(SYSMODULE_HTTPS);
-	sysModuleUnload(SYSMODULE_SSL);
-	sysModuleUnload(SYSMODULE_NET);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_HTTP);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_HTTPS);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_SSL);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_NET);
 
 	if(http_pools.http_pool) free(http_pools.http_pool);
 	if(http_pools.ssl_pool) free(http_pools.ssl_pool);
@@ -184,7 +184,7 @@ char* escape_filename(const char* filename)
 	int len = strlen(filename);
     char* ret = (char *)calloc(1, len*3);
 
-	httpUtilEscapeUri(ret, len*3, (uint8_t*) filename, len, 0);
+	cellHttpUtilEscapeUri(ret, len*3, (uint8_t*) filename, len, 0);
 
 	return ret;
 }
@@ -192,9 +192,9 @@ char* escape_filename(const char* filename)
 int http_download(const char* url, const char* filename, const char* local_dst)
 {
 	int ret = 0, httpCode = 0;
-	httpUri uri;
-	httpClientId httpClient = 0;
-	httpTransId httpTrans = 0;
+	CellHttpUri uri;
+	CellHttpClientId httpClient = 0;
+	CellHttpTransId httpTrans = 0;
 	FILE* fp=NULL;
 	u32 nRecv = 1;
 	u32 size = 0;
@@ -203,15 +203,15 @@ int http_download(const char* url, const char* filename, const char* local_dst)
 	char* escaped_name = NULL;
 	char* escaped_url = NULL;
 
-	ret = httpCreateClient(&httpClient);
+	ret = cellHttpCreateClient(&httpClient);
 	if (ret < 0) {
-		printf("Error : httpCreateClient HTTP_FAILED (%x)", ret);
+		printf("Error : cellHttpCreateClient HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	}
-    httpClientSetConnTimeout(httpClient, 10 * 1000 * 1000);
-    httpClientSetUserAgent(httpClient, HTTP_USER_AGENT);
-    httpClientSetAutoRedirect(httpClient, 1);
+    cellHttpClientSetConnTimeout(httpClient, 10 * 1000 * 1000);
+    cellHttpClientSetUserAgent(httpClient, HTTP_USER_AGENT);
+    cellHttpClientSetAutoRedirect(httpClient, 1);
 
 	// Escape URL file name characters
 	escaped_name = escape_filename(filename);
@@ -220,9 +220,9 @@ int http_download(const char* url, const char* filename, const char* local_dst)
 	printf("Downloading (%s) -> (%s)", escaped_url, local_dst);
 
 	//URI
-	ret = httpUtilParseUri(&uri, escaped_url, NULL, 0, &size);
+	ret = cellHttpUtilParseUri(&uri, escaped_url, NULL, 0, &size);
 	if (ret < 0) {
-		printf("Error : httpUtilParseUri() HTTP_FAILED (%x)", ret);
+		printf("Error : cellHttpUtilParseUri() HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	}
@@ -234,40 +234,40 @@ int http_download(const char* url, const char* filename, const char* local_dst)
 		goto end;
 	}
 
-	ret = httpUtilParseUri(&uri, escaped_url, uri_pool, size, 0);
+	ret = cellHttpUtilParseUri(&uri, escaped_url, uri_pool, size, 0);
 	if (ret < 0) {
-		printf("Error : httpUtilParseUri() HTTP_FAILED (%x)", ret);
+		printf("Error : cellHttpUtilParseUri() HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	}
 	//END of URI	
 
 	//SEND REQUEST
-	ret = httpCreateTransaction(&httpTrans, httpClient, HTTP_METHOD_GET, &uri);
+	ret = cellHttpCreateTransaction(&httpTrans, httpClient, CELL_HTTP_METHOD_GET, &uri);
 	if (ret < 0) {
-		printf("Error : httpCreateTransaction() HTTP_FAILED (%x)", ret);
+		printf("Error : cellHttpCreateTransaction() HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	}
 
-	ret = httpSendRequest(httpTrans, NULL, 0, NULL);
+	ret = cellHttpSendRequest(httpTrans, NULL, 0, NULL);
 	if (ret < 0) {
-		printf("Error : httpSendRequest() HTTP_FAILED (%x)", ret);
+		printf("Error : cellHttpSendRequest() HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	}
 	
 	//GET SIZE
-	httpResponseGetContentLength(httpTrans, &length);
+	cellHttpResponseGetContentLength(httpTrans, &length);
 
-	ret = httpResponseGetStatusCode(httpTrans, &httpCode);
+	ret = cellHttpResponseGetStatusCode(httpTrans, &httpCode);
 	if (ret < 0) {
 		printf("Error : cellHttpResponseGetStatusCode() HTTP_FAILED (%x)", ret);
 		ret=HTTP_FAILED;
 		goto end;
 	}
 
-	if(httpCode != HTTP_STATUS_CODE_OK && httpCode >= 400 ) {
+	if(httpCode != CELL_HTTP_STATUS_CODE_OK && httpCode >= 400 ) {
 		printf("Error : Status code (%d)", httpCode);
 		ret=HTTP_FAILED;
 		goto end;
@@ -282,7 +282,7 @@ int http_download(const char* url, const char* filename, const char* local_dst)
 	}
 	
 	while(nRecv != 0) {
-		if(httpRecvResponse(httpTrans, (void*) getBuffer, sizeof(getBuffer)-1, &nRecv) > 0) break;
+		if(cellHttpRecvResponse(httpTrans, (void*) getBuffer, sizeof(getBuffer)-1, &nRecv) > 0) break;
 		if(nRecv == 0)	break;
 		fwrite((char*) getBuffer, nRecv, 1, fp);
 		if(cancel==HTTP_YES) break;
@@ -299,8 +299,8 @@ int http_download(const char* url, const char* filename, const char* local_dst)
 	ret=HTTP_SUCCESS;
 
 end:
-	if(httpTrans) httpDestroyTransaction(httpTrans);
-	if(httpClient) httpDestroyClient(httpClient);
+	if(httpTrans) cellHttpDestroyTransaction(httpTrans);
+	if(httpClient) cellHttpDestroyClient(httpClient);
 	if(uri_pool) free(uri_pool);
 	if(escaped_url) free(escaped_url);
 	if(escaped_name) free(escaped_name);

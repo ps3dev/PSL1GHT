@@ -3,105 +3,105 @@
 
 #include <ppu-types.h>
 
-#define JPGDEC_ERROR_OK						0
-#define JPGDEC_ERROR_HEADER					0x80611101
-#define JPGDEC_ERROR_STREAM_FORMAT			0x80611102
-#define JPGDEC_ERROR_ARG					0x80611103
-#define JPGDEC_ERROR_SEQ					0x80611104
-#define JPGDEC_ERROR_BUSY					0x80611105
-#define JPGDEC_ERROR_FATAL					0x80611106
-#define JPGDEC_ERROR_OPEN_FILE				0x80611107
-#define JPGDEC_ERROR_SPU_UNSUPPORT			0x80611108
-#define JPGDEC_ERROR_CB_PARAM				0x80611109
+#define CELL_JPGDEC_ERROR_OK					0
+#define CELL_JPGDEC_ERROR_HEADER				0x80611101
+#define CELL_JPGDEC_ERROR_STREAM_FORMAT			0x80611102
+#define CELL_JPGDEC_ERROR_ARG					0x80611103
+#define CELL_JPGDEC_ERROR_SEQ					0x80611104
+#define CELL_JPGDEC_ERROR_BUSY					0x80611105
+#define CELL_JPGDEC_ERROR_FATAL					0x80611106
+#define CELL_JPGDEC_ERROR_OPEN_FILE				0x80611107
+#define CELL_JPGDEC_ERROR_SPU_UNSUPPORT			0x80611108
+#define CELL_JPGDEC_ERROR_CB_PARAM				0x80611109
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct _jpgdec_strm_info jpgDecStrmInfo;
-typedef struct _jpgdec_strm_param jpgDecStrmParam;
-typedef struct _jpgdec_disp_info jpgDecDispInfo;
-typedef struct _jpgdec_disp_param jpgDecDispParam;
+typedef struct _jpgdec_strm_info CellJpgDecStrmInfo;
+typedef struct _jpgdec_strm_param CellJpgDecStrmParam;
+typedef struct _jpgdec_disp_info CellJpgDecDispInfo;
+typedef struct _jpgdec_disp_param CellJpgDecDispParam;
 
-typedef void* (*jpgCbCtrlMalloc)(u32 size,void *cbCtrlArg);
-typedef void (*jpgCbCtrlFree)(void *ptr,void *cbCtrlArg);
+typedef void* (*CellJpgCbCtrlMalloc)(u32 size,void *cbCtrlArg);
+typedef void (*CellJpgCbCtrlFree)(void *ptr,void *cbCtrlArg);
 
-typedef s32 (*jpgCbCtrlStrm)(jpgDecStrmInfo *strmInfo,jpgDecStrmParam *strmParam,void *cbCtrlArg);
-typedef s32 (*jpgCbCtrlDisp)(jpgDecDispInfo *dispInfo,jpgDecDispParam *dispParam,void *cbDispArg);
-
-typedef enum
-{
-	JPGDEC_FILE		= 0,
-	JPGDEC_BUFFER	= 1
-} jpgStreamSel;
+typedef s32 (*CellJpgCbCtrlStrm)(CellJpgDecStrmInfo *strmInfo,CellJpgDecStrmParam *strmParam,void *cbCtrlArg);
+typedef s32 (*CellJpgCbCtrlDisp)(CellJpgDecDispInfo *dispInfo,CellJpgDecDispParam *dispParam,void *cbDispArg);
 
 typedef enum
 {
-	JPGDEC_SPU_THREAD_DISABLE = 0,
-	JPGDEC_SPU_THREAD_ENABLE = 1
-} jpgSpuThreadEna;
+	CELL_JPGDEC_FILE		= 0,
+	CELL_JPGDEC_BUFFER	    = 1
+} CellJpgStreamSel;
 
 typedef enum
 {
-	JPGDEC_GRAYSCALE		= 1,
-	JPGDEC_RGB				= 2,
-	JPGDEC_YCBCR			= 3,
-	JPGDEC_RGBA				= 10,
-	JPGDEC_UPSTREAM			= 11,
-	JPGDEC_ARGB				= 20,
-} jpgColorSpace;
+	CELL_JPGDEC_SPU_THREAD_DISABLE = 0,
+	CELL_JPGDEC_SPU_THREAD_ENABLE  = 1
+} CellJpgSpuThreadEna;
 
 typedef enum
 {
-	JPGDEC_STATUS_FINISH = 0,
-	JPGDEC_STATUS_STOP = 1
-} jpgDecodeStatus;
+	CELL_JPGDEC_GRAYSCALE		    = 1,
+	CELL_JPGDEC_RGB				    = 2,
+	CELL_JPGDEC_YCBCR			    = 3,
+	CELL_JPGDEC_RGBA				= 10,
+	CELL_JPGDEC_UPSTREAM			= 11,
+	CELL_JPGDEC_ARGB				= 20,
+} CellJpgColorSpace;
 
 typedef enum
 {
-	JPGDEC_CONTINUE = 0,
-	JPGDEC_STOP = 1
-} jpgCommand;
+	CELL_JPGDEC_STATUS_FINISH = 0,
+	CELL_JPGDEC_STATUS_STOP   = 1
+} CellJpgDecodeStatus;
 
 typedef enum
 {
-	JPGDEC_QUALITY = 0,
-	JPGDEC_FAST = 5
-} jpgMethod;
+	CELL_JPGDEC_CONTINUE = 0,
+	CELL_JPGDEC_STOP 	 = 1
+} CellJpgCommand;
 
 typedef enum
 {
-	JPGDEC_TOP_TO_BOTTOM = 0,
-	JPGDEC_BOTTOM_TO_TOP = 1
-} jpgOutputMode;
+	CELL_JPGDEC_QUALITY = 0,
+	CELL_JPGDEC_FAST	= 5
+} CellJpgMethod;
 
 typedef enum
 {
-	JPGDEC_MCU_MODE = 0,
-	JPGDEC_LINE_MODE = 1
-} jpgBufferMode;
+	CELL_JPGDEC_TOP_TO_BOTTOM = 0,
+	CELL_JPGDEC_BOTTOM_TO_TOP = 1
+} CellJpgOutputMode;
 
 typedef enum
 {
-	JPGDEC_RECEIVE_EVENT = 0,
-	JPGDEC_TRYRECEIVE_EVENT = 1
-} jpgSpuMode;
+	CELL_JPGDEC_MCU_MODE  = 0,
+	CELL_JPGDEC_LINE_MODE = 1
+} CellJpgBufferMode;
+
+typedef enum
+{
+	CELL_JPGDEC_RECEIVE_EVENT    = 0,
+	CELL_JPGDEC_TRYRECEIVE_EVENT = 1
+} CellJpgSpuMode;
 
 typedef struct _jpgdec_thread_in_param
 {
 	u32 spu_enable;
 	u32 ppu_prio;
 	u32 spu_prio;
-	jpgCbCtrlMalloc malloc_func ATTRIBUTE_PRXPTR;
+	CellJpgCbCtrlMalloc malloc_func ATTRIBUTE_PRXPTR;
 	void *malloc_arg ATTRIBUTE_PRXPTR;
-	jpgCbCtrlFree free_func ATTRIBUTE_PRXPTR;
+	CellJpgCbCtrlFree free_func ATTRIBUTE_PRXPTR;
 	void *free_arg ATTRIBUTE_PRXPTR;
-} jpgDecThreadInParam;
+} CellJpgDecThreadInParam;
 
 typedef struct _jpgdec_thread_out_param
 {
 	u32 version;
-} jpgDecThreadOutParam;
+} CellJpgDecThreadOutParam;
 
 typedef struct _jpgdec_src
 {
@@ -112,7 +112,7 @@ typedef struct _jpgdec_src
 	void *stream_ptr ATTRIBUTE_PRXPTR;
 	u32 stream_size;
 	u32 spu_enable;
-} jpgDecSource;
+} CellJpgDecSource;
 
 typedef struct _jpgdec_info
 {
@@ -120,19 +120,19 @@ typedef struct _jpgdec_info
 	u32 height;
 	u32 num_comp;
 	u32 color_space;
-} jpgDecInfo;
+} CellJpgDecInfo;
 
 typedef struct _jpgdec_data_info
 {
 	f32 value;
 	u32 output_lines;
 	u32 decode_status;
-} jpgDecDataInfo;
+} CellJpgDecDataInfo;
 
 typedef struct _jpgdec_opn_info
 {
 	u32 init_space_allocated;
-} jpgDecOpnInfo;
+} CellJpgDecOpnInfo;
 
 typedef struct _jpgdec_in_param
 {
@@ -143,7 +143,7 @@ typedef struct _jpgdec_in_param
 	u32 color_space;
 	u8 alpha;
 	u8 pad[3];
-} jpgDecInParam;
+} CellJpgDecInParam;
 
 typedef struct _jpgdec_out_param
 {
@@ -155,24 +155,24 @@ typedef struct _jpgdec_out_param
 	u32 color_space;
 	u32 down_scale;
 	u32 use_memory_space;
-} jpgDecOutParam;
+} CellJpgDecOutParam;
 
 typedef struct _jpgdec_datactrl_param
 {
 	u64 output_bytes_per_line;
-} jpgDecDataCtrlParam;
+} CellJpgDecDataCtrlParam;
 
 typedef struct _jpgdec_ctrl_strm
 {
-	jpgCbCtrlStrm strm_func ATTRIBUTE_PRXPTR;
+	CellJpgCbCtrlStrm strm_func ATTRIBUTE_PRXPTR;
 	void *strm_arg ATTRIBUTE_PRXPTR;
-} jpgDecCtrlStrm;
+} CellJpgDecCtrlStrm;
 
 typedef struct _jpgdec_ext_info
 {
 	u64 coeff_buffer_size;
 	u32 mcu_width;
-} jpgDecExtInfo;
+} CellJpgDecExtInfo;
 
 typedef struct _jpgdec_extin_param
 {
@@ -180,7 +180,7 @@ typedef struct _jpgdec_extin_param
 	u32 buffer_mode;
 	u32 output_counts;
 	u32 spu_mode;
-} jpgDecExtInParam;
+} CellJpgDecExtInParam;
 
 typedef struct _jpgdec_extout_param
 {
@@ -188,13 +188,13 @@ typedef struct _jpgdec_extout_param
 	u32 output_height;
 	u32 one_mcu_width;
 	u32 one_mcu_height;
-} jpgDecExtOutParam;
+} CellJpgDecExtOutParam;
 
 typedef struct _jpgdec_ctrl_disp
 {
-	jpgCbCtrlDisp disp_func ATTRIBUTE_PRXPTR;
+	CellJpgCbCtrlDisp disp_func ATTRIBUTE_PRXPTR;
 	void *disp_arg ATTRIBUTE_PRXPTR;
-} jpgDecCtrlDisp;
+} CellJpgDecCtrlDisp;
 
 struct _jpgdec_strm_info
 {
@@ -231,23 +231,23 @@ typedef struct _jpg_data
 	u32 pitch;
 	u32 width;
 	u32 height;
-} jpgData;
+} CellJpgData;
 
-s32 jpgDecCreate(s32 *handle,jpgDecThreadInParam *in,jpgDecThreadOutParam *out);
-s32 jpgDecOpen(s32 handle,s32 *subhandle,const jpgDecSource *src,jpgDecOpnInfo *openInfo);
-s32 jpgDecReadHeader(s32 handle,s32 subhandle,jpgDecInfo *info);
-s32 jpgDecSetParameter(s32 handle,s32 subhandle,const jpgDecInParam *in,jpgDecOutParam *out);
-s32 jpgDecDecodeData(s32 handle,s32 subhandle,u8 *data,const jpgDecDataCtrlParam *dataCtrlParam,jpgDecDataInfo *info);
-s32 jpgDecClose(s32 handle,s32 subhandle);
-s32 jpgDecDestroy(s32 handle);
+s32 cellJpgDecCreate(s32 *handle,CellJpgDecThreadInParam *in,CellJpgDecThreadOutParam *out);
+s32 cellJpgDecOpen(s32 handle,s32 *subhandle,const CellJpgDecSource *src,CellJpgDecOpnInfo *openInfo);
+s32 cellJpgDecReadHeader(s32 handle,s32 subhandle,CellJpgDecInfo *info);
+s32 cellJpgDecSetParameter(s32 handle,s32 subhandle,const CellJpgDecInParam *in,CellJpgDecOutParam *out);
+s32 cellJpgDecDecodeData(s32 handle,s32 subhandle,u8 *data,const CellJpgDecDataCtrlParam *dataCtrlParam,CellJpgDecDataInfo *info);
+s32 cellJpgDecClose(s32 handle,s32 subhandle);
+s32 cellJpgDecDestroy(s32 handle);
 
-s32 jpgDecExtOpen(s32 handle,s32 *subhandle,const jpgDecSource *src,jpgDecOpnInfo *openInfo,const jpgDecCtrlStrm *cbCtrlStrm);
-s32 jpgDecExtReadHeader(s32 handle,s32 subhandle,jpgDecInfo *info,jpgDecExtInfo *extInfo);
-s32 jpgDecExtSetParameter(s32 handle,s32 subhandle,const jpgDecInParam *inParam,jpgDecOutParam *outParam,const jpgDecExtInParam *extInParam,jpgDecExtOutParam *extOutParam);
-s32 jpgDecExtDecodeData(s32 handle,s32 subhandle,u8 *data,const jpgDecDataCtrlParam *dataCtrlParam,jpgDecDataInfo *info,const jpgDecCtrlDisp *cbCtrlDisp,jpgDecDispParam *dispParam);
+s32 cellJpgDecExtOpen(s32 handle,s32 *subhandle,const CellJpgDecSource *src,CellJpgDecOpnInfo *openInfo,const CellJpgDecCtrlStrm *cbCtrlStrm);
+s32 cellJpgDecExtReadHeader(s32 handle,s32 subhandle,CellJpgDecInfo *info,CellJpgDecExtInfo *extInfo);
+s32 cellJpgDecExtSetParameter(s32 handle,s32 subhandle,const CellJpgDecInParam *inParam,CellJpgDecOutParam *outParam,const CellJpgDecExtInParam *extInParam,CellJpgDecExtOutParam *extOutParam);
+s32 cellJpgDecExtDecodeData(s32 handle,s32 subhandle,u8 *data,const CellJpgDecDataCtrlParam *dataCtrlParam,CellJpgDecDataInfo *info,const CellJpgDecCtrlDisp *cbCtrlDisp,CellJpgDecDispParam *dispParam);
 
-s32 jpgLoadFromFile(const char *filename,jpgData *out);
-s32 jpgLoadFromBuffer(const void *buffer,u32 size,jpgData *out);
+s32 cellJpgLoadFromFile(const char *filename,CellJpgData *out);
+s32 cellJpgLoadFromBuffer(const void *buffer,u32 size,CellJpgData *out);
 
 #ifdef __cplusplus
 	}

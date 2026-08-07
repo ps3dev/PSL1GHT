@@ -5,7 +5,7 @@
 
 u8* RSXDebugFontRenderer::spTextureData;
 
-gcmContextData* RSXDebugFontRenderer::mContext = NULL;
+CellGcmContextData* RSXDebugFontRenderer::mContext = NULL;
 
 u8* RSXDebugFontRenderer::mpTexture = NULL;
 u8* RSXDebugFontRenderer::mPosition = NULL;
@@ -37,7 +37,7 @@ RSXDebugFontRenderer::RSXDebugFontRenderer() : DebugFontRenderer()
 
 }
 
-RSXDebugFontRenderer::RSXDebugFontRenderer(gcmContextData *context) : DebugFontRenderer()
+RSXDebugFontRenderer::RSXDebugFontRenderer(CellGcmContextData *context) : DebugFontRenderer()
 {
 	mContext = context;
 }
@@ -67,7 +67,7 @@ void RSXDebugFontRenderer::initShader()
 
 void RSXDebugFontRenderer::init()
 {
-	mLabel = (vu32*) gcmGetLabelAddress(sLabelId);
+	mLabel = (vu32*) cellGcmGetLabelAddress(sLabelId);
 	*mLabel = mLabelValue;
 
 	initShader();
@@ -109,40 +109,40 @@ void RSXDebugFontRenderer::printStart(f32 r, f32 g, f32 b, f32 a)
 	sB = b;
 	sA = a;
 
-	rsxSetBlendFunc(mContext, GCM_SRC_ALPHA, GCM_ONE_MINUS_SRC_ALPHA, GCM_SRC_ALPHA, GCM_ONE_MINUS_SRC_ALPHA);
-	rsxSetBlendEquation(mContext, GCM_FUNC_ADD, GCM_FUNC_ADD);
-	rsxSetBlendEnable(mContext, GCM_TRUE);
-	rsxSetLogicOpEnable(mContext, GCM_FALSE);
+	rsxSetBlendFunc(mContext, CELL_GCM_SRC_ALPHA, CELL_GCM_ONE_MINUS_SRC_ALPHA, CELL_GCM_SRC_ALPHA, CELL_GCM_ONE_MINUS_SRC_ALPHA);
+	rsxSetBlendEquation(mContext, CELL_GCM_FUNC_ADD, CELL_GCM_FUNC_ADD);
+	rsxSetBlendEnable(mContext, CELL_GCM_TRUE);
+	rsxSetLogicOpEnable(mContext, CELL_GCM_FALSE);
 
-	rsxSetDepthTestEnable(mContext, GCM_FALSE);
+	rsxSetDepthTestEnable(mContext, CELL_GCM_FALSE);
 
 	rsxLoadVertexProgram(mContext, mRSXVertexProgram, mVertexProgramUCode);
-	rsxLoadFragmentProgramLocation(mContext, mRSXFragmentProgram, mFragmentProgramOffset, GCM_LOCATION_RSX);
+	rsxLoadFragmentProgramLocation(mContext, mRSXFragmentProgram, mFragmentProgramOffset, CELL_GCM_LOCATION_RSX);
 
-	gcmTexture tex;
-	tex.format = GCM_TEXTURE_FORMAT_B8|GCM_TEXTURE_FORMAT_LIN;
+	CellGcmTexture tex;
+	tex.format = CELL_GCM_TEXTURE_FORMAT_B8|CELL_GCM_TEXTURE_FORMAT_LIN;
 	tex.mipmap = 1;
-	tex.dimension = GCM_TEXTURE_DIMS_2D;
-	tex.cubemap = GCM_FALSE;
-	tex.remap = GCM_TEXTURE_REMAP_TYPE_REMAP<<GCM_TEXTURE_REMAP_TYPE_B_SHIFT |
-				GCM_TEXTURE_REMAP_TYPE_REMAP<<GCM_TEXTURE_REMAP_TYPE_G_SHIFT |
-				GCM_TEXTURE_REMAP_TYPE_REMAP<<GCM_TEXTURE_REMAP_TYPE_R_SHIFT |
-				GCM_TEXTURE_REMAP_TYPE_REMAP<<GCM_TEXTURE_REMAP_TYPE_A_SHIFT |
-				GCM_TEXTURE_REMAP_COLOR_B<<GCM_TEXTURE_REMAP_COLOR_B_SHIFT |
-				GCM_TEXTURE_REMAP_COLOR_B<<GCM_TEXTURE_REMAP_COLOR_G_SHIFT |
-				GCM_TEXTURE_REMAP_COLOR_B<<GCM_TEXTURE_REMAP_COLOR_R_SHIFT |
-				GCM_TEXTURE_REMAP_COLOR_B<<GCM_TEXTURE_REMAP_COLOR_A_SHIFT;
+	tex.dimension = CELL_GCM_TEXTURE_DIMS_2D;
+	tex.cubemap = CELL_GCM_FALSE;
+	tex.remap = CELL_GCM_TEXTURE_REMAP_TYPE_REMAP<<CELL_GCM_TEXTURE_REMAP_TYPE_B_SHIFT |
+				CELL_GCM_TEXTURE_REMAP_TYPE_REMAP<<CELL_GCM_TEXTURE_REMAP_TYPE_G_SHIFT |
+				CELL_GCM_TEXTURE_REMAP_TYPE_REMAP<<CELL_GCM_TEXTURE_REMAP_TYPE_R_SHIFT |
+				CELL_GCM_TEXTURE_REMAP_TYPE_REMAP<<CELL_GCM_TEXTURE_REMAP_TYPE_A_SHIFT |
+				CELL_GCM_TEXTURE_REMAP_COLOR_B<<CELL_GCM_TEXTURE_REMAP_COLOR_B_SHIFT |
+				CELL_GCM_TEXTURE_REMAP_COLOR_B<<CELL_GCM_TEXTURE_REMAP_COLOR_G_SHIFT |
+				CELL_GCM_TEXTURE_REMAP_COLOR_B<<CELL_GCM_TEXTURE_REMAP_COLOR_R_SHIFT |
+				CELL_GCM_TEXTURE_REMAP_COLOR_B<<CELL_GCM_TEXTURE_REMAP_COLOR_A_SHIFT;
 	tex.width = DEBUGFONT_TEXTURE_WIDTH;
 	tex.height = DEBUGFONT_TEXTURE_HEIGHT;
 	tex.depth = 1;
 	tex.pitch = DEBUGFONT_TEXTURE_WIDTH;
-	tex.location = GCM_LOCATION_RSX;
+	tex.location = CELL_GCM_LOCATION_RSX;
 	tex.offset = mTextureOffset;
 	rsxLoadTexture(mContext, mTexUnit->index, &tex);
 
-	rsxTextureControl(mContext, mTexUnit->index, GCM_TRUE, 0<<8, 12<<8, GCM_TEXTURE_MAX_ANISO_1);
-	rsxTextureFilter(mContext, mTexUnit->index, 0, GCM_TEXTURE_NEAREST_MIPMAP_LINEAR, GCM_TEXTURE_LINEAR, GCM_TEXTURE_CONVOLUTION_QUINCUNX);
-	rsxTextureWrapMode(mContext, mTexUnit->index, GCM_TEXTURE_REPEAT, GCM_TEXTURE_REPEAT, GCM_TEXTURE_REPEAT, GCM_TEXTURE_UNSIGNED_REMAP_NORMAL, GCM_TEXTURE_ZFUNC_LESS, 0);
+	rsxTextureControl(mContext, mTexUnit->index, CELL_GCM_TRUE, 0<<8, 12<<8, CELL_GCM_TEXTURE_MAX_ANISO_1);
+	rsxTextureFilter(mContext, mTexUnit->index, 0, CELL_GCM_TEXTURE_NEAREST_MIPMAP_LINEAR, CELL_GCM_TEXTURE_LINEAR, CELL_GCM_TEXTURE_CONVOLUTION_QUINCUNX);
+	rsxTextureWrapMode(mContext, mTexUnit->index, CELL_GCM_TEXTURE_REPEAT, CELL_GCM_TEXTURE_REPEAT, CELL_GCM_TEXTURE_REPEAT, CELL_GCM_TEXTURE_UNSIGNED_REMAP_NORMAL, CELL_GCM_TEXTURE_ZFUNC_LESS, 0);
 }
 
 void RSXDebugFontRenderer::printPass(DebugFont::Position *pPositions, DebugFont::TexCoord *pTexCoords, DebugFont::Color *pColors, s32 numVerts)
@@ -155,9 +155,9 @@ void RSXDebugFontRenderer::printPass(DebugFont::Position *pPositions, DebugFont:
 	memcpy(mTexCoord, pTexCoords, numVerts*sizeof(f32)*2);
 	memcpy(mColor, pColors, numVerts*sizeof(f32)*4);
 
-	rsxBindVertexArrayAttrib(mContext, mPosIndex->index, 0, mPositionOffset, sizeof(f32)*3, 3, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
-	rsxBindVertexArrayAttrib(mContext, mTexIndex->index, 0, mTexCoordOffset, sizeof(f32)*2, 2, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
-	rsxBindVertexArrayAttrib(mContext, mColIndex->index, 0, mColorOffset, sizeof(f32)*4, 4, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(mContext, mPosIndex->index, 0, mPositionOffset, sizeof(f32)*3, 3, CELL_GCM_VERTEX_DATA_TYPE_F32, CELL_GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(mContext, mTexIndex->index, 0, mTexCoordOffset, sizeof(f32)*2, 2, CELL_GCM_VERTEX_DATA_TYPE_F32, CELL_GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(mContext, mColIndex->index, 0, mColorOffset, sizeof(f32)*4, 4, CELL_GCM_VERTEX_DATA_TYPE_F32, CELL_GCM_LOCATION_RSX);
 
 	rsxDrawVertexArray(mContext, DEBUGFONT_PRIMITIVE, 0, numVerts);
 	rsxInvalidateVertexCache(mContext);
@@ -168,6 +168,6 @@ void RSXDebugFontRenderer::printPass(DebugFont::Position *pPositions, DebugFont:
 
 void RSXDebugFontRenderer::printEnd()
 {
-	rsxSetDepthTestEnable(mContext, GCM_TRUE);
-	rsxSetBlendEnable(mContext, GCM_FALSE);
+	rsxSetDepthTestEnable(mContext, CELL_GCM_TRUE);
+	rsxSetBlendEnable(mContext, CELL_GCM_FALSE);
 }

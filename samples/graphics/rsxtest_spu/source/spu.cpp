@@ -55,7 +55,7 @@ void signal_spu_rsx()
 	u32 data[4] = { 0xbeefbeef,0xbeefbeef,0xbeefbeef,0xbeefbeef };
 
 	rsxAddressToOffset((void*)(intptr_t)spuparam.spu_read_label_addr,&offset);
-	rsxInlineTransfer(context,offset,data,4,GCM_LOCATION_CELL);
+	rsxInlineTransfer(context,offset,data,4,CELL_GCM_LOCATION_CELL);
 }
 
 void wait_signal_spu()

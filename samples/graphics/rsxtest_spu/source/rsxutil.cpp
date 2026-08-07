@@ -11,8 +11,8 @@
 
 #define GCM_LABEL_INDEX		255
 
-videoResolution vResolution;
-gcmContextData *context = NULL;
+CellVideoOutResolution vResolution;
+CellGcmContextData *context = NULL;
 
 u32 curr_fb = 0;
 u32 first_fb = 1;
@@ -31,10 +31,10 @@ u32 *color_buffer[FRAME_BUFFER_COUNT];
 f32 aspect_ratio;
 
 static u32 sResolutionIds[] = {
-    VIDEO_RESOLUTION_960x1080,
-    VIDEO_RESOLUTION_720,
-    VIDEO_RESOLUTION_480,
-    VIDEO_RESOLUTION_576
+    CELL_VIDEO_OUT_RESOLUTION_960x1080,
+    CELL_VIDEO_OUT_RESOLUTION_720,
+    CELL_VIDEO_OUT_RESOLUTION_480,
+    CELL_VIDEO_OUT_RESOLUTION_576
 };
 static size_t RESOLUTION_ID_COUNT = sizeof(sResolutionIds)/sizeof(u32);
 
@@ -48,7 +48,7 @@ static void waitFinish()
 
 	rsxFlushBuffer(context);
 
-	while(*(vu32*)gcmGetLabelAddress(GCM_LABEL_INDEX)!=sLabelVal)
+	while(*(vu32*)cellGcmGetLabelAddress(GCM_LABEL_INDEX)!=sLabelVal)
 		usleep(30);
 
 	++sLabelVal;
@@ -70,41 +70,41 @@ void initVideoConfiguration()
     s32 resId = 0;
 
     for (size_t i=0;i < RESOLUTION_ID_COUNT;i++) {
-        rval = videoGetResolutionAvailability(VIDEO_PRIMARY, sResolutionIds[i], VIDEO_ASPECT_AUTO, 0);
+        rval = cellVideoOutGetResolutionAvailability(CELL_VIDEO_OUT_PRIMARY, sResolutionIds[i], CELL_VIDEO_OUT_ASPECT_AUTO, 0);
         if (rval != 1) continue;
 
         resId = sResolutionIds[i];
-        rval = videoGetResolution(resId, &vResolution);
+        rval = cellVideoOutGetResolution(resId, &vResolution);
         if(!rval) break;
     }
 
     if(rval) {
-        printf("Error: videoGetResolutionAvailability failed. No usable resolution.\n");
+        printf("Error: cellVideoOutGetResolutionAvailability failed. No usable resolution.\n");
         exit(1);
     }
 
-    videoConfiguration config = {
+    CellVideoOutConfiguration config = {
         (u8)resId,
-        VIDEO_BUFFER_FORMAT_XRGB,
-        VIDEO_ASPECT_AUTO,
+        CELL_VIDEO_OUT_BUFFER_FORMAT_XRGB,
+        CELL_VIDEO_OUT_ASPECT_AUTO,
         {0,0,0,0,0,0,0,0,0},
         (u32)vResolution.width*4
     };
 
-    rval = videoConfigure(VIDEO_PRIMARY, &config, NULL, 0);
+    rval = cellVideoOutConfigure(CELL_VIDEO_OUT_PRIMARY, &config, NULL, 0);
     if(rval) {
-        printf("Error: videoConfigure failed.\n");
+        printf("Error: cellVideoOutConfigure failed.\n");
         exit(1);
     }
 
-    videoState state;
+    CellVideoOutState state;
 
-    rval = videoGetState(VIDEO_PRIMARY, 0, &state);
+    rval = cellVideoOutGetState(CELL_VIDEO_OUT_PRIMARY, 0, &state);
     switch(state.displayMode.aspect) {
-        case VIDEO_ASPECT_4_3:
+        case CELL_VIDEO_OUT_ASPECT_4_3:
             aspect_ratio = 4.0f/3.0f;
             break;
-        case VIDEO_ASPECT_16_9:
+        case CELL_VIDEO_OUT_ASPECT_16_9:
             aspect_ratio = 16.0f/9.0f;
             break;
         default:
@@ -119,17 +119,17 @@ void initVideoConfiguration()
 
 void setRenderTarget(u32 index)
 {
-	gcmSurface sf;
+	CellGcmSurface sf;
 
-	sf.colorFormat		= GCM_SURFACE_X8R8G8B8;
-	sf.colorTarget		= GCM_SURFACE_TARGET_0;
-	sf.colorLocation[0]	= GCM_LOCATION_RSX;
+	sf.colorFormat		= CELL_GCM_SURFACE_X8R8G8B8;
+	sf.colorTarget		= CELL_GCM_SURFACE_TARGET_0;
+	sf.colorLocation[0]	= CELL_GCM_LOCATION_RSX;
 	sf.colorOffset[0]	= color_offset[index];
 	sf.colorPitch[0]	= color_pitch;
 
-	sf.colorLocation[1]	= GCM_LOCATION_RSX;
-	sf.colorLocation[2]	= GCM_LOCATION_RSX;
-	sf.colorLocation[3]	= GCM_LOCATION_RSX;
+	sf.colorLocation[1]	= CELL_GCM_LOCATION_RSX;
+	sf.colorLocation[2]	= CELL_GCM_LOCATION_RSX;
+	sf.colorLocation[3]	= CELL_GCM_LOCATION_RSX;
 	sf.colorOffset[1]	= 0;
 	sf.colorOffset[2]	= 0;
 	sf.colorOffset[3]	= 0;
@@ -137,13 +137,13 @@ void setRenderTarget(u32 index)
 	sf.colorPitch[2]	= 64;
 	sf.colorPitch[3]	= 64;
 
-	sf.depthFormat		= GCM_SURFACE_ZETA_Z16;
-	sf.depthLocation	= GCM_LOCATION_RSX;
+	sf.depthFormat		= CELL_GCM_SURFACE_ZETA_Z16;
+	sf.depthLocation	= CELL_GCM_LOCATION_RSX;
 	sf.depthOffset		= depth_offset;
 	sf.depthPitch		= depth_pitch;
 
-	sf.type				= GCM_SURFACE_TYPE_LINEAR;
-	sf.antiAlias		= GCM_SURFACE_CENTER_1;
+	sf.type				= CELL_GCM_SURFACE_TYPE_LINEAR;
+	sf.antiAlias		= CELL_GCM_SURFACE_CENTER_1;
 
 	sf.width			= display_width;
 	sf.height			= display_height;
@@ -164,7 +164,7 @@ void init_screen(void *host_addr,u32 size)
 
 	waitRSXIdle();
 
-	gcmSetFlipMode(GCM_FLIP_VSYNC);
+	cellGcmSetFlipMode(CELL_GCM_FLIP_VSYNC);
 
 	color_pitch = display_width*color_depth;
 	depth_pitch = display_width*zs_depth;
@@ -172,7 +172,7 @@ void init_screen(void *host_addr,u32 size)
 	for (u32 i=0;i < FRAME_BUFFER_COUNT;i++) {
 		color_buffer[i] = (u32*)rsxMemalign(64,(display_height*color_pitch));
 		rsxAddressToOffset(color_buffer[i],&color_offset[i]);
-		gcmSetDisplayBuffer(i,color_offset[i],color_pitch,display_width,display_height);
+		cellGcmSetDisplayBuffer(i,color_offset[i],color_pitch,display_width,display_height);
 	}
 
 	depth_buffer = (u32*)rsxMemalign(64,(display_height*depth_pitch)*2);
@@ -181,20 +181,20 @@ void init_screen(void *host_addr,u32 size)
 
 void waitflip()
 {
-	while(gcmGetFlipStatus()!=0)
+	while(cellGcmGetFlipStatus()!=0)
 		usleep(200);
-	gcmResetFlipStatus();
+	cellGcmResetFlipStatus();
 }
 
 void flip()
 {
 	if(!first_fb) waitflip();
-	else gcmResetFlipStatus();
+	else cellGcmResetFlipStatus();
 
-	gcmSetFlip(context,curr_fb);
+	cellGcmSetFlip(context,curr_fb);
 	rsxFlushBuffer(context);
 
-	gcmSetWaitFlip(context);
+	cellGcmSetWaitFlip(context);
 
 	curr_fb ^= 1;
 	setRenderTarget(curr_fb);
