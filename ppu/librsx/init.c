@@ -59,9 +59,20 @@ void rsxSetDefaultCommandBuffer(gcmContextData **context)
 		*context = gGcmContext;
 }
 
+/**
+ * @brief Sets user context callback handler for GCM command buffer wrap.
+ *
+ * In PowerPC 64-bit ELF ABI, C function pointers reference 24-byte 64-bit Procedure
+ * Descriptors (OPD). However, rsxContextCallback in rsx_function_macros.h uses 32-bit
+ * word loads (lwz 0, 0(%3); lwz 2, 4(%3)) expecting a 32-bit OPD descriptor layout.
+ * We must explicitly transform the handler pointer via __get_opd32 to ensure the entry
+ * point and TOC register are properly populated, preventing CTR=0 crashes on ring wrap.
+ *
+ * @param cb Function pointer to user-defined gcmContextCallback handler.
+ */
 void rsxSetUserCallback(gcmContextCallback cb)
 {
-	sUserContext.callback = cb;
+	sUserContext.callback = (gcmContextCallback)__get_opd32(cb);
 }
 
 u32* rsxGetCurrentBuffer()
