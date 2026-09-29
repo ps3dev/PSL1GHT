@@ -159,7 +159,8 @@ typedef struct _vdec_h264_info
 	u16 sar_height;
 	u16 sar_width;
 	u8  pic_struct;
-	s8  pic_order_count[2];
+	u8  _pad0;
+	s16 pic_order_count[2];
 	bool vui_parameters_present_flag;
 	bool frame_mbs_only_flag;
 	bool video_signal_type_present_flag;
@@ -175,6 +176,9 @@ typedef struct _vdec_h264_info
 	bool low_delay_hrd_flag;
 	bool entropy_coding_mode_flag;
 	u16 nalUnitPresentFlags;
+	u8  ccDataLength[2];
+	u8  ccData[2][128];
+	u64 reserved[2];
 } vdecH264Info;
 
 typedef u32 (*vdecCallback)(u32 handle,u32 msgtype,u32 msgdata,u32 arg);
