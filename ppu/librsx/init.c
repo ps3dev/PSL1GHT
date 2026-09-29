@@ -20,6 +20,11 @@ s32 rsxInit(gcmContextData **context,u32 cmdSize,u32 ioSize,const void *ioAddres
 
 	ret = gcmInitBodyEx(&gGcmContext,cmdSize,ioSize,ioAddress);
 	if(ret==0) {
+		u32 maxCmdSize = (ioSize > 0x1000) ? (ioSize - 0x1000) : 0;
+		if(cmdSize > 0x7000 && cmdSize <= maxCmdSize && gGcmContext != NULL) {
+			gGcmContext->end = (u32*)((uintptr_t)(void*)gGcmContext->begin + (cmdSize & ~0x3) - 4);
+		}
+
 		rsxHeapInit();
 
 		if (context)
@@ -28,13 +33,27 @@ s32 rsxInit(gcmContextData **context,u32 cmdSize,u32 ioSize,const void *ioAddres
 	return ret;
 }
 
+/**
+ * @brief Configures GCM context buffer pointers and registers wrap callback.
+ *
+ * @param context Pointer to destination gcmContextData structure.
+ * @param addr Start address of the mapped command FIFO buffer.
+ * @param size Total allocated byte size of the command buffer.
+ * @param cb User-defined callback invoked when buffer reaches end.
+ */
 void rsxSetupContextData(gcmContextData *context,const u32 *addr,u32 size,gcmContextCallback cb)
 {
 	u32 alignedSize = size&~0x3;
 
 	context->begin = (u32*)addr;
 	context->current = (u32*)addr;
-	context->end = (u32*)(addr + alignedSize - 4);
+	/*
+	 * Explicitly cast addr to uintptr_t (or u64) before adding the alignedSize byte
+	 * count. Because addr is typed as 'const u32*', standard C pointer arithmetic
+	 * (addr + alignedSize) would scale alignedSize by sizeof(u32) (4x multiplication),
+	 * overflowing 4x beyond the allocated buffer and bypassing boundary checks.
+	 */
+	context->end = (u32*)((uintptr_t)addr + alignedSize - 4);
 	context->callback = (gcmContextCallback)__get_opd32(cb);
 }
 
@@ -72,7 +91,10 @@ void rsxSetDefaultCommandBuffer(gcmContextData **context)
  */
 void rsxSetUserCallback(gcmContextCallback cb)
 {
-	sUserContext.callback = (gcmContextCallback)__get_opd32(cb);
+	gcmContextCallback cb32 = (gcmContextCallback)__get_opd32(cb);
+	sUserContext.callback = cb32;
+	if(gGcmContext != NULL)
+		gGcmContext->callback = cb32;
 }
 
 u32* rsxGetCurrentBuffer()

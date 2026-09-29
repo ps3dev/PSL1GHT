@@ -215,7 +215,7 @@ void RSX_FUNC(SetViewport)(gcmContextData *context,u16 x,u16 y,u16 width,u16 hei
 	_offset[2].f = offset[2];
 	_offset[3].f = offset[3];
 
-	RSX_CONTEXT_CURRENT_BEGIN(24);
+	RSX_CONTEXT_CURRENT_BEGIN(15);
 
 	RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(NV40TCL_VIEWPORT_HORIZ,2);
 	RSX_CONTEXT_CURRENTP[1] = ((width<<16) | x);
@@ -235,17 +235,7 @@ void RSX_FUNC(SetViewport)(gcmContextData *context,u16 x,u16 y,u16 width,u16 hei
 	RSX_CONTEXT_CURRENTP[13] = _scale[2].u;
 	RSX_CONTEXT_CURRENTP[14] = _scale[3].u;
 
-	RSX_CONTEXT_CURRENTP[15] = RSX_METHOD(NV40TCL_VIEWPORT_OFFSET,8);
-	RSX_CONTEXT_CURRENTP[16] = _offset[0].u;
-	RSX_CONTEXT_CURRENTP[17] = _offset[1].u;
-	RSX_CONTEXT_CURRENTP[18] = _offset[2].u;
-	RSX_CONTEXT_CURRENTP[19] = _offset[3].u;
-	RSX_CONTEXT_CURRENTP[20] = _scale[0].u;
-	RSX_CONTEXT_CURRENTP[21] = _scale[1].u;
-	RSX_CONTEXT_CURRENTP[22] = _scale[2].u;
-	RSX_CONTEXT_CURRENTP[23] = _scale[3].u;
-
-	RSX_CONTEXT_CURRENT_END(24);
+	RSX_CONTEXT_CURRENT_END(15);
 }
 
 void RSX_FUNC(SetViewportClip)(gcmContextData *context,u8 sel,u16 width,u16 height)
@@ -661,7 +651,7 @@ void RSX_FUNC(LoadFragmentProgramLocation)(gcmContextData *context,const rsxFrag
 	texcoords = program->texcoords;
 	texcoord2D = program->texcoord2D;
 	texcoord3D = program->texcoord3D;
-	for(i=0;texcoords;i++) {
+	for(i=0; i<8 && texcoords; i++) {
 		if(texcoords&1) {
 			RSX_CONTEXT_CURRENT_BEGIN(2);
 			RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(NV40TCL_TEX_COORD_CONTROL(i),1);
@@ -676,6 +666,8 @@ void RSX_FUNC(LoadFragmentProgramLocation)(gcmContextData *context,const rsxFrag
 	{
 		u32 num_regs = program->num_regs > 2 ? program->num_regs : 2;
 		u32 fpcontrol = program->fp_control | (num_regs << NV40TCL_FP_CONTROL_TEMP_COUNT_SHIFT) | (1<<10);
+		if(program->texcoords)
+			fpcontrol |= (1 << 15);
 
 		RSX_CONTEXT_CURRENT_BEGIN(2);
 		RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(NV40TCL_FP_CONTROL,1);
@@ -816,7 +808,7 @@ void RSX_FUNC(SetVertexProgramConstants)(gcmContextData *context,u32 start,u32 c
 		RSX_CONTEXT_CURRENTP[1] = loadAt;
 
 		RSX_MEMCPY(&RSX_CONTEXT_CURRENTP[2],value,sizeof(f32)*16);
-		RSX_MEMCPY(&RSX_CONTEXT_CURRENTP[18],value,sizeof(f32)*16);
+		RSX_MEMCPY(&RSX_CONTEXT_CURRENTP[18],&value[16],sizeof(f32)*16);
 		RSX_CONTEXT_CURRENTP += 34;
 		value += 32;
 	}
@@ -824,13 +816,8 @@ void RSX_FUNC(SetVertexProgramConstants)(gcmContextData *context,u32 start,u32 c
 	if (rest) {
 		RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(NV40TCL_VP_UPLOAD_CONST_ID,rest + 1);
 		RSX_CONTEXT_CURRENTP[1] = start + (loop<<3);
-		RSX_CONTEXT_CURRENTP += 2;
-
-		for(i=0;i < rest;i++) {
-			RSX_CONTEXT_CURRENTP[0] = *value;
-			RSX_CONTEXT_CURRENTP++;
-			value++;
-		}
+		RSX_MEMCPY(&RSX_CONTEXT_CURRENTP[2],value,sizeof(f32)*rest);
+		RSX_CONTEXT_CURRENTP += 2 + rest;
 	}
 
 	RSX_CONTEXT_CURRENT_END(reserve);
@@ -2261,7 +2248,7 @@ void RSX_FUNC(SetTimeStamp)(gcmContextData *context,u32 index)
 	RSX_CONTEXT_CURRENT_BEGIN(2);
 
 	RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(NV40TCL_QUERY_GET,1);
-	RSX_CONTEXT_CURRENTP[2] = (((index << 4)&0x0fffffff) | 0x10000000);
+	RSX_CONTEXT_CURRENTP[1] = (((index << 4)&0x0fffffff) | 0x10000000);
 
 	RSX_CONTEXT_CURRENT_END(2);
 }

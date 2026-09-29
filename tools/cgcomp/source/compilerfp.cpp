@@ -732,6 +732,7 @@ void CCompilerFP::emit_txl(struct nvfx_insn *insn)
 	hw[0] |= (insn->tex_unit << NVFX_FP_OP_TEX_UNIT_SHIFT);
 
 	m_nSamplers |= (1<<insn->tex_unit);
+	m_nFPControl |= 0x8000;
 }
 
 void CCompilerFP::emit_tex(struct nvfx_insn *insn,u8 op)
@@ -746,6 +747,7 @@ void CCompilerFP::emit_tex(struct nvfx_insn *insn,u8 op)
 	hw[0] |= (insn->tex_unit << NVFX_FP_OP_TEX_UNIT_SHIFT);
 
 	m_nSamplers |= (1<<insn->tex_unit);
+	m_nFPControl |= 0x8000;
 }
 
 struct nvfx_reg CCompilerFP::imm(f32 x, f32 y, f32 z, f32 w)

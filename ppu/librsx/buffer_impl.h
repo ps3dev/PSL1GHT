@@ -1,13 +1,31 @@
+/**
+ * @brief Resets the RSX command ring buffer and rewinds host write pointer.
+ *
+ * Emits a hardware JUMP command directing RSX FIFO execution back to the base
+ * offset (0x1000) within the mapped host IO area. Waits until the RSX GET pointer
+ * acknowledges the jump, then rewinds context->current back to context->begin so
+ * subsequent CPU command emissions resume cleanly from the start of the buffer.
+ *
+ * @param context Pointer to active gcmContextData structure.
+ */
 void RSX_FUNC(ResetCommandBuffer)(gcmContextData *context)
 {
-	u32 offset = 0x1000;			// init state offset;
-	RSX_FUNC(SetJumpCommand)(context,offset);
+	u32 offset = 0;
+	if (gcmAddressToOffset(context->begin, &offset) != 0)
+		offset = 0x1000;
 
-	__sync();
+	RSX_FUNC(SetJumpCommand)(context, offset);
+
+	/* Flush the jump command so RSX FIFO executes up to and through the jump */
+	RSX_FUNC(FlushBuffer)(context);
 
 	gcmControlRegister volatile *ctrl = gcmGetControlRegister(context);
+	while(ctrl->get != offset) usleep(30);
+
 	ctrl->put = offset;
-	while(ctrl->get!=offset) usleep(30);
+
+	/* Synchronize host write pointer back to the buffer start */
+	context->current = context->begin;
 }
 
 void RSX_FUNC(FlushBuffer)(gcmContextData *context)
