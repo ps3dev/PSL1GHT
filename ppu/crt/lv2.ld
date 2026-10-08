@@ -30,6 +30,22 @@ SECTIONS
 	    *(.rel.init)
 	    *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
 	    *(.rel.fini)
+
+		/* PS3-specific relocations. */
+		*(.rel.sceStub.text) *(SORT(.rel.sceStub.text.*))
+		*(.rel.lib.ent.top)
+		*(.rel.lib.ent)
+		*(.rel.lib.ent.btm)
+		*(.rel.lib.stub.top)
+		*(.rel.lib.stub)
+		*(.rel.lib.stub.btm)
+		*(.rel.rodata.sceModuleInfo)
+		*(.rel.rodata.sceResident)
+		*(.rel.rodata.sceFNid)
+		*(.rel.rodata.sceVNid)
+		*(.rel.rodata.sceTNid)
+		*(.rel.rodata.sceVstub) *(SORT(.rel.rodata.sceVstub.*))
+
 	    *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*)
 	    *(.rel.data.rel.ro*)
 	    *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*)
@@ -50,6 +66,22 @@ SECTIONS
 	    *(.rela.init)
 	    *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*)
 	    *(.rela.fini)
+
+		/* PS3-specific relocations. */
+		*(.rela.sceStub.text) *(SORT(.rela.sceStub.text.*))
+		*(.rela.lib.ent.top)
+		*(.rela.lib.ent)
+		*(.rela.lib.ent.btm)
+		*(.rela.lib.stub.top)
+		*(.rela.lib.stub)
+		*(.rela.lib.stub.btm)
+		*(.rela.rodata.sceModuleInfo)
+		*(.rela.rodata.sceResident)
+		*(.rela.rodata.sceFNid)
+		*(.rela.rodata.sceVNid)
+		*(.rela.rodata.sceTNid)
+		*(.rela.rodata.sceVstub) *(SORT(.rela.rodata.sceVstub.*))
+
 	    *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*)
 	    *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*)
 	    *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*)
@@ -92,6 +124,7 @@ SECTIONS
 	.eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) }
 	.gcc_except_table   : ONLY_IF_RO { *(.gcc_except_table .gcc_except_table.*) }
 
+	.rodata.sceModuleInfo : { KEEP (*(.rodata.sceModuleInfo)) }
 	.rodata.sceResident : { KEEP (*(.rodata.sceResident)) }
 	.rodata.sceFNID     : { KEEP (*(.rodata.sceFNID .rodata.sceFNID.*)) }
 	.rodata.sceVNID     : { KEEP (*(.rodata.sceVNID .rodata.sceVNID.*)) }
