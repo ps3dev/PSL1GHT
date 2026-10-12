@@ -20,8 +20,13 @@ void RSX_FUNC(ResetCommandBuffer)(gcmContextData *context)
 	RSX_FUNC(FlushBuffer)(context);
 
 	gcmControlRegister volatile *ctrl = gcmGetControlRegister(context);
-	while(ctrl->get != offset) usleep(30);
+	uint32_t spins = 0;
+	while(ctrl->get != offset && spins < 100000) {
+		usleep(30);
+		spins++;
+	}
 
+	__sync();
 	ctrl->put = offset;
 
 	/* Synchronize host write pointer back to the buffer start */

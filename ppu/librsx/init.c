@@ -20,11 +20,7 @@ s32 rsxInit(gcmContextData **context,u32 cmdSize,u32 ioSize,const void *ioAddres
 
 	ret = gcmInitBodyEx(&gGcmContext,cmdSize,ioSize,ioAddress);
 	if(ret==0) {
-		u32 maxCmdSize = (ioSize > 0x1000) ? (ioSize - 0x1000) : 0;
-		if(cmdSize > 0x7000 && cmdSize <= maxCmdSize && gGcmContext != NULL) {
-			gGcmContext->end = (u32*)((uintptr_t)(void*)gGcmContext->begin + (cmdSize & ~0x3) - 4);
-		}
-
+	
 		rsxHeapInit();
 
 		if (context)
