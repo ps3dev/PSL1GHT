@@ -3,66 +3,49 @@ ifeq ($(strip $(PSL1GHT)),)
 $(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
 endif
 
-TITLE		:=	PS Eye Sample - PSL1GHT
-APPID		:=	PSEYETEST
-CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
+TITLE       :=  PS Eye Sample - PSL1GHT
+APPID       :=  PSEYETEST
+CONTENTID   :=  UP0001-$(APPID)_00-0000000000000000
 
 include $(PSL1GHT)/ppu_rules
 
-SCETOOL_FLAGS	+=	
+TARGET      :=  $(notdir $(CURDIR))
+BUILD       :=  build
+SOURCES     :=  source
+DATA        :=  data
+INCLUDES    :=  include
 
-TARGET		:=	$(notdir $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	source
-DATA		:=	data
-SHADERS		:=	shaders
-INCLUDES	:=	include
+LIBS        :=  -lrsx -lgcm_sys -lio -lsysutil -lrt -llv2 -lsysmodule -lcamera -lz -lm -llv2dbg
 
-LIBS		:=	-ltiny3d -lrsx -lgcm_sys -lio -lsysutil -lrt -llv2 -lsysmodule -lz -lm -llv2dbg -lcamera
-
-CFLAGS		=	-O2 -Wall -mcpu=cell $(MACHDEP) $(INCLUDE)
-
-LDFLAGS		=	$(MACHDEP) -Wl,-Map,$(notdir $@).map
-
-LIBDIRS		:=	$(CURDIR)
+CFLAGS      =   -O2 -Wall -mcpu=cell $(MACHDEP) $(INCLUDE)
+LDFLAGS     =   $(MACHDEP) -Wl,-Map,$(notdir $@).map
+LIBDIRS     :=  $(CURDIR)
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
-export GAMEROOT	:=	$(CURDIR)
+export OUTPUT   :=  $(CURDIR)/$(TARGET)
+export GAMEROOT :=  $(CURDIR)
 
-export VPATH	:=	$(shell find $(SOURCES) $(DATA) $(SHADERS) -type d 2>/dev/null | sed "s|^|$(CURDIR)/|")
+export VPATH   :=  $(shell find $(SOURCES) $(DATA) -type d 2>/dev/null | sed "s|^|$(CURDIR)/|")
+export DEPSDIR :=  $(CURDIR)/$(BUILD)
+export BUILDDIR := $(CURDIR)/$(BUILD)
 
-export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+CFILES      :=  $(shell find $(SOURCES) -type f -name '*.c')
+BINFILES    :=  $(shell find $(DATA) -type f -name '*.bin' 2>/dev/null)
 
-export BUILDDIR	:=	$(CURDIR)/$(BUILD)
+export LD   :=  $(CC)
+export OFILES := $(addsuffix .o,$(BINFILES)) $(CFILES:.c=.c.o)
 
-CFILES		:=	$(shell find $(SOURCES) -type f -name '*.c')
-BINFILES	:=	$(shell find $(DATA) -type f -name '*.bin' 2>/dev/null)
-VCGFILES	:=	$(foreach dir,$(SHADERS),$(notdir $(wildcard $(dir)/*.vcg)))
-FCGFILES	:=	$(foreach dir,$(SHADERS),$(notdir $(wildcard $(dir)/*.fcg)))
+export INCLUDE := $(foreach dir,$(INCLUDES), -I$(CURDIR)/$(dir)) \
+                  $(foreach dir,$(shell find $(INCLUDES) $(SOURCES) -type d 2>/dev/null),-I$(CURDIR)/$(dir)) \
+                  $(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+                  $(LIBPSL1GHT_INC) \
+                  -I$(CURDIR)/$(BUILD) -I$(PORTLIBS)/include
 
-VPOFILES	:=	$(VCGFILES:.vcg=.vpo)
-FPOFILES	:=	$(FCGFILES:.fcg=.fpo)
+export LIBPATHS := $(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
+                   $(LIBPSL1GHT_LIB) -L$(PORTLIBS)/lib
 
-export LD	:=	$(CC)
-
-export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
-					$(addsuffix .o,$(VPOFILES)) \
-					$(addsuffix .o,$(FPOFILES)) \
-					$(CFILES:.c=.c.o) \
-
-export INCLUDE	:=	$(foreach dir,$(INCLUDES), -I$(CURDIR)/$(dir)) \
-					$(foreach dir,$(shell find $(INCLUDES) $(SOURCES) -type d 2>/dev/null),-I$(CURDIR)/$(dir)) \
-					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-					$(LIBPSL1GHT_INC) \
-					-I$(CURDIR)/$(BUILD) -I$(PORTLIBS)/include
-
-export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					$(LIBPSL1GHT_LIB) -L$(PORTLIBS)/lib
-
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean run pkg npdrm
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
@@ -75,27 +58,19 @@ clean:
 run:
 	ps3load $(OUTPUT).self
 
-pkg:	$(BUILD) $(OUTPUT).pkg
+pkg: $(BUILD) $(OUTPUT).pkg
 
 npdrm: $(BUILD)
-	@$(SELF_NPDRM) $(SCETOOL_FLAGS) $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(BUILDDIR)/../EBOOT.BIN  --np-content-id=$(CONTENTID) 
+	@$(SELF_NPDRM) $(SCETOOL_FLAGS) $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(BUILDDIR)/../EBOOT.BIN --np-content-id=$(CONTENTID)
 
 else
 
-DEPENDS	:=	$(addprefix $(DEPSDIR)/,$(filter-out %.bin.d %.vpo.d %.fpo.d,$(OFILES:.o=.d)))
+DEPENDS := $(addprefix $(DEPSDIR)/,$(filter-out %.bin.d,$(OFILES:.o=.d)))
 
 $(OUTPUT).self: $(OUTPUT).elf
-$(OUTPUT).elf:	$(OFILES)
+$(OUTPUT).elf: $(OFILES)
 
-%.bin.o	:	%.bin
-	@echo $(notdir $<)
-	@$(bin2o)
-
-%.vpo.o	:	%.vpo
-	@echo $(notdir $<)
-	@$(bin2o)
-
-%.fpo.o	:	%.fpo
+%.bin.o: %.bin
 	@echo $(notdir $<)
 	@$(bin2o)
 
