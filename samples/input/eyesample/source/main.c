@@ -182,22 +182,6 @@ static void convertCameraFrame(const u8 *yuv)
     }
 }
 
-static void drawCameraFrame(u32 *dst)
-{
-    int x, y;
-    int src_x, src_y;
-
-    for (y = 0; y < res.height; y++)
-    {
-        src_y = (y * CAMERA_HEIGHT) / res.height;
-        for (x = 0; x < res.width; x++)
-        {
-            src_x = (x * CAMERA_WIDTH) / res.width;
-            dst[y * res.width + x] = converted[src_y * CAMERA_WIDTH + src_x];
-        }
-    }
-}
-
 static int initCamera(void)
 {
     s32 ret;
