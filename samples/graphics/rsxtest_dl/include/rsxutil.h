@@ -9,9 +9,9 @@
 #define HOST_STATE_CB_SIZE					0x10000		// 64Kb state command buffer size (used for resetting certain default states)
 #define HOST_ADDR_ALIGNMENT					(1024*1024)
 
-#define GCM_PREPARED_BUFFER_INDEX			65
-#define GCM_BUFFER_STATUS_INDEX				66
-#define GCM_WAIT_LABEL_INDEX				255
+#define CELL_GCM_PREPARED_BUFFER_INDEX			65
+#define CELL_GCM_BUFFER_STATUS_INDEX				66
+#define CELL_GCM_WAIT_LABEL_INDEX				255
 
 #define MAX_BUFFER_QUEUE_SIZE				1
 

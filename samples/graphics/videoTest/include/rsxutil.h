@@ -29,14 +29,14 @@ typedef struct
 /* Block the PPU thread untill the previous flip operation has finished. */
 void waitFlip (void);
 /* Flip a buffer onto the screen. Returns TRUE on success */
-int flip (gcmContextData *context, s32 buffer);
+int flip (CellGcmContextData *context, s32 buffer);
 /* Create a buffer to draw into and assign it to @id. Returns NULL on error */
 int makeBuffer (rsxBuffer * buffer, u16 width, u16 height, int id);
 /* Get current screen resolution. returns TRUE on success */
 int getResolution (u16 *width, u16 *height);
 /* Initilize the RSX properly. Returns NULL on error */
-gcmContextData *initScreen (void *host_addr, u32 size);
+CellGcmContextData *initScreen (void *host_addr, u32 size);
 /* Sets the target buffer to render to */
-void setRenderTarget(gcmContextData *context, rsxBuffer *buffer);
+void setRenderTarget(CellGcmContextData *context, rsxBuffer *buffer);
 
 #endif /* __RSXUTIL_H__ */

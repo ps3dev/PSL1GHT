@@ -4,45 +4,45 @@
 #include <http/http.h>
 
 
-extern s32 httpClientSetAuthenticationCallbackEx(httpClientId cid, opd32 *opd, void *arg);
-extern s32 httpClientSetTransactionStateCallbackEx(httpClientId cid, opd32 *opd, void *arg);
-extern s32 httpClientSetRedirectCallbackEx(httpClientId cid, opd32 *opd, void *arg);
-extern s32 httpClientSetCookieSendCallbackEx(httpClientId cid, opd32 *opd, void *arg);
-extern s32 httpClientSetCookieRecvCallbackEx(httpClientId cid, opd32 *opd, void *arg);
+extern s32 cellHttpClientSetAuthenticationCallbackEx(CellHttpClientId cid, opd32 *opd, void *arg);
+extern s32 cellHttpClientSetTransactionStateCallbackEx(CellHttpClientId cid, opd32 *opd, void *arg);
+extern s32 cellHttpClientSetRedirectCallbackEx(CellHttpClientId cid, opd32 *opd, void *arg);
+extern s32 cellHttpClientSetCookieSendCallbackEx(CellHttpClientId cid, opd32 *opd, void *arg);
+extern s32 cellHttpClientSetCookieRecvCallbackEx(CellHttpClientId cid, opd32 *opd, void *arg);
 
 
-s32 httpClientSetAuthenticationCallback(httpClientId cid,httpAuthenticationCallback cb,void *arg)
+s32 cellHttpClientSetAuthenticationCallback(CellHttpClientId cid,CellHttpAuthenticationCallback cb,void *arg)
 {
-    printf ( "IN: httpClientSetAuthenticationStateCallback(%d, %p, %p)\n", cid, cb, arg) ;
-    printf ( "OUT: httpClientSetAuthenticationStateCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
-    return httpClientSetAuthenticationCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
+    printf ( "IN: cellHttpClientSetAuthenticationStateCallback(%d, %p, %p)\n", cid, cb, arg) ;
+    printf ( "OUT: cellHttpClientSetAuthenticationStateCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
+    return cellHttpClientSetAuthenticationCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
 }
 
-s32 httpClientSetTransactionStateCallback(httpClientId cid,httpTransactionStateCallback cb,void *arg)
+s32 cellHttpClientSetTransactionStateCallback(CellHttpClientId cid,CellHttpTransactionStateCallback cb,void *arg)
 {
-    printf ( "IN: httpClientSetTransactionStateCallback(%d, %p, %p)\n", cid, cb, arg) ;
-    printf ( "OUT: httpClientSetTransactionStateCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
-    return httpClientSetTransactionStateCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
+    printf ( "IN: cellHttpClientSetTransactionStateCallback(%d, %p, %p)\n", cid, cb, arg) ;
+    printf ( "OUT: cellHttpClientSetTransactionStateCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
+    return cellHttpClientSetTransactionStateCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
 }
 
-s32 httpClientSetRedirectCallback(httpClientId cid,httpRedirectCallback cb,void *arg)
+s32 cellHttpClientSetRedirectCallback(CellHttpClientId cid,CellHttpRedirectCallback cb,void *arg)
 {
-    printf ( "IN: httpClientSetRedirectCallback(%d, %p, %p)\n", cid, cb, arg) ;
-    printf ( "OUT: httpClientSetRedirectCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
-    return httpClientSetRedirectCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
+    printf ( "IN: cellHttpClientSetRedirectCallback(%d, %p, %p)\n", cid, cb, arg) ;
+    printf ( "OUT: cellHttpClientSetRedirectCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
+    return cellHttpClientSetRedirectCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
 }
 
-s32 httpClientSetCookieSendCallback(httpClientId cid, httpCookieSendCallback cb, void *arg)
+s32 cellHttpClientSetCookieSendCallback(CellHttpClientId cid, CellHttpCookieSendCallback cb, void *arg)
 {
-    printf ( "IN: httpClientSetCookieSendCallback(%d, %p, %p)\n", cid, cb, arg ) ;
-    printf ( "OUT: httpClientSetCookieSendCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
-    return httpClientSetCookieSendCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
+    printf ( "IN: cellHttpClientSetCookieSendCallback(%d, %p, %p)\n", cid, cb, arg ) ;
+    printf ( "OUT: cellHttpClientSetCookieSendCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
+    return cellHttpClientSetCookieSendCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
 }
 
-s32 httpClientSetCookieRecvCallback(httpClientId cid, httpCookieRecvCallback cb, void *arg)
+s32 cellHttpClientSetCookieRecvCallback(CellHttpClientId cid, CellHttpCookieRecvCallback cb, void *arg)
 {
-    printf ( "IN: httpClientSetCookieRecvCallback(%d, %p, %p)\n", cid, cb, arg ) ;
-    printf ( "OUT: httpClientSetCookieRecvCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
-    return httpClientSetCookieRecvCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
+    printf ( "IN: cellHttpClientSetCookieRecvCallback(%d, %p, %p)\n", cid, cb, arg ) ;
+    printf ( "OUT: cellHttpClientSetCookieRecvCallbackEx(%d, %p, %p)\n", cid, (opd32*)__get_opd32(cb), arg) ;
+    return cellHttpClientSetCookieRecvCallbackEx(cid, (opd32*)__get_opd32(cb), arg);
 }
 

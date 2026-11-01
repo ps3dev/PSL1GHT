@@ -10,7 +10,7 @@
 
 #include "rsxutil.h"
 
-videoResolution vResolution;
+CellVideoOutResolution vResolution;
 
 u32 curr_fb = 0;
 
@@ -33,18 +33,18 @@ bool fbOnFlip = false;
 sys_event_queue_t flipEventQueue;
 sys_event_port_t flipEventPort;
 
-gcmSurface surface;
+CellGcmSurface surface;
 
 static u32 sLabelVal = 1;
 
 static u32 sResolutionIds[] = {
-    VIDEO_RESOLUTION_1600x1080,
-    VIDEO_RESOLUTION_1440x1080,
-    VIDEO_RESOLUTION_1280x1080,
-    VIDEO_RESOLUTION_960x1080,
-    VIDEO_RESOLUTION_720,
-    VIDEO_RESOLUTION_480,
-    VIDEO_RESOLUTION_576
+    CELL_VIDEO_OUT_RESOLUTION_1600x1080,
+    CELL_VIDEO_OUT_RESOLUTION_1440x1080,
+    CELL_VIDEO_OUT_RESOLUTION_1280x1080,
+    CELL_VIDEO_OUT_RESOLUTION_960x1080,
+    CELL_VIDEO_OUT_RESOLUTION_720,
+    CELL_VIDEO_OUT_RESOLUTION_480,
+    CELL_VIDEO_OUT_RESOLUTION_576
 };
 static size_t RESOLUTION_ID_COUNT = sizeof(sResolutionIds)/sizeof(u32);
 
@@ -55,7 +55,7 @@ static void flipHandler(const u32 head)
     u32 v = fbFlipped;
 
     for (u32 i = fbOnDisplay; i != v; i=(i + 1)%FRAME_BUFFER_COUNT) {
-        *((vu32*) gcmGetLabelAddress(GCM_BUFFER_STATUS_INDEX + i)) = BUFFER_IDLE;
+        *((vu32*) cellGcmGetLabelAddress(CELL_GCM_BUFFER_STATUS_INDEX + i)) = BUFFER_IDLE;
     }
     fbOnDisplay = v;
     fbOnFlip = false;
@@ -70,13 +70,13 @@ static void vblankHandler(const u32 head)
     u32 bufferToFlip;
     u32 indexToFlip;
 
-    data = *((vu32*) gcmGetLabelAddress(GCM_PREPARED_BUFFER_INDEX));
+    data = *((vu32*) cellGcmGetLabelAddress(CELL_GCM_PREPARED_BUFFER_INDEX));
     bufferToFlip = (data >> 8);
     indexToFlip = (data & 0x07);
 
     if (!fbOnFlip) {
         if (bufferToFlip != fbOnDisplay) {
-            s32 ret = gcmSetFlipImmediate(indexToFlip);
+            s32 ret = cellGcmSetFlipImmediate(indexToFlip);
             if (ret != 0) {
                 printf("flip immediate failed\n");
                 return;
@@ -90,7 +90,7 @@ static void vblankHandler(const u32 head)
 
 static void syncPPUGPU()
 {
-    vu32 *label = (vu32*) gcmGetLabelAddress(GCM_PREPARED_BUFFER_INDEX);
+    vu32 *label = (vu32*) cellGcmGetLabelAddress(CELL_GCM_PREPARED_BUFFER_INDEX);
     while(((curr_fb + FRAME_BUFFER_COUNT - ((*label)>>8))%FRAME_BUFFER_COUNT) > MAX_BUFFER_QUEUE_SIZE) {
         sys_event_t event;
 
@@ -101,11 +101,11 @@ static void syncPPUGPU()
 
 static void waitRSXFinish()
 {
-	rsxSetWriteBackendLabel(gGcmContext,GCM_WAIT_LABEL_INDEX,sLabelVal);
+	rsxSetWriteBackendLabel(gGcmContext,CELL_GCM_WAIT_LABEL_INDEX,sLabelVal);
 
 	rsxFlushBuffer(gGcmContext);
 
-	while(*(vu32*)gcmGetLabelAddress(GCM_WAIT_LABEL_INDEX)!=sLabelVal)
+	while(*(vu32*)cellGcmGetLabelAddress(CELL_GCM_WAIT_LABEL_INDEX)!=sLabelVal)
 		usleep(30);
 
 	++sLabelVal;
@@ -113,8 +113,8 @@ static void waitRSXFinish()
 
 static void waitRSXIdle()
 {
-	rsxSetWriteBackendLabel(gGcmContext,GCM_WAIT_LABEL_INDEX,sLabelVal);
-	rsxSetWaitLabel(gGcmContext,GCM_WAIT_LABEL_INDEX,sLabelVal);
+	rsxSetWriteBackendLabel(gGcmContext,CELL_GCM_WAIT_LABEL_INDEX,sLabelVal);
+	rsxSetWaitLabel(gGcmContext,CELL_GCM_WAIT_LABEL_INDEX,sLabelVal);
 
 	++sLabelVal;
 
@@ -127,41 +127,41 @@ void initVideoConfiguration()
     s32 resId = 0;
 
     for (size_t i=0;i < RESOLUTION_ID_COUNT;i++) {
-        rval = videoGetResolutionAvailability(VIDEO_PRIMARY, sResolutionIds[i], VIDEO_ASPECT_AUTO, 0);
+        rval = cellVideoOutGetResolutionAvailability(CELL_VIDEO_OUT_PRIMARY, sResolutionIds[i], CELL_VIDEO_OUT_ASPECT_AUTO, 0);
         if (rval != 1) continue;
 
         resId = sResolutionIds[i];
-        rval = videoGetResolution(resId, &vResolution);
+        rval = cellVideoOutGetResolution(resId, &vResolution);
         if(!rval) break;
     }
 
     if(rval) {
-        printf("Error: videoGetResolutionAvailability failed. No usable resolution.\n");
+        printf("Error: cellVideoOutGetResolutionAvailability failed. No usable resolution.\n");
         exit(1);
     }
 
-    videoConfiguration config = {
+    CellVideoOutConfiguration config = {
         (u8)resId,
-        VIDEO_BUFFER_FORMAT_XRGB,
-        VIDEO_ASPECT_AUTO,
+        CELL_VIDEO_OUT_BUFFER_FORMAT_XRGB,
+        CELL_VIDEO_OUT_ASPECT_AUTO,
         {0,0,0,0,0,0,0,0,0},
         (u32)vResolution.width*4
     };
 
-    rval = videoConfigure(VIDEO_PRIMARY, &config, NULL, 0);
+    rval = cellVideoOutConfigure(CELL_VIDEO_OUT_PRIMARY, &config, NULL, 0);
     if(rval) {
-        printf("Error: videoConfigure failed.\n");
+        printf("Error: cellVideoOutConfigure failed.\n");
         exit(1);
     }
 
-    videoState state;
+    CellVideoOutState state;
 
-    rval = videoGetState(VIDEO_PRIMARY, 0, &state);
+    rval = cellVideoOutGetState(CELL_VIDEO_OUT_PRIMARY, 0, &state);
     switch(state.displayMode.aspect) {
-        case VIDEO_ASPECT_4_3:
+        case CELL_VIDEO_OUT_ASPECT_4_3:
             aspect_ratio = 4.0f/3.0f;
             break;
-        case VIDEO_ASPECT_16_9:
+        case CELL_VIDEO_OUT_ASPECT_16_9:
             aspect_ratio = 16.0f/9.0f;
             break;
         default:
@@ -182,33 +182,33 @@ void initFlipEvent()
     sysEventPortCreate(&flipEventPort, SYS_EVENT_PORT_LOCAL, SYS_EVENT_PORT_NO_NAME);
     sysEventPortConnectLocal(flipEventPort, flipEventQueue);
 
-    gcmSetFlipHandler(flipHandler);
-    gcmSetVBlankHandler(vblankHandler);
+    cellGcmSetFlipHandler(flipHandler);
+    cellGcmSetVBlankHandler(vblankHandler);
 }
 
 void initRenderTarget()
 {
-    memset(&surface, 0, sizeof(gcmSurface));
+    memset(&surface, 0, sizeof(CellGcmSurface));
 
-	surface.colorFormat		= GCM_SURFACE_X8R8G8B8;
-	surface.colorTarget		= GCM_SURFACE_TARGET_0;
-	surface.colorLocation[0]	= GCM_LOCATION_RSX;
+	surface.colorFormat		= CELL_GCM_SURFACE_X8R8G8B8;
+	surface.colorTarget		= CELL_GCM_SURFACE_TARGET_0;
+	surface.colorLocation[0]	= CELL_GCM_LOCATION_RSX;
 	surface.colorOffset[0]	= color_offset[curr_fb];
 	surface.colorPitch[0]	= color_pitch;
 
-    for(u32 i=1; i< GCM_MAX_MRT_COUNT;i++) {
-        surface.colorLocation[i]	= GCM_LOCATION_RSX;
+    for(u32 i=1; i< CELL_GCM_MAX_MRT_COUNT;i++) {
+        surface.colorLocation[i]	= CELL_GCM_LOCATION_RSX;
         surface.colorOffset[i]		= color_offset[curr_fb];
         surface.colorPitch[i]		= 64;
     }
 
-	surface.depthFormat		= GCM_SURFACE_ZETA_Z16;
-	surface.depthLocation	= GCM_LOCATION_RSX;
+	surface.depthFormat		= CELL_GCM_SURFACE_ZETA_Z16;
+	surface.depthLocation	= CELL_GCM_LOCATION_RSX;
 	surface.depthOffset		= depth_offset;
 	surface.depthPitch		= depth_pitch;
 
-	surface.type				= GCM_SURFACE_TYPE_LINEAR;
-	surface.antiAlias		= GCM_SURFACE_CENTER_1;
+	surface.type				= CELL_GCM_SURFACE_TYPE_LINEAR;
+	surface.antiAlias		= CELL_GCM_SURFACE_CENTER_1;
 
 	surface.width			= display_width;
 	surface.height			= display_height;
@@ -229,7 +229,7 @@ void initScreen()
     u32 color_depth = 4;
     u32 bufferSize = rsxAlign(HOST_ADDR_ALIGNMENT, (DEFAULT_CB_SIZE + HOST_SIZE));
 
-    gcmInitDefaultFifoMode(GCM_DEFAULT_FIFO_MODE_CONDITIONAL);
+    cellGcmInitDefaultFifoMode(CELL_GCM_DEFAULT_FIFO_MODE_CONDITIONAL);
 
     void *hostAddr = memalign(HOST_ADDR_ALIGNMENT, bufferSize);
     rsxInit(nullptr, DEFAULT_CB_SIZE, bufferSize, hostAddr);
@@ -241,50 +241,50 @@ void initScreen()
 
     waitRSXIdle();
 
-    gcmSetFlipMode(GCM_FLIP_HSYNC);
+    cellGcmSetFlipMode(CELL_GCM_FLIP_HSYNC);
 
     void *buffer;
     for (u32 i=0;i < FRAME_BUFFER_COUNT;i++) {
         buffer = rsxMemalign(64,(display_height*color_pitch));
         rsxAddressToOffset(buffer,&color_offset[i]);
         printf("fb[%d]: %p (%08x) [%dx%d] %d\n", i, buffer, color_offset[i], display_width, display_height, color_pitch);
-        gcmSetDisplayBuffer(i,color_offset[i],color_pitch,display_width,display_height);
+        cellGcmSetDisplayBuffer(i,color_offset[i],color_pitch,display_width,display_height);
     }
 
     buffer = rsxMemalign(64,(display_height*depth_pitch)*2);
     rsxAddressToOffset(buffer, &depth_offset);
 
     for (u32 i=0;i < FRAME_BUFFER_COUNT;i++) {
-        *((vu32*) gcmGetLabelAddress(GCM_BUFFER_STATUS_INDEX + i)) = BUFFER_IDLE;
+        *((vu32*) cellGcmGetLabelAddress(CELL_GCM_BUFFER_STATUS_INDEX + i)) = BUFFER_IDLE;
     }
-    *((vu32*) gcmGetLabelAddress(GCM_PREPARED_BUFFER_INDEX)) = (fbOnDisplay << 8);
-    *((vu32*) gcmGetLabelAddress(GCM_BUFFER_STATUS_INDEX + fbOnDisplay)) = BUFFER_BUSY;
+    *((vu32*) cellGcmGetLabelAddress(CELL_GCM_PREPARED_BUFFER_INDEX)) = (fbOnDisplay << 8);
+    *((vu32*) cellGcmGetLabelAddress(CELL_GCM_BUFFER_STATUS_INDEX + fbOnDisplay)) = BUFFER_BUSY;
 
     curr_fb = (fbOnDisplay + 1)%FRAME_BUFFER_COUNT;
 
     initFlipEvent();
     initRenderTarget();
 
-    rsxSetWriteCommandLabel(gGcmContext, GCM_BUFFER_STATUS_INDEX + curr_fb, BUFFER_BUSY);
+    rsxSetWriteCommandLabel(gGcmContext, CELL_GCM_BUFFER_STATUS_INDEX + curr_fb, BUFFER_BUSY);
 }
 
 void flip()
 {
-    s32 qid = gcmSetPrepareFlip(gGcmContext, curr_fb);
+    s32 qid = cellGcmSetPrepareFlip(gGcmContext, curr_fb);
     while (qid < 0) {
         usleep(100);
-        qid = gcmSetPrepareFlip(gGcmContext, curr_fb);
+        qid = cellGcmSetPrepareFlip(gGcmContext, curr_fb);
     }
 
-    rsxSetWriteBackendLabel(gGcmContext, GCM_PREPARED_BUFFER_INDEX, ((curr_fb << 8) | qid));
+    rsxSetWriteBackendLabel(gGcmContext, CELL_GCM_PREPARED_BUFFER_INDEX, ((curr_fb << 8) | qid));
     rsxFlushBuffer(gGcmContext);
 
     syncPPUGPU();
 
     curr_fb = (curr_fb + 1)%FRAME_BUFFER_COUNT;
 
-    rsxSetWaitLabel(gGcmContext, GCM_BUFFER_STATUS_INDEX + curr_fb, BUFFER_IDLE);
-    rsxSetWriteCommandLabel(gGcmContext, GCM_BUFFER_STATUS_INDEX + curr_fb, BUFFER_BUSY);
+    rsxSetWaitLabel(gGcmContext, CELL_GCM_BUFFER_STATUS_INDEX + curr_fb, BUFFER_IDLE);
+    rsxSetWriteCommandLabel(gGcmContext, CELL_GCM_BUFFER_STATUS_INDEX + curr_fb, BUFFER_BUSY);
 
     setRenderTarget(curr_fb);
 }
@@ -293,7 +293,7 @@ void finish()
 {
 	rsxFinish(gGcmContext,1);
 
-    u32 data = *((vu32*) gcmGetLabelAddress(GCM_PREPARED_BUFFER_INDEX));
+    u32 data = *((vu32*) cellGcmGetLabelAddress(CELL_GCM_PREPARED_BUFFER_INDEX));
     u32 lastBuffer = (data >> 8);
     while (lastBuffer != fbOnDisplay)
         usleep(100);

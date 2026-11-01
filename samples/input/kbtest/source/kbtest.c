@@ -44,9 +44,9 @@ int main(int argc, char *argv[]) {
     short int port;                  /*  port number               */
     struct    sockaddr_in servaddr;  /*  socket address structure  */
     char     *endptr;                /*  for strtol()              */
-	KbInfo kbinfo;
-	KbConfig kbconfig;
-	KbData kbdata;
+	CellKbInfo kbinfo;
+	CellKbConfig kbconfig;
+	CellKbData kbdata;
 	int i;
 	
 	fprintf(stdout, "Starting Kb Test.\n");
@@ -100,66 +100,66 @@ int main(int argc, char *argv[]) {
 
 	Writeline(conn_s, message, strlen(message));
 	
-	/* Keyboard ioKbInit()/ioKbGetInfo() Test */
-	sprintf(buffer, "Calling ioKbInit(%d) returned %d\r\n", MAX_KB_PORT_NUM, ioKbInit(MAX_KB_PORT_NUM));
+	/* Keyboard cellKbInit()/ioKbGetInfo() Test */
+	sprintf(buffer, "Calling cellKbInit(%d) returned %d\r\n", CELL_MAX_KB_PORT_NUM, cellKbInit(CELL_MAX_KB_PORT_NUM));
 	Writeline(conn_s, buffer, strlen(buffer));
 	
-	sprintf(buffer, "Calling ioKbGetInfo() returned %d\r\n", ioKbGetInfo(&kbinfo));
+	sprintf(buffer, "Calling cellKbGetInfo() returned %d\r\n", cellKbGetInfo(&kbinfo));
 	Writeline(conn_s, buffer, strlen(buffer));
 	
 	sprintf(buffer, "KbInfo:\r\nMax Kbs: %u\r\nConnected Kbs: %u\r\nInfo Field: %08x\r\n", kbinfo.max, kbinfo.connected, kbinfo.info);
 	Writeline(conn_s, buffer, strlen(buffer));
-	for(i=0; i<MAX_KEYBOARDS; i++)
+	for(i=0; i<CELL_MAX_KEYBOARDS; i++)
 	{
 		if(kbinfo.status[i])
 		{
-			/* Keyboard ioKbSetLEDStatus() Test */
+			/* Keyboard cellKbSetLEDStatus() Test */
 			{
-				KbLed led_state;
+				CellKbLed led_state;
 				/* num_lock=ON, caps_lock=OFF, scroll_lock=OFF, compose=OFF, kana=OFF*/
 				led_state.leds = 0;
 				led_state.num_lock = 1;
-				sprintf(buffer, "num_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				sprintf(buffer, "num_lock=ON Calling cellKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, cellKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* num_lock=OFF, caps_lock=ON, scroll_lock=OFF, compose=OFF, kana=OFF*/
 				led_state.leds = 0;
 				led_state.caps_lock = 1;
-				sprintf(buffer, "caps_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				sprintf(buffer, "caps_lock=ON Calling cellKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, cellKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* num_lock=OFF, caps_lock=OFF, scroll_lock=ON, compose=OFF, kana=OFF*/
 				led_state.leds = 0;
 				led_state.scroll_lock = 1;
-				sprintf(buffer, "scroll_lock=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				sprintf(buffer, "scroll_lock=ON Calling cellKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, cellKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);		
 				/* num_lock=OFF, caps_lock=OFF, scroll_lock=OFF, compose=ON, kana=OFF*/
 				led_state.leds = 0;
 				led_state.compose = 1;
-				sprintf(buffer, "compose=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				sprintf(buffer, "compose=ON Calling cellKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, cellKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* num_lock=OFF, caps_lock=OFF, scroll_lock=OFF, compose=OFF, kana=ON*/
 				led_state.leds = 0;
 				led_state.kana = 1;
-				sprintf(buffer, "kana=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				sprintf(buffer, "kana=ON Calling cellKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, cellKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* All Kb Leds=OFF */
 				led_state.leds = 0;
-				sprintf(buffer, "All Kb Leds=OFF Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				sprintf(buffer, "All Kb Leds=OFF Calling cellKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, cellKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);	
 				/* All Kb Leds=ON */
 				led_state.leds = 0xFFFFFFFF;
 				led_state.reserved = 0;
-				sprintf(buffer, "All Kb Leds=ON Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				sprintf(buffer, "All Kb Leds=ON Calling cellKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, cellKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 				/* All Kb Leds=OFF */
 				led_state.leds = 0;
-				sprintf(buffer, "All Kb Leds=OFF Calling ioKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, ioKbSetLEDStatus(i, led_state));
+				sprintf(buffer, "All Kb Leds=OFF Calling cellKbSetLEDStatus(%d, 0x%08X) returned %d\r\n", i, led_state.leds, cellKbSetLEDStatus(i, led_state));
 				Writeline(conn_s, buffer, strlen(buffer));
 				usleep(500000);
 
@@ -167,12 +167,12 @@ int main(int argc, char *argv[]) {
 				Writeline(conn_s, buffer, strlen(buffer));
 			}		
 		
-			/* Keyboard ioKbRead() Info Test */
+			/* Keyboard cellKbRead() Info Test */
 			{
 				sprintf(buffer, "Keyboard %u:\r\nStatus: %hhu\r\n", i, kbinfo.status[i]);
 				Writeline(conn_s, buffer, strlen(buffer));
 				
-				sprintf(buffer, "Calling ioKbRead(%d) returned %d\r\n", i, ioKbRead(i, &kbdata));
+				sprintf(buffer, "Calling cellKbRead(%d) returned %d\r\n", i, cellKbRead(i, &kbdata));
 				Writeline(conn_s, buffer, strlen(buffer));
 				sprintf(buffer, "Kb Data:\r\nnb_keycode: %d\r\n", kbdata.nb_keycode);
 				Writeline(conn_s, buffer, strlen(buffer));
@@ -214,9 +214,9 @@ int main(int argc, char *argv[]) {
 				Writeline(conn_s, buffer, strlen(buffer));
 			}
 			
-			/* Keyboard Configuration ioKbGetConfiguration() Test */
+			/* Keyboard Configuration cellKbGetConfiguration() Test */
 			{	
-				sprintf(buffer, "Calling ioKbGetConfiguration(%d) returned %d\r\n", i, ioKbGetConfiguration(i, &kbconfig));
+				sprintf(buffer, "Calling cellKbGetConfiguration(%d) returned %d\r\n", i, cellKbGetConfiguration(i, &kbconfig));
 				Writeline(conn_s, buffer, strlen(buffer));
 				
 				sprintf(buffer, "kbconfig.mapping..... %d\r\n", kbconfig.mapping);
@@ -230,19 +230,19 @@ int main(int argc, char *argv[]) {
 				Writeline(conn_s, buffer, strlen(buffer));
 			}
 
-			/* Keyboard ioKbSetReadMode()/ioKbSetCodeType()/ioKbRead() Test */
+			/* Keyboard cellKbSetReadMode()/ioKbSetCodeType()/ioKbRead() Test */
 			{		
-				sprintf(buffer, "Calling ioKbSetReadMode(%d, KB_RMODE_INPUTCHAR) returned %d\r\n", i, ioKbSetReadMode(i, KB_RMODE_INPUTCHAR));
+				sprintf(buffer, "Calling cellKbSetReadMode(%d, CELL_KB_RMODE_INPUTCHAR) returned %d\r\n", i, cellKbSetReadMode(i, CELL_KB_RMODE_INPUTCHAR));
 				Writeline(conn_s, buffer, strlen(buffer));
 				sprintf(buffer, "Finished.\r\n");
 				Writeline(conn_s, buffer, strlen(buffer));
 				
-				sprintf(buffer, "Calling ioKbSetCodeType(%d, KB_CODETYPE_ASCII) returned %d\r\n", i, ioKbSetCodeType(i, KB_CODETYPE_ASCII));
+				sprintf(buffer, "Calling cellKbSetCodeType(%d, CELL_KB_CODETYPE_ASCII) returned %d\r\n", i, cellKbSetCodeType(i, CELL_KB_CODETYPE_ASCII));
 				Writeline(conn_s, buffer, strlen(buffer));
 				sprintf(buffer, "Finished.\r\n");
 				Writeline(conn_s, buffer, strlen(buffer));
 				
-				sprintf(buffer, "Calling ioKbRead(%d) returned %d\r\n", i, ioKbRead(i, &kbdata));
+				sprintf(buffer, "Calling cellKbRead(%d) returned %d\r\n", i, cellKbRead(i, &kbdata));
 				Writeline(conn_s, buffer, strlen(buffer));
 				sprintf(buffer, "Kb Data:\r\nnb_keycode: %d\r\n", kbdata.nb_keycode);
 				Writeline(conn_s, buffer, strlen(buffer));
@@ -255,11 +255,11 @@ int main(int argc, char *argv[]) {
 				Writeline(conn_s, buffer, strlen(buffer));
 			}
 			
-			/* Keyboard ioKbCnvRawCode() Test */
+			/* Keyboard cellKbCnvRawCode() Test */
 			{
-				KbMapping mapping;
-				KbMkey mkey;
-				KbLed led;
+				CellKbMapping mapping;
+				CellKbMkey mkey;
+				CellKbLed led;
 				u16 rawcode;
 				
 				/* Use previous data */
@@ -269,15 +269,15 @@ int main(int argc, char *argv[]) {
 				for(int j=0; j<kbdata.nb_keycode ;j++)
 				{
 					rawcode = kbdata.keycode[j];
-					sprintf(buffer, "Calling ioKbCnvRawCode(%d, 0x%08X, 0x%08X, 0x%04X) returned 0x%04X\r\n", mapping, mkey.mkeys, led.leds, rawcode,
-								ioKbCnvRawCode(mapping, mkey, led, rawcode));
+					sprintf(buffer, "Calling cellKbCnvRawCode(%d, 0x%08X, 0x%08X, 0x%04X) returned 0x%04X\r\n", mapping, mkey.mkeys, led.leds, rawcode,
+								cellKbCnvRawCode(mapping, mkey, led, rawcode));
 					Writeline(conn_s, buffer, strlen(buffer));
 				}
 			}
 			
-			/* Keyboard ioKbClearBuf() Test */
+			/* Keyboard cellKbClearBuf() Test */
 			{
-				sprintf(buffer, "Calling ioKbClearBuf(%d) returned %d\r\n", i, ioKbClearBuf(i));
+				sprintf(buffer, "Calling cellKbClearBuf(%d) returned %d\r\n", i, cellKbClearBuf(i));
 				Writeline(conn_s, buffer, strlen(buffer));
 				
 				sprintf(buffer, "Finished.\r\n");
@@ -286,8 +286,8 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	/* Keyboard ioKbEnd() Test */
-	sprintf(buffer, "Calling ioKbEnd() returned %d\r\n", ioKbEnd());
+	/* Keyboard cellKbEnd() Test */
+	sprintf(buffer, "Calling cellKbEnd() returned %d\r\n", cellKbEnd());
 	Writeline(conn_s, buffer, strlen(buffer));
 	
 	sprintf(buffer, "Finished.\r\n");
@@ -296,29 +296,29 @@ int main(int argc, char *argv[]) {
 	sprintf(buffer, "Start infinite loop Keyboard key output, stop it with Pad \"X\" Button.\r\n");
 	Writeline(conn_s, buffer, strlen(buffer));
 	
-	ioPadInit(MAX_PORT_NUM);
-	ioKbInit(MAX_KB_PORT_NUM);
+	cellPadInit(CELL_MAX_PORT_NUM);
+	cellKbInit(CELL_MAX_KB_PORT_NUM);
 	
-	sprintf(buffer, "Calling ioKbGetInfo() returned %d\r\n", ioKbGetInfo(&kbinfo));
+	sprintf(buffer, "Calling cellKbGetInfo() returned %d\r\n", cellKbGetInfo(&kbinfo));
 	Writeline(conn_s, buffer, strlen(buffer));
 	
 	sprintf(buffer, "KbInfo:\r\nMax Kbs: %u\r\nConnected Kbs: %u\r\nInfo Field: %08x\r\n", kbinfo.max, kbinfo.connected, kbinfo.info);
 	Writeline(conn_s, buffer, strlen(buffer));	
 
-	PadInfo2 padinfo2;
-	PadData paddata;
+	CellPadInfo2 padinfo2;
+	CellPadData paddata;
 	s32 status;
 
 	while(receive_exit_request == 0)
 	{
 		/* Check the pads. */
-		if( ioPadGetInfo2(&padinfo2) == 0)
+		if( cellPadGetInfo2(&padinfo2) == 0)
 		{
-			for(i=0; i<MAX_PORT_NUM; i++)
+			for(i=0; i<CELL_MAX_PORT_NUM; i++)
 			{
 				if(padinfo2.port_status[i])
 				{
-					ioPadGetData(i, &paddata);
+					cellPadGetData(i, &paddata);
 					if(paddata.BTN_CROSS){
 						sprintf(buffer, "PadButton \"X\" Exit.\r\n");
 						Writeline(conn_s, buffer, strlen(buffer));
@@ -328,23 +328,23 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		/* Check Keyboards and output keys */
-		if( ioKbGetInfo(&kbinfo) == 0)
+		if( cellKbGetInfo(&kbinfo) == 0)
 		{
-			for(i=0; i<MAX_KEYBOARDS; i++)
+			for(i=0; i<CELL_MAX_KEYBOARDS; i++)
 			{
 				if(kbinfo.status[i])
 				{
-					status = ioKbRead(i, &kbdata);
+					status = cellKbRead(i, &kbdata);
 					if(status != 0)
 					{
-						sprintf(buffer, "Calling ioKbRead(%d) returned %d\r\n", i, ioKbRead(i, &kbdata));
+						sprintf(buffer, "Calling cellKbRead(%d) returned %d\r\n", i, cellKbRead(i, &kbdata));
 						Writeline(conn_s, buffer, strlen(buffer));
 					}
 					for(int j=0; j<kbdata.nb_keycode;j++)
 					{
 						u16 keycode;
-						KbMkey mkey;
-						KbLed led;
+						CellKbMkey mkey;
+						CellKbLed led;
 						keycode = kbdata.keycode[j];
 						mkey.mkeys = kbdata.mkey.mkeys;
 						led.leds = kbdata.led.leds;
@@ -369,8 +369,8 @@ int main(int argc, char *argv[]) {
 	sprintf(buffer, "Finished.\r\n");
 	Writeline(conn_s, buffer, strlen(buffer));
 
-	ioPadEnd();
-	ioKbEnd();
+	cellPadEnd();
+	cellKbEnd();
 	
 	sprintf(buffer, "Exit.\r\n");
 	Writeline(conn_s, buffer, strlen(buffer));	

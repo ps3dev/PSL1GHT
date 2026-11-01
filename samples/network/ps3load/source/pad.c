@@ -9,18 +9,18 @@ u32 pad_read()
 {
 	u32 i,btn;
 	u32 pad_alive;
-	padInfo padinfo;
-	padData paddata;
+	CellPadInfo padinfo;
+	CellPadData paddata;
 
-	sysUtilCheckCallback();
+	cellSysutilCheckCallback();
 
 	btn = 0;
 	pad_alive = 0;
-	ioPadGetInfo(&padinfo);
-	for(i=0;i<MAX_PADS;i++) {
+	cellPadGetInfo(&padinfo);
+	for(i=0;i<CELL_MAX_PADS;i++) {
 		if(padinfo.status[i]) {
 			pad_alive = 1;
-			ioPadGetData(i, &paddata);
+			cellPadGetData(i, &paddata);
 			btn = ((paddata.button[2]<<8) | (paddata.button[3]&0xff));
 			break;
 		}

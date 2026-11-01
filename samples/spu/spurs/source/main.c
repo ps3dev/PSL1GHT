@@ -39,38 +39,38 @@ int main(void)
 	
 	/* initialize spurs */
 	printf("Initializing spurs\n");
-	Spurs *spurs= (void*)memalign(SPURS_ALIGN, sizeof(Spurs));
+	CellSpurs *spurs= (void*)memalign(CELL_SPURS_ALIGN, sizeof(CellSpurs));
 	printf("Initializing spurs attribute\n");
-	SpursAttribute	attributeSpurs;
+	CellSpursAttribute	attributeSpurs;
 	
-	ret=spursAttributeInitialize(&attributeSpurs,SPU_NUMBER, SPU_THREAD_GROUP_PRIORITY, ppu_prio-1, true);
+	ret=cellSpursAttributeInitialize(&attributeSpurs,SPU_NUMBER, SPU_THREAD_GROUP_PRIORITY, ppu_prio-1, true);
 	if (ret) {
-		printf("error : spursAttributeInitialize failed  %x\n", ret);
+		printf("error : cellSpursAttributeInitialize failed  %x\n", ret);
 		return (ret);
 	}
 	
 	printf("Setting name prefix\n");
-	ret=spursAttributeSetNamePrefix(&attributeSpurs, SPURS_PREFIX_NAME, strlen(SPURS_PREFIX_NAME));
+	ret=cellSpursAttributeSetNamePrefix(&attributeSpurs, SPURS_PREFIX_NAME, strlen(SPURS_PREFIX_NAME));
 	if (ret) {
-		printf("error : spursAttributeInitialize failed %x\n", ret);
+		printf("error : cellSpursAttributeInitialize failed %x\n", ret);
 		return (ret);
 	}
 	
 	printf("Initializing with attribute\n");
-	ret=spursInitializeWithAttribute(spurs, &attributeSpurs);
+	ret=cellSpursInitializeWithAttribute(spurs, &attributeSpurs);
 	if (ret) {
-		printf("error: spursInitializeWithAttribute failed  %x\n", ret);
+		printf("error: cellSpursInitializeWithAttribute failed  %x\n", ret);
 		return (ret);
 	}
 
-	ret = spursGetNumSpuThread(spurs, &nthread);
+	ret = cellSpursGetNumSpuThread(spurs, &nthread);
 	if(ret){
 		printf("error: spursGetNumSpuThread failed %x\n", ret);
 	}
 
 	sys_spu_thread_t *threads = (sys_spu_thread_t *)malloc(sizeof(sys_spu_thread_t) * nthread);
 
-	ret = spursGetSpuThreadId(spurs, threads, &nthread);
+	ret = cellSpursGetSpuThreadId(spurs, threads, &nthread);
 	if(ret){
 		printf("error: spursGetSpuThreadId failed %x\n", ret);
 	}
@@ -81,14 +81,14 @@ int main(void)
 	}
 	printf("\n");
 	
-	printf("checking SpursInfo\n");
-	SpursInfo info;
-	ret=spursGetInfo(spurs, &info);
+	printf("checking CellSpursInfo\n");
+	CellSpursInfo info;
+	ret=cellSpursGetInfo(spurs, &info);
 	if(ret)
 	{
-	 	printf("error: spursGetInfo failed %x\n", ret);
+	 	printf("error: cellSpursGetInfo failed %x\n", ret);
 	}
-	printf("SpursInfo: \n");
+	printf("CellSpursInfo: \n");
 	printf("nSpus=%d \n",info.nSpus);
 	printf("spuGroupPriority=%d \n",info.spuGroupPriority);
 	printf("ppuThreadPriority=%d \n",info.ppuThreadPriority);
@@ -100,7 +100,7 @@ int main(void)
 	}
 	/* finalize spurs */
 	printf("Finalize spurs\n");
-	ret = spursFinalize (spurs);
+	ret = cellSpursFinalize (spurs);
 	if (ret) {
 		printf("error: spursFinalize failed : %x\n", ret);
 		return ret;

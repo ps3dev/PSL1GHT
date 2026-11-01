@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <sys/memory.h>
 #include <io/camera.h>
+#include <io/move.h>
 #include <ppu-types.h>
 #include <../include/rsxutil.h>
 
@@ -12,18 +13,18 @@ extern u16 width;
 extern u16 height;
 extern rsxBuffer buffers[MAX_BUFFERS];
 extern int currentBuffer;
-cameraType type;
+CellCameraType type;
 
-cameraInfoEx camInf;
-cameraReadInfo camread;
+CellCameraInfoEx camInf;
+CellCameraReadInfo camread;
 
 void
 endCamera ()
 {
-  cameraStop (0);
+  cellCameraStop (0);
 
-  cameraClose (0);
-  cameraEnd ();
+  cellCameraClose (0);
+  cellCameraEnd ();
 
   sysMemContainerDestroy (container);
 
@@ -36,31 +37,31 @@ setupCamera ()
   int ret;
   int flag1 = 0;
 
-  cameraGetType (0, &type);
-  if (type == CAM_TYPE_PLAYSTATION_EYE) {
+  cellCameraGetType (0, &type);
+  if (type == CELL_CAMERA_TYPE_PLAYSTATION_EYE) {
     flag1 = 1;
-    camInf.format = CAM_FORM_RAW8;
+    camInf.format = CELL_CAMERA_FORMAT_RAW8;
     camInf.framerate = 60;
-    camInf.resolution = CAM_RESO_VGA;
+    camInf.resolution = CELL_CAMERA_RESOLUTION_VGA;
     camInf.info_ver = 0x0101;
     camInf.container = container;
     printf ("Buffer at %08X\n", camInf.buffer);
     printf ("Buffer at %08X\n", camInf.pbuf[0]);
     printf ("Buffer at %08X\n", camInf.pbuf[1]);
 
-    ret = cameraOpenEx (0, &camInf);
+    ret = cellCameraOpenEx (0, &camInf);
     switch (ret) {
-      case CAMERA_ERRO_DOUBLE_OPEN:
-	cameraClose (0);
+      case CELL_CAMERA_ERROR_DOUBLE_OPEN:
+	cellCameraClose (0);
 	flag1 = 0;
 	break;
-      case CAMERA_ERRO_NO_DEVICE_FOUND:
+      case CELL_CAMERA_ERROR_NO_DEVICE_FOUND:
 	printf ("This sample need a PlayStation Eye device\n");
 	flag1 = 0;
 	break;
       case 0:
 	printf ("Found me an eye, arrr!\n");
-	printf ("cameraOpenEx returned %08X\n", ret);
+	printf ("cellCameraOpenEx returned %08X\n", ret);
 	printf ("Video dimensions: %dx%d\n", camInf.width, camInf.height);
 	printf ("Buffer at %08X\n", camInf.buffer);
 	printf ("pbuf0 Buffer at %08X\n", camInf.pbuf[0]);
@@ -95,7 +96,7 @@ initCamera ()
 
   ret = sysMemContainerCreate (&container, 0x200000);
   printf ("sysMemContainerCreate() for camera container returned %d\n", ret);
-  ret = cameraInit ();
+  ret = cellCameraInit ();
   printf ("cameraInit() returned %d\n", ret);
   if (ret == 0) {
     ret = setupCamera ();
@@ -109,17 +110,17 @@ readCamera ()
 {
   int ret;
 
-  ret = cameraReadEx (0, &camread);
+  ret = cellCameraReadEx (0, &camread);
   switch (ret) {
 
-    case CAMERA_ERRO_NEED_START:
-      cameraReset (0);
-      ret = gemPrepareCamera (128, 0.5);
+    case CELL_CAMERA_ERROR_NEED_START:
+      cellCameraReset (0);
+      ret = cellGemPrepareCamera (128, 0.5);
       printf
-	  ("GemPrepareCamera return %d exposure set to 128 and quality to 0.5 before cameraStart\n",
+	  ("cellGemPrepareCamera return %d exposure set to 128 and quality to 0.5 before cameraStart\n",
 	  ret);
       printf ("lets go!! It's time to look your face in Sony Bravia :P\n");
-      ret = cameraStart (0);
+      ret = cellCameraStart (0);
       printf ("cameraStart return %d \n", ret);
       printf ("*******************************************\n");
       printf ("* Now make sure you have a Move connected\n");

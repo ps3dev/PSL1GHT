@@ -9,7 +9,7 @@
 
 #define FRAME_BUFFER_COUNT					2
 
-extern gcmContextData *context;
+extern CellGcmContextData *context;
 
 extern u32 curr_fb;
 

@@ -41,18 +41,18 @@
 #include <io/camera.h>
 
 // PAD
-padInfo padinfo;
-padData paddata;
+CellPadInfo padinfo;
+CellPadData paddata;
 
 // main bucle running
 int running = 1;
 int gem_flag = 0;
-extern gcmContextData *context;
+extern CellGcmContextData *context;
 extern rsxBuffer buffers[MAX_BUFFERS];
 extern int currentBuffer;
 
-extern cameraInfoEx camInf;
-extern cameraReadInfo camread;
+extern CellCameraInfoEx camInf;
+extern CellCameraReadInfo camread;
 extern u8 video_frame[640*480*4]; //added to get video output, transforamtion in spus give us a RGBA frame
 int calibrate_flag = 1;
 int tracking = 0;
@@ -66,10 +66,10 @@ readPad ()
 
   int i;
 
-  ioPadGetInfo (&padinfo);
+  cellPadGetInfo (&padinfo);
   for (i = 0; i < 6; i++) {	// 7 is our Move device
     if (padinfo.status[i]) {
-      ioPadGetData (i, &paddata);
+      cellPadGetData (i, &paddata);
 
       if (paddata.BTN_CROSS) {
 
@@ -88,9 +88,9 @@ loadModules ()
   int ret;
 
   printf ("Loading modules\n");
-  ret = sysModuleLoad (SYSMODULE_CAMERA);
+  ret = cellSysmoduleLoadModule (CELL_SYSMODULE_CAMERA);
   printf ("laod camera module return %X\n", ret);
-  ret = sysModuleLoad (SYSMODULE_GEM);
+  ret = cellSysmoduleLoadModule (CELL_SYSMODULE_GEM);
   printf ("load gem module return %X\n", ret);
 
 }
@@ -102,9 +102,9 @@ unLoadModules ()
 
   printf ("Unloading modules\n");
 
-  ret = sysModuleUnload (SYSMODULE_GEM);
+  ret = cellSysmoduleUnloadModule (CELL_SYSMODULE_GEM);
   printf ("unload gem module return %X\n", ret);
-  ret = sysModuleUnload (SYSMODULE_CAMERA);
+  ret = cellSysmoduleUnloadModule (CELL_SYSMODULE_CAMERA);
   printf ("unload camera module return %X\n", ret);
 
 }
@@ -120,19 +120,19 @@ eventHandler (u64 status, u64 param, void *userdata)
   } xmb;
 
   printf ("Received event %lX\n", status);
-  if (status == SYSUTIL_EXIT_GAME) {
+  if (status == CELL_SYSUTIL_EXIT_GAME) {
     xmb.exit = 1;
     running = 0;
-  } else if (status == SYSUTIL_MENU_OPEN) {
+  } else if (status == CELL_SYSUTIL_MENU_OPEN) {
     xmb.opened = 1;
     xmb.closed = 0;
-  } else if (status == SYSUTIL_MENU_CLOSE) {
+  } else if (status == CELL_SYSUTIL_MENU_CLOSE) {
     xmb.opened = 0;
     xmb.closed = 1;
-  } else if (status == SYSUTIL_DRAW_BEGIN) {
+  } else if (status == CELL_SYSUTIL_DRAW_BEGIN) {
     /* We must start drawing, to avoid the app freezing */
     xmb.drawing = 1;
-  } else if (status == SYSUTIL_DRAW_END) {
+  } else if (status == CELL_SYSUTIL_DRAW_END) {
     xmb.drawing = 0;
   }
 }
@@ -149,9 +149,9 @@ endGame ()
   endCamera ();
   unLoadModules ();
 
-  sysUtilUnregisterCallback (SYSUTIL_EVENT_SLOT0);
+  cellSysutilUnregisterCallback (CELL_SYSUTIL_EVENT_SLOT0);
 
-  ioPadEnd ();
+  cellPadEnd ();
 
 }
 
@@ -165,11 +165,11 @@ initGame ()
   // When we finalize this method is called
   atexit (endGame);
   // register callback
-  sysUtilRegisterCallback (SYSUTIL_EVENT_SLOT0, eventHandler, NULL);
+  cellSysutilRegisterCallback (CELL_SYSUTIL_EVENT_SLOT0, eventHandler, NULL);
   // Init screen
   ret = startScreen ();
   // Init pad
-  ioPadInit (6);
+  cellPadInit (6);
   // Init camera
   // printf("cameraInit() returned %d\n", cameraInit());
   initGem ();
@@ -225,7 +225,7 @@ main (s32 argc, const char *argv[])
     if (currentBuffer >= MAX_BUFFERS)
       currentBuffer = 0;
 
-    sysUtilCheckCallback ();
+    cellSysutilCheckCallback ();
   }
 
   endScreen ();

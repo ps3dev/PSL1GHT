@@ -16,58 +16,58 @@
  */
 
 /* Errors */
-#define RESC_ERROR_NOT_INITIALIZED               (0x80210301)
-#define RESC_ERROR_REINITIALIZED                 (0x80210302)
-#define RESC_ERROR_BAD_ALIGNMENT                 (0x80210303)
-#define RESC_ERROR_BAD_ARGUMENT                  (0x80210304)
-#define RESC_ERROR_LESS_MEMORY                   (0x80210305)
-#define RESC_ERROR_GCM_FLIP_QUE_FULL             (0x80210306)
-#define RESC_ERROR_BAD_COMBINATION               (0x80210307)
+#define CELL_RESC_ERROR_NOT_INITIALIZED               (0x80210301)
+#define CELL_RESC_ERROR_REINITIALIZED                 (0x80210302)
+#define CELL_RESC_ERROR_BAD_ALIGNMENT                 (0x80210303)
+#define CELL_RESC_ERROR_BAD_ARGUMENT                  (0x80210304)
+#define CELL_RESC_ERROR_LESS_MEMORY                   (0x80210305)
+#define CELL_RESC_ERROR_GCM_FLIP_QUE_FULL             (0x80210306)
+#define CELL_RESC_ERROR_BAD_COMBINATION               (0x80210307)
 
 /* resource policies */
-#define RESC_CONSTANT_VRAM                       0
-#define RESC_MINIMUM_VRAM                        1
-#define RESC_CONSTANT_GPU_LOAD                   0 /* do not use */
-#define RESC_MINIMUM_GPU_LOAD                    2
+#define CELL_RESC_CONSTANT_VRAM                       0
+#define CELL_RESC_MINIMUM_VRAM                        1
+#define CELL_RESC_CONSTANT_GPU_LOAD                   0 /* do not use */
+#define CELL_RESC_MINIMUM_GPU_LOAD                    2
 
 /* dst formats */
-#define RESC_SURFACE_A8R8G8B8                    GCM_TF_COLOR_A8R8G8B8       /* 8 */
-#define RESC_SURFACE_F_W16Z16Y16X16              GCM_TF_COLOR_F_W16Z16Y16X16 /* 11 */
+#define CELL_RESC_SURFACE_A8R8G8B8                    CELL_GCM_TF_COLOR_A8R8G8B8       /* 8 */
+#define CELL_RESC_SURFACE_F_W16Z16Y16X16              CELL_GCM_TF_COLOR_F_W16Z16Y16X16 /* 11 */
 
 /* buffer modes */
-#define RESC_UNDEFINED                           0
-#define RESC_720x480                             1
-#define RESC_720x576                             2
-#define RESC_1280x720                            4
-#define RESC_1920x1080                           8
+#define CELL_RESC_UNDEFINED                           0
+#define CELL_RESC_720x480                             1
+#define CELL_RESC_720x576                             2
+#define CELL_RESC_1280x720                            4
+#define CELL_RESC_1920x1080                           8
 
 /* ratio convert modes */
-#define RESC_FULLSCREEN                          0
-#define RESC_LETTERBOX                           1
-#define RESC_PANSCAN                             2
+#define CELL_RESC_FULLSCREEN                          0
+#define CELL_RESC_LETTERBOX                           1
+#define CELL_RESC_PANSCAN                             2
 
 /* PAL temporal mode */
-#define RESC_PAL_50                              0
-#define RESC_PAL_60_DROP                         1
-#define RESC_PAL_60_INTERPOLATE                  2
-#define RESC_PAL_60_INTERPOLATE_30_DROP          3
-#define RESC_PAL_60_INTERPOLATE_DROP_FLEXIBLE    4
-#define RESC_PAL_60_FOR_HSYNC                    5
+#define CELL_RESC_PAL_50                              0
+#define CELL_RESC_PAL_60_DROP                         1
+#define CELL_RESC_PAL_60_INTERPOLATE                  2
+#define CELL_RESC_PAL_60_INTERPOLATE_30_DROP          3
+#define CELL_RESC_PAL_60_INTERPOLATE_DROP_FLEXIBLE    4
+#define CELL_RESC_PAL_60_FOR_HSYNC                    5
 
 /* convolution filter mode */
-#define RESC_NORMAL_BILINEAR                     0
-#define RESC_INTERLACE_FILTER                    1
-#define RESC_3X3_GAUSSIAN                        2
-#define RESC_2X3_QUINCUNX                        3
-#define RESC_2X3_QUINCUNX_ALT                    4
+#define CELL_RESC_NORMAL_BILINEAR                     0
+#define CELL_RESC_INTERLACE_FILTER                    1
+#define CELL_RESC_3X3_GAUSSIAN                        2
+#define CELL_RESC_2X3_QUINCUNX                        3
+#define CELL_RESC_2X3_QUINCUNX_ALT                    4
 
 /* table element */
-#define RESC_ELEMENT_HALF                        0
-#define RESC_ELEMENT_FLOAT                       1
+#define CELL_RESC_ELEMENT_HALF                        0
+#define CELL_RESC_ELEMENT_FLOAT                       1
 
 /* flip mode */
-#define RESC_DISPLAY_VSYNC                       0
-#define RESC_DISPLAY_HSYNC                       1
+#define CELL_RESC_DISPLAY_VSYNC                       0
+#define CELL_RESC_DISPLAY_HSYNC                       1
 
 
 #ifdef __cplusplus
@@ -145,7 +145,7 @@ typedef struct _resc_init_config
     u32 palTemporalMode;
     u32 interlaceMode;
     u32 flipMode;
-} rescInitConfig;
+} CellRescInitConfig;
 
 typedef struct _resc_src
 {
@@ -154,14 +154,14 @@ typedef struct _resc_src
     u16 width;
     u16 height;
     u32 offset;
-} rescSrc;
+} CellRescSrc;
 
 typedef struct _resc_dsts
 {
     u32 format;
     u32 pitch;
     u32 heightAlign;
-} rescDsts;
+} CellRescDsts;
 
 
 /*
@@ -170,42 +170,42 @@ typedef struct _resc_dsts
 
 /* equivalent functions
  *
- * rescSetSrc()               gcmSetDisplayBuffer()
- * rescSetConvertAndFlip()    gcmSetFlip()
- * rescSetWaitFlip()          gcmSetWaitFlip()
- * rescSetFlipHandler()       gcmSetFlipHandler()
- * rescSetVBlankHandler()     gcmSetVBlankHandler()
- * rescGetFlipStatus()        gcmGetFlipStatus()
- * rescGetLasFlipTime()       gcmGetLastFlipTime()
- * rescResetFlipStatus()      gcmResetFlipStatus()
+ * cellRescSetSrc()               cellGcmSetDisplayBuffer()
+ * cellRescSetConvertAndFlip()    cellGcmSetFlip()
+ * cellRescSetWaitFlip()          cellGcmSetWaitFlip()
+ * cellRescSetFlipHandler()       cellGcmSetFlipHandler()
+ * cellRescSetVBlankHandler()     cellGcmSetVBlankHandler()
+ * cellRescGetFlipStatus()        cellGcmGetFlipStatus()
+ * cellRescGetLasFlipTime()       cellGcmGetLastFlipTime()
+ * cellRescResetFlipStatus()      cellGcmResetFlipStatus()
  */
 
-s32 rescInit(const rescInitConfig* const initConfig);
-void rescExit();
-s32 rescSetDsts(u32 dstsMode, rescDsts *dsts);
-s32 rescSetDisplayMode(u32 bufferMode);
-s32 rescGetNumColorBuffers(u32 dstsMode, u32 palTemporalMode, u32 reserved);
-s32 rescGetBufferSize(int *colorBuffers, int *vertexArray, int *fragmentShader);
-s32 rescSetBufferAddress(void *colorBuffers, void *vertexArray, void *fragmentShader);
-s32 rescSetSrc(s32 idx, rescSrc *src);
-s32 rescSetConvertAndFlip(gcmContextData *context, s32 idx);
-void rescSetWaitFlip(gcmContextData *context);
-s64 rescGetLastFlipTime();
-void rescResetFlipStatus();
-u32 rescGetFlipStatus();
-s32 rescGetRegisterCount();
-void rescSetRegisterCount(s32 count);
-s32 rescSetPalInterpolateDropFlexRatio(float ratio);
-s32 rescCreateInterlaceTable(void *ea, float srcH, s32 depth, int length);
-s32 rescAdjustAspectRatio(float horizontal, float vertical);
+s32 cellRescInit(const CellRescInitConfig* const initConfig);
+void cellRescExit(void);
+s32 cellRescSetDsts(u32 dstsMode, CellRescDsts *dsts);
+s32 cellRescSetDisplayMode(u32 bufferMode);
+s32 cellRescGetNumColorBuffers(u32 dstsMode, u32 palTemporalMode, u32 reserved);
+s32 cellRescGetBufferSize(int *colorBuffers, int *vertexArray, int *fragmentShader);
+s32 cellRescSetBufferAddress(void *colorBuffers, void *vertexArray, void *fragmentShader);
+s32 cellRescSetSrc(s32 idx, CellRescSrc *src);
+s32 cellRescSetConvertAndFlip(CellGcmContextData *context, s32 idx);
+void cellRescSetWaitFlip(CellGcmContextData *context);
+s64 cellRescGetLastFlipTime(void);
+void cellRescResetFlipStatus(void);
+u32 cellRescGetFlipStatus(void);
+s32 cellRescGetRegisterCount(void);
+void cellRescSetRegisterCount(s32 count);
+s32 cellRescSetPalInterpolateDropFlexRatio(float ratio);
+s32 cellRescCreateInterlaceTable(void *ea, float srcH, s32 depth, int length);
+s32 cellRescAdjustAspectRatio(float horizontal, float vertical);
 
 /* Register event handler */
-void rescSetVBlankHandler(void (*handler)(u32 head));
-void rescSetFlipHandler(void (*handler)(u32 head));
+void cellRescSetVBlankHandler(void (*handler)(u32 head));
+void cellRescSetFlipHandler(void (*handler)(u32 head));
 
 /* Utility functions */
-s32  rescGcmSurface2RescSrc(gcmSurface *surface, rescSrc *src);
-s32  rescVideoResolution2RescBufferMode(u32 resolutionId, u32 *bufferMode);
+s32  cellRescGcmSurface2RescSrc(CellGcmSurface *surface, CellRescSrc *src);
+s32  cellRescVideoResolution2RescBufferMode(u32 resolutionId, u32 *bufferMode);
 
 #ifdef __cplusplus
     }

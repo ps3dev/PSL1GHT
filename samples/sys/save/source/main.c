@@ -28,11 +28,11 @@
 #define SAVE_LIST_MAX_FILES 3
 
 /* This should actually be the maximum between
- * (MAX_FILES * sizeof(sysSaveFileStatus)) and
- * (MAX_DIRECTORIES * sizeof(sysSaveDirectoryList))
+ * (MAX_FILES * sizeof(CellSaveDataFileStatus)) and
+ * (MAX_DIRECTORIES * sizeof(CellSaveDataDirectoryList))
  */
 #define BUFFER_SETTINGS_BUFSIZE (SAVE_LIST_MAX_DIRECTORIES * \
-      sizeof(sysSaveDirectoryList))
+      sizeof(CellSaveDataDirectoryList))
 #define MEMORY_CONTAINER_SIZE (5*1024*1024)
 
 #define SAVE_DATA_FILENAME "GAME"
@@ -48,9 +48,9 @@ static struct SaveData {
   sys_ppu_thread_t save_tid;
   int saving;
   int loading;
-  char prefix[SYS_SAVE_MAX_DIRECTORY_NAME];
-  sysSaveNewSaveGame new_save;
-  sysSaveNewSaveGameIcon new_save_icon;
+  char prefix[CELL_SAVE_DATA_MAX_DIRECTORY_NAME];
+  CellSaveDataNewSaveGame new_save;
+  CellSaveDataNewSaveGameIcon new_save_icon;
   enum SaveDataMode mode;
   u8 *icon_data;
   u64 icon_size;
@@ -61,7 +61,7 @@ static struct SaveData {
   s32 result;
 } *save_data;
 
-static gcmContextData *context;
+static CellGcmContextData *context;
 static void *host_addr;
 
 #define MAX_BUFFERS 2
@@ -73,8 +73,8 @@ static int counter = 0;
 
 
 void
-saveload_game_list_cb (sysSaveCallbackResult *result,
-    sysSaveListIn *in, sysSaveListOut *out)
+saveload_game_list_cb (CellSaveDataCallbackResult *result,
+    CellSaveDataListIn *in, CellSaveDataListOut *out)
 {
   int i;
 
@@ -87,22 +87,22 @@ saveload_game_list_cb (sysSaveCallbackResult *result,
         in->directoryList[i].directoryName,
         in->directoryList[i].listParameter);
 
-  memset (out, 0, sizeof(sysSaveListOut));
-  out->focus = SYS_SAVE_FOCUS_POSITION_LIST_HEAD;
+  memset (out, 0, sizeof(CellSaveDataListOut));
+  out->focus = CELL_SAVE_DATA_FOCUS_POSITION_LIST_HEAD;
   out->numDirectories = in->numDirectories;
   out->directoryList = in->directoryList;
 
   /* If we're saving and we didn't reach max saves, add the new save button */
   if (save_data->saving && out->numDirectories < SAVE_LIST_MAX_DIRECTORIES) {
-    sysSaveNewSaveGame *new_save = &save_data->new_save;
-    sysSaveNewSaveGameIcon *new_save_icon = &save_data->new_save_icon;
-    char *dir = malloc (SYS_SAVE_MAX_DIRECTORY_NAME + 1);
+    CellSaveDataNewSaveGame *new_save = &save_data->new_save;
+    CellSaveDataNewSaveGameIcon *new_save_icon = &save_data->new_save_icon;
+    char *dir = malloc (CELL_SAVE_DATA_MAX_DIRECTORY_NAME + 1);
     int idx = -1;
     int j;
 
     /* We must choose a property directory name for the save data */
     for (i = 0; idx == -1 && i <= 99; i++) {
-      snprintf (dir, SYS_SAVE_MAX_DIRECTORY_NAME, "%s%d",
+      snprintf (dir, CELL_SAVE_DATA_MAX_DIRECTORY_NAME, "%s%d",
           save_data->prefix, i);
       idx = i;
       for (j = 0; j < in->numDirectories; j++) {
@@ -116,9 +116,9 @@ saveload_game_list_cb (sysSaveCallbackResult *result,
 
     if (idx != -1) {
       printf ("New directory : %s\n", dir);
-      memset (new_save, 0, sizeof(sysSaveNewSaveGame));
-      memset (new_save_icon, 0, sizeof(sysSaveNewSaveGameIcon));
-      new_save->position = SYS_SAVE_NEW_SAVE_POSITION_TOP;
+      memset (new_save, 0, sizeof(CellSaveDataNewSaveGame));
+      memset (new_save_icon, 0, sizeof(CellSaveDataNewSaveGameIcon));
+      new_save->position = CELL_SAVE_DATA_NEW_SAVE_POSITION_TOP;
       new_save->directoryName = dir;
       if (save_data->icon_size > 0) {
         new_save->icon = new_save_icon;
@@ -131,13 +131,13 @@ saveload_game_list_cb (sysSaveCallbackResult *result,
     }
   }
 
-  result->result = SYS_SAVE_CALLBACK_RESULT_CONTINUE;
+  result->result = CELL_SAVE_DATA_CALLBACK_RESULT_CONTINUE;
   return;
 }
 
 void
-saveload_game_status_cb (sysSaveCallbackResult *result,
-    sysSaveStatusIn *in, sysSaveStatusOut *out)
+saveload_game_status_cb (CellSaveDataCallbackResult *result,
+    CellSaveDataStatusIn *in, CellSaveDataStatusOut *out)
 {
   int i;
 
@@ -180,24 +180,24 @@ saveload_game_status_cb (sysSaveCallbackResult *result,
         in->fileList[i].fileSize,
         in->fileList[i].filename);
 
-  result->result = SYS_SAVE_CALLBACK_RESULT_CONTINUE;
+  result->result = CELL_SAVE_DATA_CALLBACK_RESULT_CONTINUE;
   out->setParam = &in->getParam;
 
   if (save_data->loading) {
     /* Do not tell it to delete the files if we're loading!!! */
-    out->recreateMode = SYS_SAVE_RECREATE_MODE_OVERWRITE_NOT_CORRUPTED;
+    out->recreateMode = CELL_SAVE_DATA_RECREATE_MODE_OVERWRITE_NOT_CORRUPTED;
     /* We'll only load the data */
     save_data->mode = PS3_SAVE_MODE_DATA;
     save_data->save_size = 0;
     for (i = 0; i < in->numFiles; i++) {
       switch (in->fileList[i].fileType) {
-        case SYS_SAVE_FILETYPE_STANDARD_FILE:
+        case CELL_SAVE_DATA_FILETYPE_STANDARD_FILE:
           save_data->save_size = in->fileList[i].fileSize;
           break;
-        case SYS_SAVE_FILETYPE_CONTENT_ICON0:
+        case CELL_SAVE_DATA_FILETYPE_CONTENT_ICON0:
           save_data->icon_size = in->fileList[i].fileSize;
           break;
-        case SYS_SAVE_FILETYPE_CONTENT_PIC1:
+        case CELL_SAVE_DATA_FILETYPE_CONTENT_PIC1:
           save_data->screenshot_size = in->fileList[i].fileSize;
           break;
         default:
@@ -206,17 +206,17 @@ saveload_game_status_cb (sysSaveCallbackResult *result,
     }
     if (save_data->save_size == 0) {
       printf ("Couldn't find the save data.. !\n");
-      result->result = SYS_SAVE_CALLBACK_RESULT_CORRUPTED;
+      result->result = CELL_SAVE_DATA_CALLBACK_RESULT_CORRUPTED;
       return;
     } else {
       printf ("Found save game data of size : %lu\n", save_data->save_size);
       save_data->save_data = malloc (save_data->save_size);
     }
   } else {
-    char subtitle[SYS_SAVE_MAX_SUBTITLE];
+    char subtitle[CELL_SAVE_DATA_MAX_SUBTITLE];
 
     /* Delete */
-    out->recreateMode = SYS_SAVE_RECREATE_MODE_DELETE;
+    out->recreateMode = CELL_SAVE_DATA_RECREATE_MODE_DELETE;
     save_data->mode = PS3_SAVE_MODE_ICON;
 
     /* Check for free space... don't forget the system file's size, and to check
@@ -224,27 +224,27 @@ saveload_game_status_cb (sysSaveCallbackResult *result,
      * Let's assume we need 1MB of data...
      */
     if ((in->freeSpaceKB + in->sizeKB) < (1024 + in->systemSizeKB)) {
-      result->result = SYS_SAVE_CALLBACK_RESULT_NO_SPACE_LEFT;
+      result->result = CELL_SAVE_DATA_CALLBACK_RESULT_NO_SPACE_LEFT;
       result->missingSpaceKB  = (1024 + in->systemSizeKB) -
           (in->freeSpaceKB + in->sizeKB);
     }
 
-    snprintf (subtitle, SYS_SAVE_MAX_SUBTITLE, "Level %d", counter);
-    strncpy (in->getParam.title, "My Game!", SYS_SAVE_MAX_TITLE);
-    strncpy (in->getParam.subtitle, subtitle, SYS_SAVE_MAX_SUBTITLE);
+    snprintf (subtitle, CELL_SAVE_DATA_MAX_SUBTITLE, "Level %d", counter);
+    strncpy (in->getParam.title, "My Game!", CELL_SAVE_DATA_MAX_TITLE);
+    strncpy (in->getParam.subtitle, subtitle, CELL_SAVE_DATA_MAX_SUBTITLE);
     strncpy (in->getParam.detail,
         "Character: KaKaRoTo\n"
         "Class: Awesomeness\n"
         "HP: 100\n"
         "MP: 50",
-        SYS_SAVE_MAX_DETAIL);
+        CELL_SAVE_DATA_MAX_DETAIL);
   }
 
 }
 
 void
-saveload_game_file_cb (sysSaveCallbackResult *result,
-    sysSaveFileIn *in, sysSaveFileOut *out)
+saveload_game_file_cb (CellSaveDataCallbackResult *result,
+    CellSaveDataFileIn *in, CellSaveDataFileOut *out)
 {
 
   printf ("saveload_game_file_cb called\n");
@@ -252,19 +252,19 @@ saveload_game_file_cb (sysSaveCallbackResult *result,
   printf ("Last operation %s %d bytes\n", save_data->saving? "wrote" : "read",
       in->previousOperationResultSize);
 
-  memset (out, 0, sizeof(sysSaveFileOut));
+  memset (out, 0, sizeof(CellSaveDataFileOut));
   switch (save_data->mode) {
     case PS3_SAVE_MODE_ICON:
       {
         printf ("Saving icon\n");
 
-        out->fileOperation = SYS_SAVE_FILE_OPERATION_WRITE;
-        out->fileType = SYS_SAVE_FILETYPE_CONTENT_ICON0;
+        out->fileOperation = CELL_SAVE_DATA_FILE_OPERATION_WRITE;
+        out->fileType = CELL_SAVE_DATA_FILETYPE_CONTENT_ICON0;
         out->size = save_data->icon_size;
         out->bufferSize = save_data->icon_size;
         out->buffer = save_data->icon_data;
 
-        result->result = SYS_SAVE_CALLBACK_RESULT_CONTINUE;
+        result->result = CELL_SAVE_DATA_CALLBACK_RESULT_CONTINUE;
         result->incrementProgress = 30;
         save_data->mode = PS3_SAVE_MODE_SCREENSHOT;
         break;
@@ -273,13 +273,13 @@ saveload_game_file_cb (sysSaveCallbackResult *result,
       {
         printf ("Saving screenshot\n");
 
-        out->fileOperation = SYS_SAVE_FILE_OPERATION_WRITE;
-        out->fileType = SYS_SAVE_FILETYPE_CONTENT_PIC1;
+        out->fileOperation = CELL_SAVE_DATA_FILE_OPERATION_WRITE;
+        out->fileType = CELL_SAVE_DATA_FILETYPE_CONTENT_PIC1;
         out->size = save_data->screenshot_size;
         out->bufferSize = save_data->screenshot_size;
         out->buffer = save_data->screenshot_data;
 
-        result->result = SYS_SAVE_CALLBACK_RESULT_CONTINUE;
+        result->result = CELL_SAVE_DATA_CALLBACK_RESULT_CONTINUE;
         result->incrementProgress = 30;
         save_data->mode = PS3_SAVE_MODE_DATA;
         break;
@@ -288,32 +288,32 @@ saveload_game_file_cb (sysSaveCallbackResult *result,
       {
         if (save_data->saving) {
           printf ("Writing game data\n");
-          out->fileOperation = SYS_SAVE_FILE_OPERATION_WRITE;
+          out->fileOperation = CELL_SAVE_DATA_FILE_OPERATION_WRITE;
         } else {
           printf ("Reading game data\n");
-          out->fileOperation = SYS_SAVE_FILE_OPERATION_READ;
+          out->fileOperation = CELL_SAVE_DATA_FILE_OPERATION_READ;
         }
 
         out->filename = SAVE_DATA_FILENAME;
-        out->fileType = SYS_SAVE_FILETYPE_STANDARD_FILE;
+        out->fileType = CELL_SAVE_DATA_FILETYPE_STANDARD_FILE;
         out->size = save_data->save_size;
         out->bufferSize = save_data->save_size;
         out->buffer = save_data->save_data;
 
-        result->result = SYS_SAVE_CALLBACK_RESULT_CONTINUE;
+        result->result = CELL_SAVE_DATA_CALLBACK_RESULT_CONTINUE;
         result->incrementProgress = 100;
         save_data->mode = PS3_SAVE_MODE_DONE;
         break;
       }
     case PS3_SAVE_MODE_DONE:
     default:
-      result->result = SYS_SAVE_CALLBACK_RESULT_DONE;
+      result->result = CELL_SAVE_DATA_CALLBACK_RESULT_DONE;
       if (save_data->loading) {
         if (in->previousOperationResultSize != save_data->save_size) {
-          result->result = SYS_SAVE_CALLBACK_RESULT_CORRUPTED;
+          result->result = CELL_SAVE_DATA_CALLBACK_RESULT_CORRUPTED;
         } else {
           if ((counter % 2) == 0) {
-            result->result = SYS_SAVE_CALLBACK_RESULT_ERROR_CUSTOM;
+            result->result = CELL_SAVE_DATA_CALLBACK_RESULT_ERROR_CUSTOM;
             result->customErrorMessage = (char *)save_data->save_data;
           }
         }
@@ -347,8 +347,8 @@ load_file (const char *filename, u8 **data, u64 *size)
 void
 saveload_game_thread(void *user_data)
 {
-  sysSaveListSettings listSettings;
-  sysSaveBufferSettings bufferSettings;
+  CellSaveDataListSettings listSettings;
+  CellSaveDataBufferSettings bufferSettings;
   sys_mem_container_t container;
   char *prefix = save_data->prefix;
   char filename[256];
@@ -357,16 +357,16 @@ saveload_game_thread(void *user_data)
   printf ("saveload_thread started\n");
 
   /* Directory name must be all upper case */
-  strncpy (prefix, "SAVELOAD-TEST", SYS_SAVE_MAX_DIRECTORY_NAME);
+  strncpy (prefix, "SAVELOAD-TEST", CELL_SAVE_DATA_MAX_DIRECTORY_NAME);
 
 
-  memset (&listSettings, 0, sizeof (sysSaveListSettings));
-  listSettings.sortType = SYS_SAVE_SORT_TYPE_TIMESTAMP;
-  listSettings.sortOrder = SYS_SAVE_SORT_ORDER_DESCENDING;
+  memset (&listSettings, 0, sizeof (CellSaveDataListSettings));
+  listSettings.sortType = CELL_SAVE_DATA_SORT_TYPE_TIMESTAMP;
+  listSettings.sortOrder = CELL_SAVE_DATA_SORT_ORDER_DESCENDING;
   listSettings.pathPrefix = save_data->prefix;
   listSettings.reserved = NULL;
 
-  memset (&bufferSettings, 0, sizeof (sysSaveBufferSettings));
+  memset (&bufferSettings, 0, sizeof (CellSaveDataBufferSettings));
   bufferSettings.maxDirectories = SAVE_LIST_MAX_DIRECTORIES;
   bufferSettings.maxFiles = SAVE_LIST_MAX_FILES;
   bufferSettings.bufferSize = BUFFER_SETTINGS_BUFSIZE;
@@ -402,12 +402,12 @@ saveload_game_thread(void *user_data)
     save_data->save_size = strlen ((char *) save_data->save_data);
     printf ("Save data is : %s\n", save_data->save_data);
 
-    ret = sysSaveListSave2 (SYS_SAVE_CURRENT_VERSION,
+    ret = cellSaveDataListSave2 (CELL_SAVE_DATA_CURRENT_VERSION,
         &listSettings, &bufferSettings,
         saveload_game_list_cb, saveload_game_status_cb, saveload_game_file_cb,
         container, NULL);
   } else {
-    ret = sysSaveListLoad2 (SYS_SAVE_CURRENT_VERSION,
+    ret = cellSaveDataListLoad2 (CELL_SAVE_DATA_CURRENT_VERSION,
         &listSettings, &bufferSettings,
         saveload_game_list_cb, saveload_game_status_cb, saveload_game_file_cb,
         container, NULL);
@@ -415,7 +415,7 @@ saveload_game_thread(void *user_data)
 
   save_data->result = ret;
 
-  printf ("sysSaveListLoad2/Save2 returned : %d\n", ret);
+  printf ("cellSaveDataListLoad2/Save2 returned : %d\n", ret);
   sysMemContainerDestroy (container);
 
 end:
@@ -485,18 +485,18 @@ event_handler (u64 status, u64 param, void * user_data)
   } xmb;
 
   printf ("Received event %lX\n", status);
-  if (status == SYSUTIL_EXIT_GAME) {
+  if (status == CELL_SYSUTIL_EXIT_GAME) {
     xmb_exit = xmb.exit = 1;
-  } else if (status == SYSUTIL_MENU_OPEN) {
+  } else if (status == CELL_SYSUTIL_MENU_OPEN) {
     xmb.opened = 1;
     xmb.closed = 0;
-  } else if (status == SYSUTIL_MENU_CLOSE) {
+  } else if (status == CELL_SYSUTIL_MENU_CLOSE) {
     xmb.opened = 0;
     xmb.closed = 1;
-  } else if (status == SYSUTIL_DRAW_BEGIN) {
+  } else if (status == CELL_SYSUTIL_DRAW_BEGIN) {
     /* We must start drawing, to avoid the app freezing */
     xmb.drawing = 1;
-  } else if (status == SYSUTIL_DRAW_END) {
+  } else if (status == CELL_SYSUTIL_DRAW_END) {
     xmb.drawing = 0;
   }
 }
@@ -504,18 +504,18 @@ event_handler (u64 status, u64 param, void * user_data)
 int
 main_loop_iterate ()
 {
-  padInfo padinfo;
-  padData paddata;
+  CellPadInfo padinfo;
+  CellPadData paddata;
   int i;
   rsxBuffer *buffer = &buffers[currentBuffer];
 
   if (xmb_exit != 0)
     goto done;
 
-  ioPadGetInfo (&padinfo);
-  for (i = 0; i < MAX_PADS; i++) {
+  cellPadGetInfo (&padinfo);
+  for (i = 0; i < CELL_MAX_PADS; i++) {
     if (padinfo.status[i]) {
-      ioPadGetData (i, &paddata);
+      cellPadGetData (i, &paddata);
       if(paddata.BTN_CROSS)
         goto done;
     }
@@ -546,7 +546,7 @@ main_loop_iterate ()
   }
 
   /* We need to poll for events */
-  sysUtilCheckCallback ();
+  cellSysutilCheckCallback ();
 
   return TRUE;
 
@@ -569,8 +569,8 @@ main (int argc, char *argv[])
   for (i = 0; i < MAX_BUFFERS; i++)
     makeBuffer (&buffers[i], width, height, i);
 
-  ioPadInit (7);
-  sysUtilRegisterCallback (SYSUTIL_EVENT_SLOT0, event_handler, NULL);
+  cellPadInit (7);
+  cellSysutilRegisterCallback (CELL_SYSUTIL_EVENT_SLOT0, event_handler, NULL);
 
   flipBuffer(context, MAX_BUFFERS - 1);
 
@@ -580,10 +580,10 @@ main (int argc, char *argv[])
   /* Main loop */
   while (main_loop_iterate ());
 
-  ioPadEnd();
-  sysUtilUnregisterCallback(SYSUTIL_EVENT_SLOT0);
+  cellPadEnd();
+  cellSysutilUnregisterCallback(CELL_SYSUTIL_EVENT_SLOT0);
 
-  gcmSetWaitFlip(context);
+  cellGcmSetWaitFlip(context);
   for (i = 0; i < MAX_BUFFERS; i++)
     rsxFree (buffers[i].ptr);
 

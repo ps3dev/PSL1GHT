@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
     struct    sockaddr_in servaddr;  /*  socket address structure  */
     char      buffer[MAX_LINE];      /*  character buffer          */
     char     *endptr;                /*  for strtol()              */
-	PadInfo padinfo;
-	PadData paddata;
+	CellPadInfo padinfo;
+	CellPadData paddata;
 	
 	fprintf(stdout, "Starting Pad Test.\n");
     /*  Get port number from the command line, and
@@ -96,21 +96,21 @@ int main(int argc, char *argv[]) {
 
 	Writeline(conn_s, message, strlen(message));
 	
-	sprintf(buffer, "Calling ioPadInit(%d) returned %d\r\n", 7, ioPadInit(7));
+	sprintf(buffer, "Calling cellPadInit(%d) returned %d\r\n", 7, cellPadInit(7));
 	Writeline(conn_s, buffer, strlen(buffer));
 	
-	sprintf(buffer, "Calling ioPadGetInfo() returned %d\r\n", ioPadGetInfo(&padinfo));
+	sprintf(buffer, "Calling cellPadGetInfo() returned %d\r\n", cellPadGetInfo(&padinfo));
 	Writeline(conn_s, buffer, strlen(buffer));
 	
 	sprintf(buffer, "PadInfo:\r\nMax Pads: %u\r\nConnected Pads: %u\r\nInfo Field: %08x\r\n", padinfo.max, padinfo.connected, padinfo.info);
 	Writeline(conn_s, buffer, strlen(buffer));
 	int i;
-	for(i=0; i<MAX_PADS; i++){
+	for(i=0; i<CELL_MAX_PADS; i++){
 		if(padinfo.status[i]){
 			sprintf(buffer, "Controller %u:\r\nVendor ID: %hx\r\nProduct ID: %hx\r\nStatus: %hhu\r\n", i, padinfo.vendor_id[i], padinfo.product_id[i], padinfo.status[i]);
 			Writeline(conn_s, buffer, strlen(buffer));
 			
-			sprintf(buffer, "Calling ioPadGetData(%d) returned %d\r\n", i, ioPadGetData(i, &paddata));
+			sprintf(buffer, "Calling cellPadGetData(%d) returned %d\r\n", i, cellPadGetData(i, &paddata));
 			Writeline(conn_s, buffer, strlen(buffer));
 			sprintf(buffer, "Pad Data:\r\nLength: %d\r\n", paddata.len);
 			Writeline(conn_s, buffer, strlen(buffer));
@@ -133,14 +133,14 @@ int main(int argc, char *argv[]) {
 			sprintf(buffer, "UP.... %d\r\n", paddata.BTN_UP);
 			Writeline(conn_s, buffer, strlen(buffer));
 			
-			PadActParam actparam;
+			CellPadActParam actparam;
 			actparam.small_motor = 1;
 			actparam.large_motor = 0;
 			
 			sprintf(buffer, "Vibrating small motor... ");
 			Writeline(conn_s, buffer, strlen(buffer));
 			
-			ioPadSetActDirect(i, &actparam);
+			cellPadSetActDirect(i, &actparam);
 			usleep(2000000);
 			
 			sprintf(buffer, "Finished.\r\n");
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
 			sprintf(buffer, "Vibrating large motor... ");
 			Writeline(conn_s, buffer, strlen(buffer));
 			
-			ioPadSetActDirect(i, &actparam);
+			cellPadSetActDirect(i, &actparam);
 			usleep(2000000);
 			
 			sprintf(buffer, "Finished.\r\n");
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
 	sprintf(buffer, "Finished.\r\n");
 	Writeline(conn_s, buffer, strlen(buffer));
 	
-	sprintf(buffer, "Calling ioPadEnd() returned %d\r\n", ioPadEnd());
+	sprintf(buffer, "Calling cellPadEnd() returned %d\r\n", cellPadEnd());
 	Writeline(conn_s, buffer, strlen(buffer));
 
 	/*  Close the connected socket  */

@@ -42,49 +42,49 @@ static void png_free(void *ptr,void *usrdata)
 	return free(ptr);
 }
 
-static s32 decodePNG(pngDecSource *src,pngData *out)
+static s32 decodePNG(CellPngDecSource *src,CellPngData *out)
 {
 	s32 mHandle,sHandle,ret;
-	pngDecInfo DecInfo;
-	pngDecOpnInfo openInfo;
-	pngDecInParam inParam;
-	pngDecOutParam outParam;
-	pngDecDataInfo DecDataInfo;
-	pngDecThreadInParam InThdParam;
-	pngDecThreadOutParam OutThdParam;
-	pngDecDataCtrlParam dataCtrlParam;
-	pngCbCtrlMalloc fnMalloc = png_malloc;
-	pngCbCtrlFree fnFree = png_free;
+	CellPngDecInfo DecInfo;
+	CellPngDecOpnInfo openInfo;
+	CellPngDecInParam inParam;
+	CellPngDecOutParam outParam;
+	CellPngDecDataInfo DecDataInfo;
+	CellPngDecThreadInParam InThdParam;
+	CellPngDecThreadOutParam OutThdParam;
+	CellPngDecDataCtrlParam dataCtrlParam;
+	CellPngCbCtrlMalloc fnMalloc = png_malloc;
+	CellPngCbCtrlFree fnFree = png_free;
 
-	InThdParam.spu_enable = PNGDEC_SPU_THREAD_DISABLE;
+	InThdParam.spu_enable = CELL_PNGDEC_SPU_THREAD_DISABLE;
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
-	InThdParam.malloc_func = (pngCbCtrlMalloc)__get_opd32(fnMalloc);
+	InThdParam.malloc_func = (CellPngCbCtrlMalloc)__get_opd32(fnMalloc);
 	InThdParam.malloc_arg = NULL;
-	InThdParam.free_func = (pngCbCtrlFree)__get_opd32(fnFree);
+	InThdParam.free_func = (CellPngCbCtrlFree)__get_opd32(fnFree);
 	InThdParam.free_arg = NULL;
 
-	ret= pngDecCreate(&mHandle, &InThdParam, &OutThdParam);
+	ret= cellPngDecCreate(&mHandle, &InThdParam, &OutThdParam);
 
 	out->bmp_out = NULL;
 	if(ret==0) {
-		ret = pngDecOpen(mHandle,&sHandle,src,&openInfo);
+		ret = cellPngDecOpen(mHandle,&sHandle,src,&openInfo);
 		if(ret==0) {
-			ret = pngDecReadHeader(mHandle,sHandle,&DecInfo);
+			ret = cellPngDecReadHeader(mHandle,sHandle,&DecInfo);
 			if(ret==0) {
 				inParam.cmd_ptr = 0;
-				inParam.output_mode = PNGDEC_TOP_TO_BOTTOM;
-				inParam.color_space = PNGDEC_ARGB;
+				inParam.output_mode = CELL_PNGDEC_TOP_TO_BOTTOM;
+				inParam.color_space = CELL_PNGDEC_ARGB;
 				inParam.bit_depth = 8;
-				inParam.pack_flag = PNGDEC_1BYTE_PER_1PIXEL;
-				if(DecInfo.color_space==PNGDEC_GRAYSCALE_ALPHA || DecInfo.color_space==PNGDEC_RGBA || DecInfo.chunk_info&0x10)
+				inParam.pack_flag = CELL_PNGDEC_1BYTE_PER_1PIXEL;
+				if(DecInfo.color_space==CELL_PNGDEC_GRAYSCALE_ALPHA || DecInfo.color_space==CELL_PNGDEC_RGBA || DecInfo.chunk_info&0x10)
 					inParam.alpha_select = 0;
 				else
 					inParam.alpha_select = 1;
 
 				inParam.alpha = 0xff;
 
-				ret = pngDecSetParameter(mHandle,sHandle,&inParam,&outParam);
+				ret = cellPngDecSetParameter(mHandle,sHandle,&inParam,&outParam);
 			}
 
 			if(ret==0) {
@@ -96,7 +96,7 @@ static s32 decodePNG(pngDecSource *src,pngData *out)
 					memset(out->bmp_out,0,(out->pitch*outParam.height));
 					
 					dataCtrlParam.output_bytes_per_line = out->pitch;
-					ret = pngDecDecodeData(mHandle,sHandle,out->bmp_out,&dataCtrlParam,&DecDataInfo);
+					ret = cellPngDecDecodeData(mHandle,sHandle,out->bmp_out,&dataCtrlParam,&DecDataInfo);
 					if(ret==0 && DecDataInfo.decode_status==0) {
 						out->width = outParam.width;
 						out->height = outParam.height;
@@ -105,41 +105,41 @@ static s32 decodePNG(pngDecSource *src,pngData *out)
 					}
 				}
 			}
-			pngDecClose(mHandle,sHandle);
+			cellPngDecClose(mHandle,sHandle);
 		}
 		if(ret && out->bmp_out) {
 			free(out->bmp_out);
 			out->bmp_out = NULL;
 		}
 
-		pngDecDestroy(mHandle);
+		cellPngDecDestroy(mHandle);
 	}
 	return ret;
 }
 
-s32 pngLoadFromFile(const char *filename,pngData *out)
+s32 cellPngLoadFromFile(const char *filename,CellPngData *out)
 {
-	pngDecSource source;
+	CellPngDecSource source;
 
-	memset(&source,0,sizeof(pngDecSource));
+	memset(&source,0,sizeof(CellPngDecSource));
 
-	source.stream_sel = PNGDEC_FILE;
+	source.stream_sel = CELL_PNGDEC_FILE;
 	source.file_name = filename;
-	source.spu_enable = PNGDEC_SPU_THREAD_DISABLE;
+	source.spu_enable = CELL_PNGDEC_SPU_THREAD_DISABLE;
 
 	return decodePNG(&source,out);
 }
 
-s32 pngLoadFromBuffer(const void *buffer,u32 size,pngData *out)
+s32 cellPngLoadFromBuffer(const void *buffer,u32 size,CellPngData *out)
 {
-	pngDecSource source;
+	CellPngDecSource source;
 
-	memset(&source,0,sizeof(pngDecSource));
+	memset(&source,0,sizeof(CellPngDecSource));
 
-	source.stream_sel = PNGDEC_BUFFER;
+	source.stream_sel = CELL_PNGDEC_BUFFER;
 	source.stream_ptr = (void*)buffer;
 	source.stream_size = size;
-	source.spu_enable = PNGDEC_SPU_THREAD_DISABLE;
+	source.spu_enable = CELL_PNGDEC_SPU_THREAD_DISABLE;
 
 	return decodePNG(&source,out);
 }

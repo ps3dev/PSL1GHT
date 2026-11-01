@@ -3,17 +3,17 @@
 #include <rsx/resc.h>
 
 
-extern void rescSetVBlankHandlerEx(opd32 *opd);
-extern void rescSetFlipHandlerEx(opd32 *opd);
+extern void cellRescSetVBlankHandlerEx(opd32 *opd);
+extern void cellRescSetFlipHandlerEx(opd32 *opd);
 
 
-void rescSetVBlankHandler(void (*handler)(const u32 head))
+void cellRescSetVBlankHandler(void (*handler)(const u32 head))
 {
-	rescSetVBlankHandlerEx((opd32*)__get_opd32(handler));
+	cellRescSetVBlankHandlerEx((opd32*)__get_opd32(handler));
 }
 
-void rescSetFlipHandler(void (*handler)(const u32 head))
+void cellRescSetFlipHandler(void (*handler)(const u32 head))
 {
-	rescSetFlipHandlerEx((opd32*)__get_opd32(handler));
+	cellRescSetFlipHandlerEx((opd32*)__get_opd32(handler));
 }
 

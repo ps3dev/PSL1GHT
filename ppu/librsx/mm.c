@@ -5,7 +5,7 @@
 
 #define SAFE_AREA			4096
 
-static gcmConfiguration __rsx_config;
+static CellGcmConfiguration __rsx_config;
 
 static heap_cntrl __rsx_heap;
 static u32 __rsxheap_initialized = 0;
@@ -16,7 +16,7 @@ s64 rsxHeapInit()
 		void *heapBuffer;
 		u32 heapBufferSize;
 
-		gcmGetConfiguration(&__rsx_config);
+		cellGcmGetConfiguration(&__rsx_config);
 		
 		heapBuffer = __rsx_config.localAddress;
 		heapBufferSize = __rsx_config.localSize - SAFE_AREA;

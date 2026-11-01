@@ -2,7 +2,7 @@
 libjpgdec is used by Eyetoy in Playstation 3 only support JPG format... IPU is away :P
  */ 
 
-#include <psl1ght/lv2.h>
+//#include <psl1ght/lv2.h>
 
 #include <stdio.h>
 #include <malloc.h>
@@ -11,39 +11,39 @@ libjpgdec is used by Eyetoy in Playstation 3 only support JPG format... IPU is a
 #include <unistd.h>
 
 #include <sysutil/video.h>
-#include <rsx/gcm.h>
-#include <rsx/reality.h>
+//#include <rsx/gcm.h>
+#include <rsx/rsx.h>
 
 #include <io/pad.h>
-#include <io/cam.h>
+#include <io/camera.h>
 
-#include <psl1ght/lv2.h>
+//#include <psl1ght/lv2.h>
 #include <sysmodule/sysmodule.h>
 #include <jpgdec/jpgdec.h>
 
 #include <stdarg.h>
 
 #include <arpa/inet.h>
-#include "sysutil/events.h"
+#include "sysutil/sysutil.h"
 
-gcmContextData *context; // Context to keep track of the RSX buffer.
+CellGcmContextData *context; // Context to keep track of the RSX buffer.
 
-VideoResolution res; // Screen Resolution
+CellVideoOutResolution res; // Screen Resolution
 
 int currentBuffer = 0;
 u32 *buffer[2]; // The buffer we will be drawing into.
 
 
 void waitFlip() { // Block the PPU thread untill the previous flip operation has finished.
-	while(gcmGetFlipStatus() != 0) 
+	while(cellGcmGetFlipStatus() != 0) 
 		usleep(200);
-	gcmResetFlipStatus();
+	cellGcmResetFlipStatus();
 }
 
 void flip(s32 buffer) {
-	assert(gcmSetFlip(context, buffer) == 0);
-	realityFlushBuffer(context);
-	gcmSetWaitFlip(context); // Prevent the RSX from continuing until the flip has finished.
+	assert(cellGcmSetFlip(context, buffer) == 0);
+	rsxFlushBuffer(context);
+	cellGcmSetWaitFlip(context); // Prevent the RSX from continuing until the flip has finished.
 }
 
 // Initilize everything. You can probally skip over this function.
@@ -53,44 +53,44 @@ void init_screen() {
 	assert(host_addr != NULL);
 
 	// Initilise Reality, which sets up the command buffer and shared IO memory
-	context = realityInit(0x10000, 1024*1024, host_addr); 
+	rsxInit(&context, 0x10000, 1024*1024, host_addr); 
 	assert(context != NULL);
 
-	VideoState state;
-	assert(videoGetState(0, 0, &state) == 0); // Get the state of the display
+	CellVideoOutState state;
+	assert(cellVideoOutGetState(0, 0, &state) == 0); // Get the state of the display
 	assert(state.state == 0); // Make sure display is enabled
 
 	// Get the current resolution
-	assert(videoGetResolution(state.displayMode.resolution, &res) == 0);
+	assert(cellVideoOutGetResolution(state.displayMode.resolution, &res) == 0);
 	
 	// Configure the buffer format to xRGB
-	VideoConfiguration vconfig;
-	memset(&vconfig, 0, sizeof(VideoConfiguration));
+	CellVideoOutConfiguration vconfig;
+	memset(&vconfig, 0, sizeof(CellVideoOutConfiguration));
 	vconfig.resolution = state.displayMode.resolution;
-	vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
+	vconfig.format = CELL_VIDEO_OUT_BUFFER_FORMAT_XRGB;
 	vconfig.pitch = res.width * 4;
 	vconfig.aspect=state.displayMode.aspect;
 
-	assert(videoConfigure(0, &vconfig, NULL, 0) == 0);
-	assert(videoGetState(0, 0, &state) == 0); 
+	assert(cellVideoOutConfigure(0, &vconfig, NULL, 0) == 0);
+	assert(cellVideoOutGetState(0, 0, &state) == 0); 
 
 	s32 buffer_size = 4 * res.width * res.height; // each pixel is 4 bytes
 	
-	gcmSetFlipMode(GCM_FLIP_VSYNC); // Wait for VSYNC to flip
+	cellGcmSetFlipMode(CELL_GCM_FLIP_VSYNC); // Wait for VSYNC to flip
 
 	// Allocate two buffers for the RSX to draw to the screen (double buffering)
-	buffer[0] = rsxMemAlign(16, buffer_size);
-	buffer[1] = rsxMemAlign(16, buffer_size);
+	buffer[0] = rsxMemalign(16, buffer_size);
+	buffer[1] = rsxMemalign(16, buffer_size);
 	assert(buffer[0] != NULL && buffer[1] != NULL);
 
 	u32 offset[2];
-	assert(realityAddressToOffset(buffer[0], &offset[0]) == 0);
-	assert(realityAddressToOffset(buffer[1], &offset[1]) == 0);
+	assert(cellGcmAddressToOffset(buffer[0], &offset[0]) == 0);
+	assert(cellGcmAddressToOffset(buffer[1], &offset[1]) == 0);
 	// Setup the display buffers
-	assert(gcmSetDisplayBuffer(0, offset[0], res.width * 4, res.width, res.height) == 0);
-	assert(gcmSetDisplayBuffer(1, offset[1], res.width * 4, res.width, res.height) == 0);
+	assert(cellGcmSetDisplayBuffer(0, offset[0], res.width * 4, res.width, res.height) == 0);
+	assert(cellGcmSetDisplayBuffer(1, offset[1], res.width * 4, res.width, res.height) == 0);
 
-	gcmResetFlipStatus();
+	cellGcmResetFlipStatus();
 	flip(1);
 }
 
@@ -103,9 +103,9 @@ void fillFrame(u32 *buffer, u32 color) {
 
 }
 void appCleanup(){
-	SysUnloadModule(SYSMODULE_JPGDEC);
-	SysUnloadModule(SYSMODULE_CAM);
-	sysUnregisterCallback(EVENT_SLOT0);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_JPGDEC);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_CAMERA);
+	cellSysutilUnregisterCallback(CELL_SYSUTIL_EVENT_SLOT0);
 	printf("Exiting for real.\n");
 }
 
@@ -168,59 +168,59 @@ int decode_jpg(u8 *buf, s32 size)
 	int mHandle;
 	int sHandle;
 
-	JpgDecThreadInParam InThdParam;
-	JpgDecThreadOutParam OutThdParam;
+	CellJpgDecThreadInParam InThdParam;
+	CellJpgDecThreadOutParam OutThdParam;
 
-	JpgDecInParam inParam;
-	JpgDecOutParam outParam;
+	CellJpgDecInParam inParam;
+	CellJpgDecOutParam outParam;
 	
-	JpgDecSrc src; 
+	CellJpgDecSource src; 
 	uint32_t space_allocated;
 
-	JpgDecInfo DecInfo;
+	CellJpgDecInfo DecInfo;
 	
 	uint64_t bytes_per_line;
-	JpgDecDataInfo DecDataInfo;
+	CellJpgDecDataInfo DecDataInfo;
 
-	InThdParam.enable   = 0;
+	InThdParam.spu_enable   = 0;
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
-	InThdParam.addr_malloc_func  = (u32)(u64) OPD32(jpg_malloc); // (see sysmodule.h)
-	InThdParam.addr_malloc_arg   = 0; // no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
-	InThdParam.addr_free_func    = (u32)(u64) OPD32(jpg_free);  // (see sysmodule.h)
-	InThdParam.addr_free_arg    =  0; // no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
+	InThdParam.malloc_func  = jpg_malloc; // (see sysmodule.h)
+	InThdParam.malloc_arg   = 0; // no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
+	InThdParam.free_func    = jpg_free;  // (see sysmodule.h)
+	InThdParam.free_arg    =  0; // no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
 
 
-	ret= JpgDecCreate(&mHandle, &InThdParam, &OutThdParam);
+	ret= cellJpgDecCreate(&mHandle, &InThdParam, &OutThdParam);
 
 
 	if(ret == 0) {
 		
-		memset(&src, 0, sizeof(JpgDecSrc));
+		memset(&src, 0, sizeof(CellJpgDecSource));
 			
-		src.stream_select = JPGDEC_BUFFER;
-		src.addr_stream_ptr  = (u32)(u64) buf;
+		src.stream_sel = CELL_JPGDEC_BUFFER;
+		src.stream_ptr  = (u32)(u64) buf;
 		src.stream_size    = size;
-		src.enable  = JPGDEC_DISABLE;
+		src.spu_enable  = false;
 			
-		ret= JpgDecOpen(mHandle, &sHandle, &src, &space_allocated);
+		ret= cellJpgDecOpen(mHandle, &sHandle, &src, &space_allocated);
 			
 		if(ret == 0) {
 			
-			ret = JpgDecReadHeader(mHandle, sHandle, &DecInfo);
+			ret = cellJpgDecReadHeader(mHandle, sHandle, &DecInfo);
 			
 			if(ret==0 && DecInfo.color_space==0) ret=-1; // unsupported color
 
 			if(ret == 0) {	
 		
-				inParam.addr_cmd_ptr = 0;
-				inParam.downscale	 = 1;
-				inParam.quality		 = JPGDEC_LOW_QUALITY; // fast
-				inParam.mode         = JPGDEC_TOP_TO_BOTTOM;
-				inParam.color_space  = JPGDEC_ARGB;
-				inParam.color_alpha  = 0xFF;
+				inParam.cmd_ptr = 0;
+				inParam.down_scale	 = 1;
+				inParam.quality_mode		 = CELL_JPGDEC_FAST; // fast
+				inParam.output_mode         = CELL_JPGDEC_TOP_TO_BOTTOM;
+				inParam.color_space  = CELL_JPGDEC_ARGB;
+				inParam.alpha  = 0xFF;
 
-				ret = JpgDecSetParameter(mHandle, sHandle, &inParam, &outParam);
+				ret = cellJpgDecSetParameter(mHandle, sHandle, &inParam, &outParam);
 				}
 				
 			if(ret == 0) {
@@ -233,19 +233,19 @@ int decode_jpg(u8 *buf, s32 size)
 
 					//memset(bmp_out, 0, bytes_per_line * outParam.height);
 						
-					ret = JpgDecDecodeData(mHandle, sHandle, bmp_out, &bytes_per_line, &DecDataInfo);
+					ret = cellJpgDecDecodeData(mHandle, sHandle, bmp_out, &bytes_per_line, &DecDataInfo);
 
-					if((ret == 0) && (DecDataInfo.status == 0)){
+					if((ret == 0) && (DecDataInfo.value == 0)){
 							
 							ret=0; // ok :)
 					}
 				}
 				
-			JpgDecClose(mHandle, sHandle);
+			cellJpgDecClose(mHandle, sHandle);
 			}
 
 		
-			JpgDecDestroy(mHandle);
+			cellJpgDecDestroy(mHandle);
 			
 		}
 
@@ -255,7 +255,7 @@ return ret;
 static void eventHandle(u64 status, u64 param, void * userdata) {
     (void)param;
     (void)userdata;
-	if(status == EVENT_REQUEST_EXITAPP){
+	if(status == CELL_SYSUTIL_EXIT_GAME){
 		printf("Quit game requested\n");
 		exit(0);
 	}else{
@@ -265,40 +265,40 @@ static void eventHandle(u64 status, u64 param, void * userdata) {
 
 s32 main(s32 argc, const char* argv[])
 {
-	PadInfo padinfo;
-	PadData paddata;
+	CellPadInfo padinfo;
+	CellPadData paddata;
 
-	SysLoadModule(SYSMODULE_CAM);
-	SysLoadModule(SYSMODULE_JPGDEC);
+	cellSysmoduleLoadModule(CELL_SYSMODULE_CAMERA);
+	cellSysmoduleLoadModule(CELL_SYSMODULE_JPGDEC);
 	
 	atexit(appCleanup);
 	
-	sysRegisterCallback(EVENT_SLOT0, eventHandle, NULL);
+	cellSysutilRegisterCallback(CELL_SYSUTIL_EVENT_SLOT0, eventHandle, NULL);
 	
 	int i, j, ret;
 	int running = 1, cameraSetup = 0;
 	
 	sys_mem_container_t container;
 	
-	ret = lv2MemContinerCreate(&container, 0x200000);
-	printf("lv2MemContinerCreate() returned %d\n", ret);
-	CameraType type;
-	CameraInfoEx cameraInfo;
+	ret = sysMemContainerCreate(&container, 0x200000);
+	printf("sysMemContainerCreate() returned %d\n", ret);
+	CellCameraType type;
+	CellCameraInfoEx cameraInfo;
 	
 	
 	init_screen();
-	ioPadInit(7);
+	cellPadInit(7);
 	
 	
-	printf("cameraInit() returned %d\n", cameraInit());
+	printf("cameraInit() returned %d\n", cellCameraInit());
 	
 	// Ok, everything is setup. Now for the main loop.
 	while(running){
 		// Check the pads.
-		ioPadGetInfo(&padinfo);
-		for(i=0; i<MAX_PADS; i++){
+		cellPadGetInfo(&padinfo);
+		for(i=0; i<CELL_MAX_PADS; i++){
 			if(padinfo.status[i]){
-				ioPadGetData(i, &paddata);
+				cellPadGetData(i, &paddata);
 				
 				if(paddata.BTN_CROSS){
 				
@@ -313,38 +313,38 @@ s32 main(s32 argc, const char* argv[])
 		
 		if(!cameraSetup){
 			
-			cameraGetType(0, &type);
-			if (type == CAM_TYPE_PLAYSTATION_EYE){
+			cellCameraGetType(0, &type);
+			if (type == CELL_CAMERA_TYPE_PLAYSTATION_EYE){
 				cameraSetup = 1;
-				cameraInfo.format=CAM_FORM_YUV422;
+				cameraInfo.format=CELL_CAMERA_FORMAT_YUV422;
 				cameraInfo.framerate=30;
-				cameraInfo.resolution=CAM_RESO_VGA;
+				cameraInfo.resolution=CELL_CAMERA_RESOLUTION_VGA;
 				cameraInfo.info_ver=0x101;
 				cameraInfo.container=container;
-				ret = cameraOpenEx(0, &cameraInfo);
-				if (ret == CAMERA_ERRO_DOUBLE_OPEN){
-					cameraClose(0);
+				ret = cellCameraOpenEx(0, &cameraInfo);
+				if (ret == CELL_CAMERA_ERROR_DOUBLE_OPEN){
+					cellCameraClose(0);
 					cameraSetup = 0;
-				}else if(ret == CAMERA_ERRO_NO_DEVICE_FOUND){
+				}else if(ret == CELL_CAMERA_ERROR_NO_DEVICE_FOUND){
 				}else{
 					printf("Found me an eye, arrr!\n");
 					printf("cameraOpenEx returned %08X\n", ret);
 					printf("Video dimensions: %dx%d\n", cameraInfo.width, cameraInfo.height);
 					printf("Buffer at %08X\n", cameraInfo.buffer);
 				}
-			}else if(type==CAM_TYPE_EYETOY){
+			}else if(type==CELL_CAMERA_TYPE_EYETOY){
 					
 				cameraSetup = 1;
-				cameraInfo.format=CAM_FORM_JPG; //ONLY JPG FOR EYETOY
+				cameraInfo.format=CELL_CAMERA_FORMAT_JPG; //ONLY JPG FOR EYETOY
 				cameraInfo.framerate=30;
-				cameraInfo.resolution=CAM_RESO_VGA;
+				cameraInfo.resolution=CELL_CAMERA_RESOLUTION_VGA;
 				cameraInfo.info_ver=0x101;
 				cameraInfo.container=container;
-				ret = cameraOpenEx(0, &cameraInfo);
-				if (ret == CAMERA_ERRO_DOUBLE_OPEN){
-					cameraClose(0);
+				ret = cellCameraOpenEx(0, &cameraInfo);
+				if (ret == CELL_CAMERA_ERROR_DOUBLE_OPEN){
+					cellCameraClose(0);
 					cameraSetup = 0;
-				}else if(ret == CAMERA_ERRO_NO_DEVICE_FOUND){
+				}else if(ret == CELL_CAMERA_ERROR_NO_DEVICE_FOUND){
 				}else{
 					printf("Found me an EyeToy :P, arrr!\n");
 					printf("cameraOpenEx returned %08X\n", ret);
@@ -356,17 +356,17 @@ s32 main(s32 argc, const char* argv[])
 		else
 		{
 			s32 readcount, frame;
-			ret = cameraRead(0, &frame, &readcount);
-			if(ret == CAMERA_ERRO_NO_DEVICE_FOUND){
+			ret = cellCameraRead(0, &frame, &readcount);
+			if(ret == CELL_CAMERA_ERROR_NO_DEVICE_FOUND){
 				cameraSetup = 0;
-			}else if(ret == CAMERA_ERRO_NEED_START){      
-				cameraReset(0);
-				cameraStart(0);
-			}else if(ret == CAMERA_ERRO_NEED_OPEN || ret == CAMERA_ERRO_NO_DEVICE_FOUND){      
+			}else if(ret == CELL_CAMERA_ERROR_NEED_START){      
+				cellCameraReset(0);
+				cellCameraStart(0);
+			}else if(ret == CELL_CAMERA_ERROR_NEED_OPEN || ret == CELL_CAMERA_ERROR_NO_DEVICE_FOUND){      
 				cameraSetup = 0;
 			}else if (ret == 0 && readcount!=0 ){
 				u8 * buf = (u8*)(u64)cameraInfo.buffer;
-				if(type == CAM_TYPE_PLAYSTATION_EYE){
+				if(type == CELL_CAMERA_TYPE_PLAYSTATION_EYE){
 					for(i=0;i<cameraInfo.height; i++){
 						for(j=0;j<cameraInfo.width; j += 2){
 							u32 pixel1, pixel2;
@@ -376,7 +376,7 @@ s32 main(s32 argc, const char* argv[])
 							buffer[currentBuffer][(i)* res.width + j + 1] = pixel2;
 						}
 					}
-				}else if(type==CAM_TYPE_EYETOY){
+				}else if(type==CELL_CAMERA_TYPE_EYETOY){
 						//oopo's libjpg making the job
 						decode_jpg(buf,readcount);
 				}
@@ -387,14 +387,14 @@ s32 main(s32 argc, const char* argv[])
 		
 		flip(currentBuffer); // Flip buffer onto screen
 		currentBuffer = !currentBuffer;
-		sysCheckCallback();
+		cellSysutilCheckCallback();
 	}
 	
-	cameraStop(0);
+	cellCameraStop(0);
 	
-	cameraClose(0);
-	cameraEnd();
+	cellCameraClose(0);
+	cellCameraEnd();
   
-	lv2MemContinerDestroy(container);
+	sysMemContainerDestroy(container);
 	return 0;
 }

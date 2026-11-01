@@ -17,7 +17,7 @@ s32 netInitialize()
 	s32 ret;
 	netInitParam params;
 	
-	ret = sysModuleLoad(SYSMODULE_NET);
+	ret = cellSysmoduleLoadModule(CELL_SYSMODULE_NET);
 	if(ret<0) return lv2errno(ret);
 
 	memset(&params,0,sizeof(netInitParam));
@@ -41,6 +41,6 @@ s32 netDeinitialize()
 	if(__netMemory) free(__netMemory);
 	__netMemory = NULL;
 
-	sysModuleUnload(SYSMODULE_NET);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_NET);
 	return 0;
 }

@@ -42,46 +42,46 @@ static void jpg_free(void *ptr,void *usrdata)
 	free(ptr);
 }
 
-static s32 decodeJPEG(jpgDecSource *src,jpgData *out)
+static s32 decodeJPEG(CellJpgDecSource *src,CellJpgData *out)
 {
 	s32 mHandle,sHandle,ret;
-	jpgDecInfo DecInfo;
-	jpgDecInParam inParam;
-	jpgDecOpnInfo openInfo;
-	jpgDecOutParam outParam;
-	jpgDecDataInfo DecDataInfo;
-	jpgDecThreadInParam InThdParam;
-	jpgDecThreadOutParam OutThdParam;
-	jpgDecDataCtrlParam dataCtrlParam;
-	jpgCbCtrlMalloc fnMalloc = jpg_malloc;
-	jpgCbCtrlFree fnFree = jpg_free;
+	CellJpgDecInfo DecInfo;
+	CellJpgDecInParam inParam;
+	CellJpgDecOpnInfo openInfo;
+	CellJpgDecOutParam outParam;
+	CellJpgDecDataInfo DecDataInfo;
+	CellJpgDecThreadInParam InThdParam;
+	CellJpgDecThreadOutParam OutThdParam;
+	CellJpgDecDataCtrlParam dataCtrlParam;
+	CellJpgCbCtrlMalloc fnMalloc = jpg_malloc;
+	CellJpgCbCtrlFree fnFree = jpg_free;
 
-	InThdParam.spu_enable = JPGDEC_SPU_THREAD_DISABLE;
+	InThdParam.spu_enable = CELL_JPGDEC_SPU_THREAD_DISABLE;
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
-	InThdParam.malloc_func = (jpgCbCtrlMalloc)__get_opd32(fnMalloc);
+	InThdParam.malloc_func = (CellJpgCbCtrlMalloc)__get_opd32(fnMalloc);
 	InThdParam.malloc_arg = NULL;
-	InThdParam.free_func = (jpgCbCtrlFree)__get_opd32(fnFree);
+	InThdParam.free_func = (CellJpgCbCtrlFree)__get_opd32(fnFree);
 	InThdParam.free_arg = NULL;
 
-	ret = jpgDecCreate(&mHandle,&InThdParam,&OutThdParam);
+	ret = cellJpgDecCreate(&mHandle,&InThdParam,&OutThdParam);
 
 	out->bmp_out = NULL;
 	if(ret==0) {
-		ret = jpgDecOpen(mHandle,&sHandle,src,&openInfo);
+		ret = cellJpgDecOpen(mHandle,&sHandle,src,&openInfo);
 		if(ret==0) {
-			ret = jpgDecReadHeader(mHandle,sHandle,&DecInfo);
+			ret = cellJpgDecReadHeader(mHandle,sHandle,&DecInfo);
 			if(ret==0 && DecInfo.color_space==0) ret = -1;
 
 			if(ret==0) {
 				inParam.cmd_ptr = NULL;
 				inParam.down_scale = 1;
-				inParam.quality_mode = JPGDEC_FAST;
-				inParam.output_mode = JPGDEC_TOP_TO_BOTTOM;
-				inParam.color_space = JPGDEC_ARGB;
+				inParam.quality_mode = CELL_JPGDEC_FAST;
+				inParam.output_mode = CELL_JPGDEC_TOP_TO_BOTTOM;
+				inParam.color_space = CELL_JPGDEC_ARGB;
 				inParam.alpha = 0xff;
 
-				ret = jpgDecSetParameter(mHandle,sHandle,&inParam,&outParam);
+				ret = cellJpgDecSetParameter(mHandle,sHandle,&inParam,&outParam);
 			}
 
 			if(ret==0) {
@@ -93,7 +93,7 @@ static s32 decodeJPEG(jpgDecSource *src,jpgData *out)
 					memset(out->bmp_out,0,(out->pitch*outParam.height));
 
 					dataCtrlParam.output_bytes_per_line = out->pitch;
-					ret = jpgDecDecodeData(mHandle,sHandle,out->bmp_out,&dataCtrlParam,&DecDataInfo);
+					ret = cellJpgDecDecodeData(mHandle,sHandle,out->bmp_out,&dataCtrlParam,&DecDataInfo);
 					if(ret==0 && DecDataInfo.decode_status==0) {
 						out->width = outParam.width;
 						out->height = outParam.height;
@@ -102,41 +102,41 @@ static s32 decodeJPEG(jpgDecSource *src,jpgData *out)
 					}
 				}
 			}
-			jpgDecClose(mHandle,sHandle);
+			cellJpgDecClose(mHandle,sHandle);
 		}
 		if(ret && out->bmp_out) {
 			free(out->bmp_out);
 			out->bmp_out = NULL;
 		}
 
-		jpgDecDestroy(mHandle);
+		cellJpgDecDestroy(mHandle);
 	}
 	return ret;
 }
 
-s32 jpgLoadFromFile(const char *filename,jpgData *out)
+s32 cellJpgLoadFromFile(const char *filename,CellJpgData *out)
 {
-	jpgDecSource source;
+	CellJpgDecSource source;
 
-	memset(&source,0,sizeof(jpgDecSource));
+	memset(&source,0,sizeof(CellJpgDecSource));
 
-	source.stream_sel = JPGDEC_FILE;
+	source.stream_sel = CELL_JPGDEC_FILE;
 	source.file_name = filename;
-	source.spu_enable = JPGDEC_SPU_THREAD_DISABLE;
+	source.spu_enable = CELL_JPGDEC_SPU_THREAD_DISABLE;
 
 	return decodeJPEG(&source,out);
 }
 
-s32 jpgLoadFromBuffer(const void *buffer,u32 size,jpgData *out)
+s32 cellJpgLoadFromBuffer(const void *buffer,u32 size,CellJpgData *out)
 {
-	jpgDecSource source;
+	CellJpgDecSource source;
 
-	memset(&source,0,sizeof(jpgDecSource));
+	memset(&source,0,sizeof(CellJpgDecSource));
 
-	source.stream_sel = JPGDEC_BUFFER;
+	source.stream_sel = CELL_JPGDEC_BUFFER;
 	source.stream_ptr = (void*)buffer;
 	source.stream_size = size;
-	source.spu_enable = JPGDEC_SPU_THREAD_DISABLE;
+	source.spu_enable = CELL_JPGDEC_SPU_THREAD_DISABLE;
 
 	return decodeJPEG(&source,out);
 }

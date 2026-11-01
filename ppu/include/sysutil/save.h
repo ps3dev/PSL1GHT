@@ -5,112 +5,112 @@
 #include <time.h>
 
 /* Maximum string/array sizes */
-#define SYS_SAVE_MAX_DIRECTORY_NAME		32
-#define SYS_SAVE_MAX_FILE_NAME			13
-#define SYS_SAVE_DIRECTORY_LIST_MAX		2048
-#define SYS_SAVE_CUSTOM_ERROR_MESSAGE_MAX	256
-#define SYS_SAVE_MAX_LIST_PARAMETER		8
-#define SYS_SAVE_MAX_TITLE			128
-#define SYS_SAVE_MAX_SUBTITLE			128
-#define SYS_SAVE_MAX_DETAIL			1024
-#define SYS_SAVE_MAX_PROTECTED_FILE_ID		16
+#define CELL_SAVE_DATA_MAX_DIRECTORY_NAME		32
+#define CELL_SAVE_DATA_MAX_FILE_NAME			13
+#define CELL_SAVE_DATA_DIRECTORY_LIST_MAX		2048
+#define CELL_SAVE_DATA_CUSTOM_ERROR_MESSAGE_MAX	256
+#define CELL_SAVE_DATA_MAX_LIST_PARAMETER		8
+#define CELL_SAVE_DATA_MAX_TITLE			128
+#define CELL_SAVE_DATA_MAX_SUBTITLE			128
+#define CELL_SAVE_DATA_MAX_DETAIL			1024
+#define CELL_SAVE_DATA_MAX_PROTECTED_FILE_ID		16
 
 /* Current version value for the save data */
-#define SYS_SAVE_CURRENT_VERSION 0
+#define CELL_SAVE_DATA_CURRENT_VERSION 0
 
 /* Result values for the callback */
-#define SYS_SAVE_CALLBACK_RESULT_DONE		1
-#define SYS_SAVE_CALLBACK_RESULT_CONTINUE 	0
-#define SYS_SAVE_CALLBACK_RESULT_NO_SPACE_LEFT	-1
-#define SYS_SAVE_CALLBACK_RESULT_ERROR		-2
-#define SYS_SAVE_CALLBACK_RESULT_CORRUPTED	-3
-#define SYS_SAVE_CALLBACK_RESULT_NOT_FOUND	-4
-#define SYS_SAVE_CALLBACK_RESULT_ERROR_CUSTOM	-5
+#define CELL_SAVE_DATA_CALLBACK_RESULT_DONE		1
+#define CELL_SAVE_DATA_CALLBACK_RESULT_CONTINUE 	0
+#define CELL_SAVE_DATA_CALLBACK_RESULT_NO_SPACE_LEFT	-1
+#define CELL_SAVE_DATA_CALLBACK_RESULT_ERROR		-2
+#define CELL_SAVE_DATA_CALLBACK_RESULT_CORRUPTED	-3
+#define CELL_SAVE_DATA_CALLBACK_RESULT_NOT_FOUND	-4
+#define CELL_SAVE_DATA_CALLBACK_RESULT_ERROR_CUSTOM	-5
 
 /* Flags for the binding information */
-#define SYS_SAVE_BIND_NO_ERROR		0x00
-#define SYS_SAVE_BIND_ANOTHER_CONSOLE	0x01
-#define SYS_SAVE_BIND_ANOTHER_DISC	0x02
-#define SYS_SAVE_BIND_ANOTHER_APP	0x04
-#define SYS_SAVE_BIND_NO_USER_INFO	0x08
-#define SYS_SAVE_BIND_OTHER_USER	0x10
+#define CELL_SAVE_DATA_BIND_NO_ERROR		0x00
+#define CELL_SAVE_DATA_BIND_ANOTHER_CONSOLE	0x01
+#define CELL_SAVE_DATA_BIND_ANOTHER_DISC	0x02
+#define CELL_SAVE_DATA_BIND_ANOTHER_APP	0x04
+#define CELL_SAVE_DATA_BIND_NO_USER_INFO	0x08
+#define CELL_SAVE_DATA_BIND_OTHER_USER	0x10
 
 /* Return values from the API calls */
-#define SYS_SAVE_RETURN_DONE			0
-#define SYS_SAVE_RETURN_CANCELED		1
-#define SYS_SAVE_RETURN_ERROR			0x8002b400
+#define CELL_SAVE_DATA_RETURN_DONE			0
+#define CELL_SAVE_DATA_RETURN_CANCELED		1
+#define CELL_SAVE_DATA_RETURN_ERROR			0x8002b400
 
-#define SYS_SAVE_RETURN_ERROR_CALLBACK		(SYS_SAVE_RETURN_ERROR | 1)
-#define SYS_SAVE_RETURN_ERROR_HDD_ERROR		(SYS_SAVE_RETURN_ERROR | 2)
-#define SYS_SAVE_RETURN_ERROR_INTERNAL		(SYS_SAVE_RETURN_ERROR | 3)
-#define SYS_SAVE_RETURN_ERROR_INVALID_ARG	(SYS_SAVE_RETURN_ERROR | 4)
-#define SYS_SAVE_RETURN_ERROR_NO_SPACE_LEFT	(SYS_SAVE_RETURN_ERROR | 5)
-#define SYS_SAVE_RETURN_ERROR_CORRUPTED		(SYS_SAVE_RETURN_ERROR | 6)
-#define SYS_SAVE_RETURN_ERROR_FAILED		(SYS_SAVE_RETURN_ERROR | 7)
-#define SYS_SAVE_RETURN_ERROR_ALREADY_IN_USE	(SYS_SAVE_RETURN_ERROR | 8)
+#define CELL_SAVE_DATA_RETURN_ERROR_CALLBACK		(CELL_SAVE_DATA_RETURN_ERROR | 1)
+#define CELL_SAVE_DATA_RETURN_ERROR_HDD_ERROR		(CELL_SAVE_DATA_RETURN_ERROR | 2)
+#define CELL_SAVE_DATA_RETURN_ERROR_INTERNAL		(CELL_SAVE_DATA_RETURN_ERROR | 3)
+#define CELL_SAVE_DATA_RETURN_ERROR_INVALID_ARG	(CELL_SAVE_DATA_RETURN_ERROR | 4)
+#define CELL_SAVE_DATA_RETURN_ERROR_NO_SPACE_LEFT	(CELL_SAVE_DATA_RETURN_ERROR | 5)
+#define CELL_SAVE_DATA_RETURN_ERROR_CORRUPTED		(CELL_SAVE_DATA_RETURN_ERROR | 6)
+#define CELL_SAVE_DATA_RETURN_ERROR_FAILED		(CELL_SAVE_DATA_RETURN_ERROR | 7)
+#define CELL_SAVE_DATA_RETURN_ERROR_ALREADY_IN_USE	(CELL_SAVE_DATA_RETURN_ERROR | 8)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum {
-  SYS_SAVE_SORT_TYPE_TIMESTAMP = 0,
-  SYS_SAVE_SORT_TYPE_TITLE,
-} sysSaveSortType;
+  CELL_SAVE_DATA_SORT_TYPE_TIMESTAMP = 0,
+  CELL_SAVE_DATA_SORT_TYPE_TITLE,
+} CellSaveDataSortType;
 
 typedef enum {
-  SYS_SAVE_SORT_ORDER_DESCENDING = 0,
-  SYS_SAVE_SORT_ORDER_ASCENDING,
-} sysSaveSortOrder;
+  CELL_SAVE_DATA_SORT_ORDER_DESCENDING = 0,
+  CELL_SAVE_DATA_SORT_ORDER_ASCENDING,
+} CellSaveDataSortOrder;
 
 typedef enum {
-  SYS_SAVE_FOCUS_POSITION_DIRECTORY_NAME = 0,
-  SYS_SAVE_FOCUS_POSITION_LIST_HEAD,
-  SYS_SAVE_FOCUS_POSITION_LIST_TAIL,
-  SYS_SAVE_FOCUS_POSITION_LATEST,
-  SYS_SAVE_FOCUS_POSITION_OLDEST,
-  SYS_SAVE_FOCUS_POSITION_NEW_SAVE,
-} sysSaveFocusPosition;
+  CELL_SAVE_DATA_FOCUS_POSITION_DIRECTORY_NAME = 0,
+  CELL_SAVE_DATA_FOCUS_POSITION_LIST_HEAD,
+  CELL_SAVE_DATA_FOCUS_POSITION_LIST_TAIL,
+  CELL_SAVE_DATA_FOCUS_POSITION_LATEST,
+  CELL_SAVE_DATA_FOCUS_POSITION_OLDEST,
+  CELL_SAVE_DATA_FOCUS_POSITION_NEW_SAVE,
+} CellSaveDataFocusPosition;
 
 typedef enum {
-  SYS_SAVE_NEW_SAVE_POSITION_TOP = 0,
-  SYS_SAVE_NEW_SAVE_POSITION_BOTTOM,
-} sysSaveNewSavePosition;
+  CELL_SAVE_DATA_NEW_SAVE_POSITION_TOP = 0,
+  CELL_SAVE_DATA_NEW_SAVE_POSITION_BOTTOM,
+} CellSaveDataNewSavePosition;
 
 
 typedef enum {
-  SYS_SAVE_FILETYPE_PROTECTED_FILE = 0,
-  SYS_SAVE_FILETYPE_STANDARD_FILE,
-  SYS_SAVE_FILETYPE_CONTENT_ICON0,
-  SYS_SAVE_FILETYPE_CONTENT_ICON1,
-  SYS_SAVE_FILETYPE_CONTENT_PIC1,
-  SYS_SAVE_FILETYPE_CONTENT_SND0,
-} sysSaveFileType;
+  CELL_SAVE_DATA_FILETYPE_PROTECTED_FILE = 0,
+  CELL_SAVE_DATA_FILETYPE_STANDARD_FILE,
+  CELL_SAVE_DATA_FILETYPE_CONTENT_ICON0,
+  CELL_SAVE_DATA_FILETYPE_CONTENT_ICON1,
+  CELL_SAVE_DATA_FILETYPE_CONTENT_PIC1,
+  CELL_SAVE_DATA_FILETYPE_CONTENT_SND0,
+} CellSaveDataFileType;
 
 typedef enum {
-  SYS_SAVE_RECREATE_MODE_OVERWRITE_CORRUPTED = 0,
-  SYS_SAVE_RECREATE_MODE_OVERWRITE_NOT_CORRUPTED,
-  SYS_SAVE_RECREATE_MODE_DELETE
-} sysSaveRecreateMode;
+  CELL_SAVE_DATA_RECREATE_MODE_OVERWRITE_CORRUPTED = 0,
+  CELL_SAVE_DATA_RECREATE_MODE_OVERWRITE_NOT_CORRUPTED,
+  CELL_SAVE_DATA_RECREATE_MODE_DELETE
+} CellSaveDataRecreateMode;
 
 typedef enum {
-  SYS_SAVE_FILE_OPERATION_READ = 0,
-  SYS_SAVE_FILE_OPERATION_WRITE,
-  SYS_SAVE_FILE_OPERATION_DELETE,
-} sysSaveFileOperation;
+  CELL_SAVE_DATA_FILE_OPERATION_READ = 0,
+  CELL_SAVE_DATA_FILE_OPERATION_WRITE,
+  CELL_SAVE_DATA_FILE_OPERATION_DELETE,
+} CellSaveDataFileOperation;
 
 typedef enum {
-  SYS_SAVE_ERROR_DIALOG_NONE = 0,
-  SYS_SAVE_ERROR_DIALOG_SHOW,
-  SYS_SAVE_ERROR_DIALOG_SHOW_ONCE,
-} sysSaveErrorDialogMode;
+  CELL_SAVE_DATA_ERROR_DIALOG_NONE = 0,
+  CELL_SAVE_DATA_ERROR_DIALOG_SHOW,
+  CELL_SAVE_DATA_ERROR_DIALOG_SHOW_ONCE,
+} CellSaveDataErrorDialogMode;
 
 typedef struct {
-  sysSaveSortType sortType;
-  sysSaveSortOrder sortOrder;
+  CellSaveDataSortType sortType;
+  CellSaveDataSortOrder sortOrder;
   char *pathPrefix ATTRIBUTE_PRXPTR;
   void *reserved ATTRIBUTE_PRXPTR;
-} sysSaveListSettings;
+} CellSaveDataListSettings;
 
 typedef struct {
   u32 maxDirectories;
@@ -118,7 +118,7 @@ typedef struct {
   u32 reserved[6];
   u32 bufferSize;
   void *buffer ATTRIBUTE_PRXPTR;
-} sysSaveBufferSettings;
+} CellSaveDataBufferSettings;
 
 
 typedef struct {
@@ -127,27 +127,27 @@ typedef struct {
   s32 missingSpaceKB;
   char *customErrorMessage ATTRIBUTE_PRXPTR;
   void *user_data ATTRIBUTE_PRXPTR;
-} sysSaveCallbackResult;
+} CellSaveDataCallbackResult;
 
 typedef struct {
-  char directoryName[SYS_SAVE_MAX_DIRECTORY_NAME];
-  char listParameter[SYS_SAVE_MAX_LIST_PARAMETER];
+  char directoryName[CELL_SAVE_DATA_MAX_DIRECTORY_NAME];
+  char listParameter[CELL_SAVE_DATA_MAX_LIST_PARAMETER];
   u8 reserved[8];
-} sysSaveDirectoryList;
+} CellSaveDataDirectoryList;
 
 typedef struct {
   char *title ATTRIBUTE_PRXPTR;
   u32 iconBufferSize;
   void *iconBuffer ATTRIBUTE_PRXPTR;
   void *reserved ATTRIBUTE_PRXPTR;
-} sysSaveNewSaveGameIcon;
+} CellSaveDataNewSaveGameIcon;
 
 typedef struct {
-  sysSaveNewSavePosition position;
+  CellSaveDataNewSavePosition position;
   char *directoryName ATTRIBUTE_PRXPTR;
-  sysSaveNewSaveGameIcon *icon ATTRIBUTE_PRXPTR;
+  CellSaveDataNewSaveGameIcon *icon ATTRIBUTE_PRXPTR;
   void *reserved ATTRIBUTE_PRXPTR;
-} sysSaveNewSaveGame;
+} CellSaveDataNewSaveGame;
 
 typedef struct {
   /* total directories found */
@@ -155,54 +155,54 @@ typedef struct {
   /* number of directories in directoryList */
   u32 numDirectories;
   /* list of directories found */
-  sysSaveDirectoryList *directoryList ATTRIBUTE_PRXPTR;
+  CellSaveDataDirectoryList *directoryList ATTRIBUTE_PRXPTR;
   u8 reserved[64];
-} sysSaveListIn;
+} CellSaveDataListIn;
 
 typedef struct {
   /* Where to put the focus of the cursor */
-  sysSaveFocusPosition focus;
+  CellSaveDataFocusPosition focus;
   /* The name of the directory to focus to */
   char *focusDirectoryName ATTRIBUTE_PRXPTR;
   u32 numDirectories;
-  sysSaveDirectoryList *directoryList ATTRIBUTE_PRXPTR;
-  sysSaveNewSaveGame *newSaveGame ATTRIBUTE_PRXPTR;
+  CellSaveDataDirectoryList *directoryList ATTRIBUTE_PRXPTR;
+  CellSaveDataNewSaveGame *newSaveGame ATTRIBUTE_PRXPTR;
   void *reserved ATTRIBUTE_PRXPTR;
-} sysSaveListOut;
+} CellSaveDataListOut;
 
 typedef struct {
   time_t atime;
   time_t mtime;
   time_t ctime;
-  char directoryName[SYS_SAVE_MAX_DIRECTORY_NAME];
-} sysSaveDirectoryStatus;
+  char directoryName[CELL_SAVE_DATA_MAX_DIRECTORY_NAME];
+} CellSaveDataDirectoryStatus;
 
 typedef struct {
-  char title[SYS_SAVE_MAX_TITLE];
-  char subtitle[SYS_SAVE_MAX_SUBTITLE];
-  char detail[SYS_SAVE_MAX_DETAIL];
+  char title[CELL_SAVE_DATA_MAX_TITLE];
+  char subtitle[CELL_SAVE_DATA_MAX_SUBTITLE];
+  char detail[CELL_SAVE_DATA_MAX_DETAIL];
   u32 copyProtected;
   u32 parentalLevel;
-  char listParameter[SYS_SAVE_MAX_LIST_PARAMETER];
+  char listParameter[CELL_SAVE_DATA_MAX_LIST_PARAMETER];
   u8 reserved[256];
-} sysSaveSystemFileParam;
+} CellSaveDataSystemFileParam;
 
 typedef struct {
-  sysSaveFileType fileType;
+  CellSaveDataFileType fileType;
   u8 reserved1[4];
   u64 fileSize;
   time_t atime;
   time_t mtime;
   time_t ctime;
-  char filename[SYS_SAVE_MAX_FILE_NAME];
+  char filename[CELL_SAVE_DATA_MAX_FILE_NAME];
   u8 reserved2[3];
-} sysSaveFileStatus;
+} CellSaveDataFileStatus;
 
 typedef struct {
   s32 freeSpaceKB;
   u32 isNew;
-  sysSaveDirectoryStatus directoryStatus;
-  sysSaveSystemFileParam getParam;
+  CellSaveDataDirectoryStatus directoryStatus;
+  CellSaveDataSystemFileParam getParam;
   u32 bindingInformation;
   /* Size of the save data */
   s32 sizeKB;
@@ -212,127 +212,127 @@ typedef struct {
   u32 totalFiles;
   /* Number of files in the the file list */
   u32 numFiles;
-  sysSaveFileStatus *fileList ATTRIBUTE_PRXPTR;
+  CellSaveDataFileStatus *fileList ATTRIBUTE_PRXPTR;
   u8 reserved[64];
-} sysSaveStatusIn;
+} CellSaveDataStatusIn;
 
 typedef struct {
-  sysSaveSystemFileParam *setParam ATTRIBUTE_PRXPTR;
-  sysSaveRecreateMode recreateMode;
+  CellSaveDataSystemFileParam *setParam ATTRIBUTE_PRXPTR;
+  CellSaveDataRecreateMode recreateMode;
   void *reserved ATTRIBUTE_PRXPTR;
-} sysSaveStatusOut;
+} CellSaveDataStatusOut;
 
 typedef struct {
   u32 previousOperationResultSize;
   u8 reserved[64];
-} sysSaveFileIn;
+} CellSaveDataFileIn;
 
 typedef struct {
-  sysSaveFileOperation fileOperation;
+  CellSaveDataFileOperation fileOperation;
   void *reserved ATTRIBUTE_PRXPTR;
-  sysSaveFileType fileType;
-  u8 protectedFileID[SYS_SAVE_MAX_PROTECTED_FILE_ID];
+  CellSaveDataFileType fileType;
+  u8 protectedFileID[CELL_SAVE_DATA_MAX_PROTECTED_FILE_ID];
   char *filename ATTRIBUTE_PRXPTR;
   u32 offset;
   u32 size;
   u32 bufferSize;
   void *buffer ATTRIBUTE_PRXPTR;
-} sysSaveFileOut;
+} CellSaveDataFileOut;
 
 typedef struct {
   char *directoryName ATTRIBUTE_PRXPTR;
-  sysSaveNewSaveGameIcon *icon ATTRIBUTE_PRXPTR;
+  CellSaveDataNewSaveGameIcon *icon ATTRIBUTE_PRXPTR;
   void *reserved ATTRIBUTE_PRXPTR;
-} sysSaveFixedOut;
+} CellSaveDataFixedOut;
 
-typedef void (* sysSaveListCallback) (sysSaveCallbackResult *result,
-    sysSaveListIn *in, sysSaveListOut *out);
+typedef void (* CellSaveDataListCallback) (CellSaveDataCallbackResult *result,
+    CellSaveDataListIn *in, CellSaveDataListOut *out);
 
-typedef void (* sysSaveStatusCallback) (sysSaveCallbackResult *result,
-    sysSaveStatusIn *in, sysSaveStatusOut *out);
+typedef void (* CellSaveDataStatusCallback) (CellSaveDataCallbackResult *result,
+    CellSaveDataStatusIn *in, CellSaveDataStatusOut *out);
 
-typedef void (* sysSaveFileCallback) (sysSaveCallbackResult *result,
-    sysSaveFileIn *in, sysSaveFileOut *out);
+typedef void (* CellSaveDataFileCallback) (CellSaveDataCallbackResult *result,
+    CellSaveDataFileIn *in, CellSaveDataFileOut *out);
 
-typedef void (* sysSaveFixedCallback) (sysSaveCallbackResult *result,
-    sysSaveListIn *in, sysSaveFixedOut *out);
+typedef void (* CellSaveDataFixedCallback) (CellSaveDataCallbackResult *result,
+    CellSaveDataListIn *in, CellSaveDataFixedOut *out);
 
 
-s32 sysSaveListLoad2 (u32 version,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveListCallback listCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataListLoad2 (u32 version,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataListCallback listCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveListSave2 (u32 version,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveListCallback listCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataListSave2 (u32 version,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataListCallback listCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveListAutoLoad (u32 version,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveFixedCallback fixedCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataListAutoLoad (u32 version,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataFixedCallback fixedCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveListAutoSave (u32 version,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveFixedCallback fixedCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataListAutoSave (u32 version,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataFixedCallback fixedCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveFixedLoad2 (u32 version,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveFixedCallback fixedCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataFixedLoad2 (u32 version,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataFixedCallback fixedCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveFixedSave2 (u32 version,
-    sysSaveListSettings *listSettings,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveFixedCallback fixedCb,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+s32 cellSaveDataFixedSave2 (u32 version,
+    CellSaveDataListSettings *listSettings,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataFixedCallback fixedCb,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveAutoLoad2 (s32 version,
+s32 cellSaveDataAutoLoad2 (s32 version,
     const char *directoryName,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveAutoSave2 (s32 version,
+s32 cellSaveDataAutoSave2 (s32 version,
     const char *directoryName,
-    sysSaveErrorDialogMode errorDialogMode,
-    sysSaveBufferSettings *bufferSettings,
-    sysSaveStatusCallback statusCb,
-    sysSaveFileCallback fileCb,
+    CellSaveDataErrorDialogMode errorDialogMode,
+    CellSaveDataBufferSettings *bufferSettings,
+    CellSaveDataStatusCallback statusCb,
+    CellSaveDataFileCallback fileCb,
     sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveDelete2(sys_mem_container_t container);
+s32 cellSaveDataDelete2(sys_mem_container_t container);
 
 #ifdef __cplusplus
 	}

@@ -36,13 +36,13 @@ LV2_SYSCALL sysLv2FsWrite(s32 fd,const void *ptr,u64 len,u64 *written)
 	return_to_user_prog(s32);
 }
 
-LV2_SYSCALL sysLv2FsStat(const char *path,sysFSStat *stat)
+LV2_SYSCALL sysLv2FsStat(const char *path,CellFsStat *stat)
 {
 	lv2syscall2(808,(u64)path,(u64)stat);
 	return_to_user_prog(s32);
 }
 
-LV2_SYSCALL sysLv2FsFStat(s32 fd,sysFSStat *stat)
+LV2_SYSCALL sysLv2FsFStat(s32 fd,CellFsStat *stat)
 {
 	lv2syscall2(809,fd,(u64)stat);
 	return_to_user_prog(s32);
@@ -60,7 +60,7 @@ LV2_SYSCALL sysLv2FsOpenDir(const char *path,s32 *fd)
 	return_to_user_prog(s32);
 }
 
-LV2_SYSCALL sysLv2FsReadDir(s32 fd,sysFSDirent *entry,u64 *read)
+LV2_SYSCALL sysLv2FsReadDir(s32 fd,CellFsDirent *entry,u64 *read)
 {
 	lv2syscall3(806,fd,(u64)entry,(u64)read);
 	return_to_user_prog(s32);
@@ -120,7 +120,7 @@ LV2_SYSCALL sysLv2FsFtruncate(s32 fd,u64 size)
 	return_to_user_prog(s32);
 }
 
-LV2_SYSCALL sysLv2FsUtime(const char *path,const sysFSUtimbuf *times)
+LV2_SYSCALL sysLv2FsUtime(const char *path,const CellFsUtimbuf *times)
 {
 	lv2syscall2(815,(u64)path,(u64)times);
 	return_to_user_prog(s32);

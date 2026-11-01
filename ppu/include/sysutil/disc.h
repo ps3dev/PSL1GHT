@@ -9,16 +9,16 @@ extern "C" {
 
 typedef enum
 {
-	SYS_DISCTYPE_OTHER = 0,
-	SYS_DISCTYPE_PS3,
-	SYS_DISCTYPE_PS2
-} sysDiscType;
+	CELL_DISCTYPE_OTHER = 0,
+	CELL_DISCTYPE_PS3,
+	CELL_DISCTYPE_PS2
+} CellDiscType;
 
-typedef void (*sysDiscEjectCallback)(void);
-typedef void (*sysDiscInsertCallback)(u32 discType,char *title);
+typedef void (*CellDiscGameEjectCallback)(void);
+typedef void (*CellDiscGameInsertCallback)(u32 discType,char *title);
 
-s32 sysDiscRegisterDiscChangeCallback(sysDiscEjectCallback cbEject,sysDiscInsertCallback cbInsert);
-s32 sysDiscUnregisterDiscChangeCallback();
+s32 cellDiscGameRegisterDiscChangeCallback(CellDiscGameEjectCallback cbEject,CellDiscGameInsertCallback cbInsert);
+s32 cellDiscGameUnregisterDiscChangeCallback();
 
 #ifdef __cplusplus
 	}

@@ -7,20 +7,20 @@
 #endif
 
 
-#define SPURS_ALIGN	128
-#define SPURS_SIZE	4096
-#define SPURS_SIZE2	8192
+#define CELL_SPURS_ALIGN	128
+#define CELL_SPURS_SIZE	4096
+#define CELL_SPURS_SIZE2	8192
 
-#define SPURS_ATTRIBUTE_ALIGN	8
-#define SPURS_ATTRIBUTE_SIZE	512
+#define CELL_SPURS_ATTRIBUTE_ALIGN	8
+#define CELL_SPURS_ATTRIBUTE_SIZE	512
 
-#define SPURS_MAX_SPU	8
-#define SPURS_NAME_MAX_LENGTH	15
-
-
+#define CELL_SPURS_MAX_SPU	8
+#define CELL_SPURS_NAME_MAX_LENGTH	15
 
 
-typedef struct SpursInfo {
+
+
+typedef struct CellSpursInfo {
 	int nSpus;
 	int spuGroupPriority;
 	int ppuThreadPriority;
@@ -32,27 +32,27 @@ typedef struct SpursInfo {
 	u64 traceBufferSize;
 	u32 traceMode;
 	sys_spu_group_t  spuGroup;
-	sys_spu_thread_t spuThreads[SPURS_MAX_SPU];
+	sys_spu_thread_t spuThreads[CELL_SPURS_MAX_SPU];
 	sys_ppu_thread_t spursHandlerThread0;
 	sys_ppu_thread_t spursHandlerThread1;
-	char namePrefix[SPURS_NAME_MAX_LENGTH+1];
+	char namePrefix[CELL_SPURS_NAME_MAX_LENGTH+1];
 	size_t namePrefixLength;
 	u32 deadlineMissCounter;
 	u32 deadlineMeetCounter;
-	u8 padding[280-sizeof(int)*3-sizeof(bool)*2-sizeof(u8)*2-sizeof(void*)-sizeof(u32)-sizeof(u64)-sizeof(u32)-sizeof(sys_spu_group_t)-sizeof(sys_spu_thread_t)*SPURS_MAX_SPU-sizeof(sys_ppu_thread_t)*2-sizeof(u8)*(SPURS_NAME_MAX_LENGTH+1)-sizeof(size_t)-sizeof(u32)*2];
-} SpursInfo;
+	u8 padding[280-sizeof(int)*3-sizeof(bool)*2-sizeof(u8)*2-sizeof(void*)-sizeof(u32)-sizeof(u64)-sizeof(u32)-sizeof(sys_spu_group_t)-sizeof(sys_spu_thread_t)*CELL_SPURS_MAX_SPU-sizeof(sys_ppu_thread_t)*2-sizeof(u8)*(CELL_SPURS_NAME_MAX_LENGTH+1)-sizeof(size_t)-sizeof(u32)*2];
+} CellSpursInfo;
 
-typedef struct Spurs {
-	unsigned char space[SPURS_SIZE]  ;
-} __attribute__((aligned(SPURS_ALIGN))) Spurs;
+typedef struct CellSpurs {
+	unsigned char space[CELL_SPURS_SIZE]  ;
+} __attribute__((aligned(CELL_SPURS_ALIGN))) CellSpurs;
 
-typedef struct Spurs2 {
-	unsigned char space[SPURS_SIZE2];
-} __attribute__((aligned(SPURS_ALIGN))) Spurs2;
+typedef struct CellSpurs2 {
+	unsigned char space[CELL_SPURS_SIZE2];
+} __attribute__((aligned(CELL_SPURS_ALIGN))) CellSpurs2;
 
-typedef struct SpursAttribute {
-	unsigned char	skip[SPURS_ATTRIBUTE_SIZE];
-} __attribute__((aligned(SPURS_ATTRIBUTE_ALIGN))) SpursAttribute;
+typedef struct CellSpursAttribute {
+	unsigned char	skip[CELL_SPURS_ATTRIBUTE_SIZE];
+} __attribute__((aligned(CELL_SPURS_ATTRIBUTE_ALIGN))) CellSpursAttribute;
 
 #ifdef __cplusplus
 	}

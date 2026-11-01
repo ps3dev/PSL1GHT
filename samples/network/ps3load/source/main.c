@@ -97,7 +97,7 @@ void release_all()
 	running = 0;
 	exit_flag = 1;
 
-	sysUtilUnregisterCallback(SYSUTIL_EVENT_SLOT0);
+	cellSysutilUnregisterCallback(CELL_SYSUTIL_EVENT_SLOT0);
 
 	if(listen_socket>=0) shutdown(listen_socket,SHUT_RDWR);
 }
@@ -110,12 +110,12 @@ void finalize()
 
 	netDeinitialize();
 
-	gcmSetWaitFlip(context);
+	cellGcmSetWaitFlip(context);
 	rsxFinish(context,1);
 
-	sysModuleUnload(SYSMODULE_PNGDEC);
-	sysModuleUnload(SYSMODULE_JPGDEC);
-	sysModuleUnload(SYSMODULE_FS);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_PNGDEC);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_JPGDEC);
+	cellSysmoduleUnloadModule(CELL_SYSMODULE_FS);
 }
 
 void program_exit_callback()
@@ -126,11 +126,11 @@ void program_exit_callback()
 void sysutil_exit_callback(u64 status,u64 param,void *usrdata)
 {
 	switch(status) {
-		case SYSUTIL_EXIT_GAME:
+		case CELL_SYSUTIL_EXIT_GAME:
 			release_all();
 			break;
-		case SYSUTIL_DRAW_BEGIN:
-		case SYSUTIL_DRAW_END:
+		case CELL_SYSUTIL_DRAW_BEGIN:
+		case CELL_SYSUTIL_DRAW_END:
 			break;
 		default:
 			break;
@@ -145,15 +145,15 @@ int main(int argc,char *argv[])
 
 	printf("PS3Load " PS3LOADVER "\n");
 
-	sysModuleLoad(SYSMODULE_FS);
-	sysModuleLoad(SYSMODULE_JPGDEC);
-	sysModuleLoad(SYSMODULE_PNGDEC);
+	cellSysmoduleLoadModule(CELL_SYSMODULE_FS);
+	cellSysmoduleLoadModule(CELL_SYSMODULE_JPGDEC);
+	cellSysmoduleLoadModule(CELL_SYSMODULE_PNGDEC);
 
 	init_screen(host_addr,HOST_SIZE);
-	ioPadInit(7);
+	cellPadInit(7);
 
 	ret = atexit(program_exit_callback);
-	ret = sysUtilRegisterCallback(SYSUTIL_EVENT_SLOT0,sysutil_exit_callback,NULL);
+	ret = cellSysutilRegisterCallback(CELL_SYSUTIL_EVENT_SLOT0,sysutil_exit_callback,NULL);
 
 	ret = netInitialize();
 	ERROR(ret,"Error initializing network");
