@@ -301,9 +301,12 @@ void self_build_sceversion_header(SCEVERSION_INFO *info,const void *elf_data,uin
 	info->unknown1 = 1;
 	info->unknown2 = 1;
 	info->size = sizeof(SCEVERSION_INFO);
-	info->section_idx = sce_idx;
 	info->unknown4 = 1;
 	info->unknown6 = 1;
+	/* no .sceversion section: sce_off is -1, and strlen would read before elf_data */
+	if (sce_idx < 0)
+		return;
+	info->section_idx = sce_idx;
 	info->offset = sce_off + elfOffset;
 	info->str_size = strlen((char*)elf_data + sce_off);
 }
