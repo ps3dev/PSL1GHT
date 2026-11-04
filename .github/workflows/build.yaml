@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  Linux:
+    name: build-linux
+    runs-on: ubuntu-latest
+    container: zeldin/ps3dev-docker:latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+          submodules: recursive
+
+    - name: Running make (linux)
+      run: |
+        make
+        make install
+        cd samples
+        make
+        make install
