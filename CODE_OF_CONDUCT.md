@@ -1,5 +1,9 @@
 # Contributor Covenant Code of Conduct
 
+> [!NOTE]
+> This Code of Conduct contains guidelines for interpersonal behaviour within
+> PS3DEV. For guidance on LLM pull requests, refer to our [AI Policy](https://github.com/ps3dev/PSL1GHT/blob/master/AI_POLICY.md).
+
 ## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in our
