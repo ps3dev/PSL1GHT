@@ -2,9 +2,9 @@
 #include <rsx/gcm_sys.h>
 #include <ppu-asm.h>
 
-gcmContextData *gGcmContext ATTRIBUTE_PRXPTR = NULL;
+CellGcmContextData *gGcmContext ATTRIBUTE_PRXPTR = NULL;
 
-static gcmContextData sUserContext =
+static CellGcmContextData sUserContext =
 {
 	NULL,
 	NULL,
@@ -12,13 +12,13 @@ static gcmContextData sUserContext =
 	NULL
 };
 
-extern s32 gcmInitBodyEx(gcmContextData* ATTRIBUTE_PRXPTR *ctx,const u32 cmdSize,const u32 ioSize,const void *ioAddress);
+extern s32 _cellGcmInitBodyEx(CellGcmContextData* ATTRIBUTE_PRXPTR *ctx,const u32 cmdSize,const u32 ioSize,const void *ioAddress);
 
-s32 rsxInit(gcmContextData **context,u32 cmdSize,u32 ioSize,const void *ioAddress)
+s32 rsxInit(CellGcmContextData **context,u32 cmdSize,u32 ioSize,const void *ioAddress)
 {
 	s32 ret = -1;
 
-	ret = gcmInitBodyEx(&gGcmContext,cmdSize,ioSize,ioAddress);
+	ret = _cellGcmInitBodyEx(&gGcmContext,cmdSize,ioSize,ioAddress);
 	if(ret==0) {
 		rsxHeapInit();
 
@@ -28,17 +28,17 @@ s32 rsxInit(gcmContextData **context,u32 cmdSize,u32 ioSize,const void *ioAddres
 	return ret;
 }
 
-void rsxSetupContextData(gcmContextData *context,const u32 *addr,u32 size,gcmContextCallback cb)
+void rsxSetupContextData(CellGcmContextData *context,const u32 *addr,u32 size,CellGcmContextCallback cb)
 {
 	u32 alignedSize = size&~0x3;
 
 	context->begin = (u32*)addr;
 	context->current = (u32*)addr;
 	context->end = (u32*)(addr + alignedSize - 4);
-	context->callback = (gcmContextCallback)__get_opd32(cb);
+	context->callback = (CellGcmContextCallback)__get_opd32(cb);
 }
 
-void rsxSetCurrentBuffer(gcmContextData **context,const u32 *addr,u32 size)
+void rsxSetCurrentBuffer(CellGcmContextData **context,const u32 *addr,u32 size)
 {
 	u32 alignedSize = size&~0x3;
 	
@@ -52,14 +52,14 @@ void rsxSetCurrentBuffer(gcmContextData **context,const u32 *addr,u32 size)
 		*context = gGcmContext;
 }
 
-void rsxSetDefaultCommandBuffer(gcmContextData **context)
+void rsxSetDefaultCommandBuffer(CellGcmContextData **context)
 {
-	gcmSetDefaultCommandBuffer();
+	cellGcmSetDefaultCommandBuffer();
 	if (context)
 		*context = gGcmContext;
 }
 
-void rsxSetUserCallback(gcmContextCallback cb)
+void rsxSetUserCallback(CellGcmContextCallback cb)
 {
 	sUserContext.callback = cb;
 }

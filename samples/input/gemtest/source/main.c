@@ -37,24 +37,24 @@ typedef struct {
 } buffer;
 
 buffer *buffers[2];             // The buffer we will be drawing into
-gcmContextData *context;        // Context to keep track of the RSX buffer.
+CellGcmContextData *context;        // Context to keep track of the RSX buffer.
 
-videoResolution res;            // Screen Resolution
+CellVideoOutResolution res;            // Screen Resolution
 
 int currentBuffer = 0;
 
-cameraReadInfo readex;
-cameraType type;
-cameraInfoEx camInfo;
+CellCameraReadInfo readex;
+CellCameraType type;
+CellCameraInfoEx camInfo;
 
 sys_mem_container_t container;
-Spurs spurs;
+CellSpurs spurs;
 
-gemAttribute gem_attr;
-gemInfo gem_info;
-gemVideoConvertAttribute gem_video_convert;
-gemState gem_state;
-gemInertialState gem_inertial_state;
+CellGemAttribute gem_attr;
+CellGemInfo gem_info;
+CellGemVideoConvertAttribute gem_video_convert;
+CellGemState gem_state;
+CellGemInertialState gem_inertial_state;
 u16 oldGemPad = 0;
 u16 newGemPad = 0;
 u16 newGemAnalogT = 0;
@@ -64,12 +64,12 @@ int pos_x = 0;
 int pos_y = 0;
 int dx = 200;                   // default step x
 int dy = 100;                   // default step y
-gemImageState image_state;
+CellGemImageState image_state;
 void *buffer_mem;
 void *video_out;
 
-padInfo padinfo;
-padData paddata;
+CellPadInfo padinfo;
+CellPadData paddata;
 
 void
 makeBuffer (int id, int size)
@@ -81,7 +81,7 @@ makeBuffer (int id, int size)
 
   assert (rsxAddressToOffset (buf->ptr, &buf->offset) == 0);
   // Register the display buffer with the RSX
-  assert (gcmSetDisplayBuffer (id, buf->offset, res.width * 4, res.width,
+  assert (cellGcmSetDisplayBuffer (id, buf->offset, res.width * 4, res.width,
           res.height) == 0);
 
   buf->width = res.width;
@@ -93,17 +93,17 @@ void
 waitFlip ()
 {                               // Block the PPU thread untill the previous
   // flip operation has finished.
-  while (gcmGetFlipStatus () != 0)
+  while (cellGcmGetFlipStatus () != 0)
     usleep (200);
-  gcmResetFlipStatus ();
+  cellGcmResetFlipStatus ();
 }
 
 void
 flip (s32 buffer)
 {
-  assert (gcmSetFlip (context, buffer) == 0);
+  assert (cellGcmSetFlip (context, buffer) == 0);
   rsxFlushBuffer (context);
-  gcmSetWaitFlip (context);     // Prevent the RSX from continuing until the
+  cellGcmSetWaitFlip (context);     // Prevent the RSX from continuing until the
   // flip has finished.
 }
 
@@ -116,7 +116,7 @@ waitFinish(u32 sLabelVal)
 
   rsxFlushBuffer (context);
 
-  while(*(vu32 *) gcmGetLabelAddress (GCM_LABEL_INDEX) != sLabelVal)
+  while(*(vu32 *) cellGcmGetLabelAddress (GCM_LABEL_INDEX) != sLabelVal)
     usleep(30);
 }
 
@@ -144,40 +144,40 @@ init_screen ()
   assert (host_addr != NULL);
 
   // Initilise RSX, which sets up the command buffer and shared IO memory
-  context = rsxInit (0x10000, 1024 * 1024, host_addr);
+  rsxInit (&context, 0x10000, 1024 * 1024, host_addr);
   assert (context != NULL);
 
-  videoState state;
+  CellVideoOutState state;
 
-  assert (videoGetState (0, 0, &state) == 0);   // Get the state of the display
+  assert (cellVideoOutGetState (0, 0, &state) == 0);   // Get the state of the display
   assert (state.state == 0);    // Make sure display is enabled
 
   // Get the current resolution
-  assert (videoGetResolution (VIDEO_RESOLUTION_1080, &res) == 0);
+  assert (cellVideoOutGetResolution (CELL_VIDEO_OUT_RESOLUTION_1080, &res) == 0);
 
   // Configure the buffer format to xRGB
-  videoConfiguration vconfig;
+  CellVideoOutConfiguration vconfig;
 
-  memset (&vconfig, 0, sizeof (videoConfiguration));
-  vconfig.resolution = VIDEO_RESOLUTION_1080;
-  vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
+  memset (&vconfig, 0, sizeof (CellVideoOutConfiguration));
+  vconfig.resolution = CELL_VIDEO_OUT_RESOLUTION_1080;
+  vconfig.format = CELL_VIDEO_OUT_BUFFER_FORMAT_XRGB;
   vconfig.pitch = res.width * 4;
-  vconfig.aspect = VIDEO_ASPECT_AUTO;
+  vconfig.aspect = CELL_VIDEO_OUT_ASPECT_AUTO;
 
   waitRSXIdle ();
 
-  assert (videoConfigure (0, &vconfig, NULL, 0) == 0);
-  assert (videoGetState (0, 0, &state) == 0);
+  assert (cellVideoOutConfigure (0, &vconfig, NULL, 0) == 0);
+  assert (cellVideoOutGetState (0, 0, &state) == 0);
 
   s32 buffer_size = 4 * res.width * res.height; // each pixel is 4 bytes
 
-  gcmSetFlipMode (GCM_FLIP_VSYNC);      // Wait for VSYNC to flip
+  cellGcmSetFlipMode (CELL_GCM_FLIP_VSYNC);      // Wait for VSYNC to flip
 
   // Allocate two buffers for the RSX to draw to the screen (double buffering)
   makeBuffer (0, buffer_size);
   makeBuffer (1, buffer_size);
 
-  gcmResetFlipStatus ();
+  cellGcmResetFlipStatus ();
   flip (1);
 
 }
@@ -209,16 +209,16 @@ fillVideoOut (u32 * b, u32 color)
 void
 appCleanup ()
 {
-  gemEnd ();
-  cameraStop (0);
+  cellGemEnd ();
+  cellCameraStop (0);
 
-  cameraClose (0);
-  cameraEnd ();
+  cellCameraClose (0);
+  cellCameraEnd ();
 
   sysMemContainerDestroy (container);
-  sysModuleUnload (SYSMODULE_GEM);
-  sysModuleUnload (SYSMODULE_CAM);
-  sysUtilUnregisterCallback (SYSUTIL_EVENT_SLOT0);
+  cellSysmoduleUnloadModule (CELL_SYSMODULE_GEM);
+  cellSysmoduleUnloadModule (CELL_SYSMODULE_CAMERA);
+  cellSysutilUnregisterCallback (CELL_SYSUTIL_EVENT_SLOT0);
   printf ("Exiting for real.\n");
 }
 
@@ -272,7 +272,7 @@ eventHandle (u64 status, u64 param, void *userdata)
 {
   (void) param;
   (void) userdata;
-  if (status == SYSUTIL_EXIT_GAME) {
+  if (status == CELL_SYSUTIL_EXIT_GAME) {
     printf ("Quit game requested\n");
     exit (0);
   } else {
@@ -287,10 +287,10 @@ readPad ()
 
   int i;
 
-  ioPadGetInfo (&padinfo);
+  cellPadGetInfo (&padinfo);
   for (i = 0; i < 6; i++) {     // 7 is our Move device
     if (padinfo.status[i]) {
-      ioPadGetData (i, &paddata);
+      cellPadGetData (i, &paddata);
 
       if (paddata.BTN_CROSS) {
 
@@ -312,29 +312,29 @@ proccessGem (int t)
   switch (t) {
 
     case 0:
-      ret = gemUpdateStart ((void *) (u64) readex.buffer, readex.timestamp);
+      ret = cellGemUpdateStart ((void *) (u64) readex.buffer, readex.timestamp);
       if (ret != 0) {
-        printf ("Return from gemUpdateStart %X\n", ret);
+        printf ("Return from cellGemUpdateStart %X\n", ret);
       }
       break;
     case 1:
 
-      ret = gemConvertVideoStart ((void *) (u64) readex.buffer);
+      ret = cellGemConvertVideoStart ((void *) (u64) readex.buffer);
       if (ret != 0) {
-        printf ("Return from gemConvertVideoStart %X\n", ret);
+        printf ("Return from cellGemConvertVideoStart %X\n", ret);
       }
       break;
     case 2:
 
-      ret = gemUpdateFinish ();
+      ret = cellGemUpdateFinish ();
       if (ret != 0) {
-        printf ("Return from gemUpdateFinish %X\n", ret);
+        printf ("Return from cellGemUpdateFinish %X\n", ret);
       }
       break;
     case 3:
-      ret = gemConvertVideoFinish ();
+      ret = cellGemConvertVideoFinish ();
       if (ret != 0) {
-        printf ("Return from gemConvertVideoFinish %X\n", ret);
+        printf ("Return from cellGemConvertVideoFinish %X\n", ret);
       }
       break;
     default:
@@ -387,17 +387,17 @@ readCamera ()
 {
   int ret;
 
-  ret = cameraReadEx (0, &readex);
+  ret = cellCameraReadEx (0, &readex);
   switch (ret) {
 
-    case CAMERA_ERRO_NEED_START:
-      cameraReset (0);
-      ret = gemPrepareCamera (500, 0.5);
+    case CELL_CAMERA_ERROR_NEED_START:
+      cellCameraReset (0);
+      ret = cellGemPrepareCamera (500, 0.5);
       printf
-          ("GemPrepareCamera return %d exposure set to 500 and quality to 0.5 before cameraStart\n",
+          ("cellGemPrepareCamera return %d exposure set to 500 and quality to 0.5 before cellCameraStart\n",
               ret);
       printf ("lets go!! It's time to look your face in Sony Bravia :P\n");
-      cameraStart (0);
+      cellCameraStart (0);
       break;
     case 0:
       break;
@@ -419,28 +419,28 @@ setupCamera ()
   int ret;
   int flag1 = 0;
 
-  cameraGetType (0, &type);
-  if (type == CAM_TYPE_PLAYSTATION_EYE) {
+  cellCameraGetType (0, &type);
+  if (type == CELL_CAMERA_TYPE_PLAYSTATION_EYE) {
     flag1 = 1;
-    camInfo.format = CAM_FORM_YUV422;
+    camInfo.format = CELL_CAMERA_FORMAT_YUV422;
     camInfo.framerate = 30;
-    camInfo.resolution = CAM_RESO_VGA;
+    camInfo.resolution = CELL_CAMERA_RESOLUTION_VGA;
     camInfo.info_ver = 0x0200;
     camInfo.container = container;
 
-    ret = cameraOpenEx (0, &camInfo);
+    ret = cellCameraOpenEx (0, &camInfo);
     switch (ret) {
-      case CAMERA_ERRO_DOUBLE_OPEN:
-        cameraClose (0);
+      case  CELL_CAMERA_ERROR_DOUBLE_OPEN:
+        cellCameraClose (0);
         flag1 = 0;
         break;
-      case CAMERA_ERRO_NO_DEVICE_FOUND:
+      case  CELL_CAMERA_ERROR_NO_DEVICE_FOUND:
         printf ("This sample need a PlayStation Eye device\n");
         flag1 = 0;
         break;
       case 0:
         printf ("Found me an eye, arrr!\n");
-        printf ("cameraOpenEx returned %08X\n", ret);
+        printf ("cellCameraOpenEx returned %08X\n", ret);
         printf ("Video dimensions: %dx%d\n", camInfo.width, camInfo.height);
         printf ("Buffer at %08X\n", camInfo.buffer);
         printf ("Setting CameraReadEx buffer to camInfo buffer\n");
@@ -478,7 +478,7 @@ calibrateGem (int numgem)
   hues[3] = 4 << 24;
   while (!flag && !error && padflag) {
     padflag = readPad ();
-    ret1 = gemCalibrate (numgem);
+    ret1 = cellGemCalibrate (numgem);
     if (readCamera () != 0) {
       proccessGem (0);
       proccessGem (1);
@@ -488,17 +488,17 @@ calibrateGem (int numgem)
 
       displayCameraFrame (buffers[currentBuffer], buf, 0, 0, camInfo.width,
           camInfo.height);
-      ret = gemGetState (numgem, 1, 0, &gem_state);
-      printf("internal gemGetState %d \n",ret);
+      ret = cellGemGetState (numgem, 1, 0, &gem_state);
+      printf("internal cellGemGetState %d \n",ret);
     }
-    ret = gemGetState (numgem, 1, 0, &gem_state);
+    ret = cellGemGetState (numgem, 1, 0, &gem_state);
     switch (ret) {
       case 1:
         printf ("status %d No Move device connected\n", ret);
         break;
       case 2:
         printf ("status %d first calibrate device\n", ret);
-        ret1 = gemCalibrate (numgem);
+        ret1 = cellGemCalibrate (numgem);
         printf ("GemCalibrate return %X\n", ret1);
         printf ("Calibrating is in proccess...\n");
         break;
@@ -512,7 +512,7 @@ calibrateGem (int numgem)
         printf
             ("status %d Second set a hue value to track or let Sony choose for you :P\n",
                 ret);
-        ret1 = gemTrackHues (hues, NULL);
+        ret1 = cellGemTrackHues (hues, NULL);
         printf ("GemTrackHues return %X\n", ret1);
 
         break;
@@ -529,7 +529,7 @@ calibrateGem (int numgem)
         flag = 1;
         break;
       default:
-        printf ("Error %X return by gemGetState \n", ret);
+        printf ("Error %X return by cellGemGetState \n", ret);
         error = 1;
 
     }
@@ -552,7 +552,7 @@ initGem ()
   int ret;
   int i;
 
-  ret = gemGetMemorySize (1);
+  ret = cellGemGetMemorySize (1);
   printf
       ("return from GemGetMemorySize %X size in bytes needed for move device to init libgem\n",
           ret);
@@ -569,15 +569,15 @@ initGem ()
   printf
       ("calling GemInit with GemAttribute structure version=%d max_connect=%d spurs=%X memory_ptr=%X  \n",
           gem_attr.version, gem_attr.max, gem_attr.spurs, gem_attr.memory);
-  ret = gemInit (&gem_attr);
+  ret = cellGemInit (&gem_attr);
   printf ("return from GemInit %X \n", ret);
   printf ("Preparing GemVideoConvert structure \n");
 
   gem_video_convert.version = 2;
-  gem_video_convert.format = GEM_RGBA_640x480;
+  gem_video_convert.format = CELL_GEM_RGBA_640x480;
   gem_video_convert.conversion =
-      GEM_AUTO_WHITE_BALANCE | GEM_COMBINE_PREVIOUS_INPUT_FRAME |
-      GEM_FILTER_OUTLIER_PIXELS | GEM_GAMMA_BOOST;
+      CELL_GEM_AUTO_WHITE_BALANCE    | CELL_GEM_COMBINE_PREVIOUS_INPUT_FRAME |
+      CELL_GEM_FILTER_OUTLIER_PIXELS | CELL_GEM_GAMMA_BOOST;
   gem_video_convert.gain = 1.0f;
   gem_video_convert.red_gain = 1.0f;
   gem_video_convert.green_gain = 1.0f;
@@ -589,15 +589,15 @@ initGem ()
   gem_video_convert.video_data_out = (u64) video_out;
   gem_video_convert.alpha = 255;
 
-  ret = gemPrepareVideoConvert (&gem_video_convert);    // return 0 but it does
+  ret = cellGemPrepareVideoConvert (&gem_video_convert);    // return 0 but it does
   // not work like i want
   // TODO
   printf ("GemPrepareVideoConvert return %X  \n", ret);
 
-  ret = gemPrepareCamera (500, 0.5);
+  ret = cellGemPrepareCamera (500, 0.5);
   printf ("GemPrepareCamera return %d exposure set to 500 and quality to 0.5\n",
       ret);
-  ret = gemReset (0);
+  ret = cellGemReset (0);
   printf ("GemReset return %X \n", ret);
   return ret;
 
@@ -608,9 +608,9 @@ readGemPad (int num_gem)
 {
   int ret;
 
-  ret = gemGetState (0, 0, 0, &gem_state);
+  ret = cellGemGetState (0, 0, 0, &gem_state);
   if (ret != 0) {
-    printf ("Error %X  in gemGetState \n ", ret);
+    printf ("Error %X  in cellGemGetState \n ", ret);
   }
 
   newGemPad = gem_state.paddata.buttons & (~oldGemPad);
@@ -638,7 +638,7 @@ readGemAccPosition (int num_gem)
 {
   vec_float4 position;
 
-  gemGetAccelerometerPositionInDevice (num_gem, &position);
+  cellGemGetAccelerometerPositionInDevice (num_gem, &position);
 
   printf (" accelerometer device coordinates [%f,%f,%fm,%f]\n",
       vec_array(position, 0), vec_array(position, 1), vec_array(position, 2),
@@ -651,7 +651,7 @@ readGemInertial (int num_gem)
 {
   int ret;
 
-  ret = gemGetInertialState (num_gem, 0, 0, &gem_inertial_state);
+  ret = cellGemGetInertialState (num_gem, 0, 0, &gem_inertial_state);
   printf ("gemGetInertialState return %X\n", ret);
   printf ("counter %d temperature %f\n", gem_inertial_state.counter,
       gem_inertial_state.temperature);
@@ -686,13 +686,13 @@ main (s32 argc, const char *argv[])
 
   int p;
 
-  p = sysModuleLoad (SYSMODULE_CAM);
+  p = cellSysmoduleLoadModule (CELL_SYSMODULE_CAMERA);
   printf ("cam return %X\n", p);
-  p = sysModuleLoad (SYSMODULE_GEM);
+  p = cellSysmoduleLoadModule (CELL_SYSMODULE_GEM);
   printf ("move return %X\n", p);
   atexit (appCleanup);
 
-  sysUtilRegisterCallback (SYSUTIL_EVENT_SLOT0, eventHandle, NULL);
+  cellSysutilRegisterCallback (CELL_SYSUTIL_EVENT_SLOT0, eventHandle, NULL);
 
   int ret;
   int running = 1, cameraSetup = 0, calibrate = 0;
@@ -706,9 +706,9 @@ main (s32 argc, const char *argv[])
 
   printf ("Initializing pad...\n");
 
-  ioPadInit (6);
+  cellPadInit (6);
 
-  printf ("cameraInit() returned %d\n", cameraInit ());
+  printf ("cellCameraInit() returned %d\n", cellCameraInit ());
 
   initGem ();
 
@@ -739,8 +739,8 @@ main (s32 argc, const char *argv[])
 
         proccessGem (2);
 
-        proccessGem (1);        // about gemConvertVideoStart and
-        // gemConvertVideoFinish i am not sure,
+        proccessGem (1);        // about cellGemConvertVideoStart and
+        // cellGemConvertVideoFinish i am not sure,
         // output_buffer is always empty in 3.41 more
         // tests are needed, however both return ok
 
@@ -750,9 +750,9 @@ main (s32 argc, const char *argv[])
           // make calibration. Point your move control to
           // Eye and press Move Button
           {
-            ret = gemGetState (0, 0, 0, &gem_state);
-            // printf("GemGetState return %d\n",ret);
-            // printf("GemGetState return %d\n",gem_state.paddata.buttons);
+            ret = cellGemGetState (0, 0, 0, &gem_state);
+            // printf("cellGemGetState return %d\n",ret);
+            // printf("cellGemGetState return %d\n",gem_state.paddata.buttons);
             if (gem_state.paddata.buttons == 4) {
               printf ("Move button pressed, time to make calibration\n");
               ret = calibrateGem (0);
@@ -850,7 +850,7 @@ main (s32 argc, const char *argv[])
                   break;
               }
             if (tracking) {
-              ret = gemGetInertialState (0, 0, 0, &gem_inertial_state);
+              ret = cellGemGetInertialState (0, 0, 0, &gem_inertial_state);
               if ((vec_array(gem_inertial_state.gyro_bias, 0) != 0.00000) &&
                   (vec_array(gem_inertial_state.gyro_bias, 1) != 0.00000) &&
                   (vec_array(gem_inertial_state.gyro_bias, 2) != 0.00000)) {
@@ -890,7 +890,7 @@ main (s32 argc, const char *argv[])
 
     flip (currentBuffer);       // Flip buffer onto screen
     currentBuffer = !currentBuffer;
-    sysUtilCheckCallback ();
+    cellSysutilCheckCallback ();
 
   }
 

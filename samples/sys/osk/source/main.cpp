@@ -17,53 +17,53 @@
 
 static vs32 dialog_action = 0;
 
-uint8_t isRunningOSK = 0;
-oskInputFieldInfo inputFieldInfo;
-oskParam parameters;
-oskCallbackReturnParam outputParam;
+uint8_t isRunningOskDialog = 0;
+CellOskDialogInputFieldInfo inputFieldInfo;
+CellOskDialogParam parameters;
+CellOskDialogCallbackReturnParam outputParam;
 
 extern "C" {
 static void program_exit_callback()
 {
-	gcmSetWaitFlip(context);
+	cellGcmSetWaitFlip(context);
 	rsxFinish(context, 1);
 }
 
 static void sysutil_exit_callback(u64 status, u64 param, void *usrdata)
 {
 	switch(status) {
-		case SYSUTIL_EXIT_GAME:
+		case CELL_SYSUTIL_EXIT_GAME:
 			break;
-		case SYSUTIL_DRAW_BEGIN:
-		case SYSUTIL_DRAW_END:
+		case CELL_SYSUTIL_DRAW_BEGIN:
+		case CELL_SYSUTIL_DRAW_END:
 			break;
-		case SYSUTIL_OSK_LOADED:
-			printf("OSK loaded\n");
+		case CELL_SYSUTIL_OSK_LOADED:
+			printf("oskdialog loaded\n");
 			break;
-		case SYSUTIL_OSK_INPUT_CANCELED:
-			printf("OSK input canceled\n");
-			oskAbort();
+		case CELL_SYSUTIL_OSK_INPUT_CANCELED:
+			printf("oskdialog input canceled\n");
+			cellOskDialogAbort();
 			// fall-through
-		case SYSUTIL_OSK_DONE:
-			if (status == SYSUTIL_OSK_DONE)
+		case CELL_SYSUTIL_OSK_DONE:
+			if (status == CELL_SYSUTIL_OSK_DONE)
 			{
-				printf("OSK done\n");
+				printf("oskdialog done\n");
 			}
-			oskUnloadAsync(&outputParam);
+			cellOskDialogUnloadAsync(&outputParam);
 
-			if (outputParam.res == OSK_OK)
+			if (outputParam.res == CELL_OSKDIALOG_OK)
 			{
-				printf("OSK result OK\n");
+				printf("oskdialog result OK\n");
 			}
 			else
 			{
-				printf("OKS result: %d\n", outputParam.res);
+				printf("OSK result: %d\n", outputParam.res);
 			}
 
 			break;
-		case SYSUTIL_OSK_UNLOADED:
-			printf("OSK unloaded\n");
-			isRunningOSK = 0;
+		case CELL_SYSUTIL_OSK_UNLOADED:
+			printf("oskdialog unloaded\n");
+			isRunningOskDialog = 0;
 			break;
 		default:
 			break;
@@ -131,7 +131,7 @@ static void utf8_to_utf16(const uint8_t *src, uint16_t *dst)
 
 static void do_flip()
 {
-	sysUtilCheckCallback();
+	cellSysutilCheckCallback();
 	flip();
 }
 
@@ -153,7 +153,7 @@ int main(int argc,char *argv[])
 	printf("osk test...\n");
 
 	init_screen(host_addr, HOST_SIZE);
-	ioPadInit(7);
+	cellPadInit(7);
 
 	// Configure the title and initial text of the keyboard, and a maximum length
 	inputFieldInfo.message = title_utf16;
@@ -161,18 +161,18 @@ int main(int argc,char *argv[])
 	inputFieldInfo.maxLength = TEXT_BUFFER_LENGTH - 1;
 
 	// Configure the type of panel
-	parameters.allowedPanels = OSK_PANEL_TYPE_DEFAULT;
-	parameters.firstViewPanel = OSK_PANEL_TYPE_DEFAULT;
-	parameters.controlPoint = (oskPoint) { 0, 0 };
-	parameters.prohibitFlags = OSK_PROHIBIT_RETURN; // This will disable entering a new line
+	parameters.allowedPanels = CELL_OSKDIALOG_PANEL_TYPE_DEFAULT;
+	parameters.firstViewPanel = CELL_OSKDIALOG_PANEL_TYPE_DEFAULT;
+	parameters.controlPoint = (CellOskDialogPoint) { 0, 0 };
+	parameters.prohibitFlags = CELL_OSKDIALOG_PROHIBIT_RETURN; // This will disable entering a new line
 	
 	// Configure where the osk will write its result
-	outputParam.res = OSK_OK;
+	outputParam.res = CELL_OSKDIALOG_OK;
 	outputParam.len = TEXT_BUFFER_LENGTH - 1;
 	outputParam.str = input_text_utf16;
 
 	atexit(program_exit_callback);
-    sysUtilRegisterCallback(SYSUTIL_EVENT_SLOT0, sysutil_exit_callback, NULL);
+    cellSysutilRegisterCallback(CELL_SYSUTIL_EVENT_SLOT0, sysutil_exit_callback, NULL);
 
 	s32 res = 0;
 	sys_mem_container_t containerid;
@@ -183,32 +183,32 @@ int main(int argc,char *argv[])
 		return 0;
 	}
 
-	oskSetInitialInputDevice(OSK_DEVICE_PAD);
-	oskSetKeyLayoutOption(OSK_FULLKEY_PANEL);
-	oskSetLayoutMode(OSK_LAYOUTMODE_HORIZONTAL_ALIGN_CENTER | OSK_LAYOUTMODE_VERTICAL_ALIGN_CENTER);
+	cellOskDialogSetInitialInputDevice(CELL_OSKDIALOG_DEVICE_PAD);
+	cellOskDialogSetKeyLayoutOption(CELL_OSKDIALOG_FULLKEY_PANEL);
+	cellOskDialogSetLayoutMode(CELL_OSKDIALOG_LAYOUTMODE_HORIZONTAL_ALIGN_CENTER | CELL_OSKDIALOG_LAYOUTMODE_VERTICAL_ALIGN_CENTER);
 
-	res = oskLoadAsync(containerid, &parameters, &inputFieldInfo);
+	res = cellOskDialogLoadAsync(containerid, &parameters, &inputFieldInfo);
 	if (res != 0)
 	{
-        printf("Error oskLoadAsync: %08x\n", res);
-		sysUtilUnregisterCallback(SYSUTIL_EVENT_SLOT0);
+        printf("Error cellOskDialogLoadAsync: %08x\n", res);
+		cellSysutilUnregisterCallback(CELL_SYSUTIL_EVENT_SLOT0);
 		sysMemContainerDestroy(containerid);
 		return 0;
 	}
 
-	printf("Running OSK\n");
+	printf("Running CELL_OSKDIALOG\n");
 
-	isRunningOSK = 1;
+	isRunningOskDialog = 1;
 
-	while (isRunningOSK)
+	while (isRunningOskDialog)
 	{
 		do_flip();
 	}
 
-	sysUtilUnregisterCallback(SYSUTIL_EVENT_SLOT0);
+	cellSysutilUnregisterCallback(CELL_SYSUTIL_EVENT_SLOT0);
 	sysMemContainerDestroy(containerid);
 
-	if (outputParam.res != OSK_OK)
+	if (outputParam.res != CELL_OSKDIALOG_OK)
 	{
         printf("Keyboard cancelled\n");
 		return 0;

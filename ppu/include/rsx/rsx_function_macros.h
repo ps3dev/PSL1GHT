@@ -12,7 +12,7 @@
 	#define RSX_FUNC_INTERNAL(func)		__rsx##func##Unsafe
 	#define RSX_CONTEXT_CURRENT_BEGIN(count) do {} while(0)	
 #else
-	s32 __attribute__((noinline)) rsxContextCallback(gcmContextData *context,u32 count)
+	s32 __attribute__((noinline)) rsxContextCallback(CellGcmContextData *context,u32 count)
 	{
 		register s32 result asm("r3");
 		__asm__ __volatile__ (

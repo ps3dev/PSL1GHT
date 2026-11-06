@@ -4,7 +4,6 @@
  */
 
 #include <audio/audio.h>
-#include <psl1ght/lv2/timer.h>
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
@@ -16,7 +15,7 @@ void fillBuffer(float *buf)
 {
 	static float pos=0;
 
-	for (unsigned int i = 0; i < AUDIO_BLOCK_SAMPLES; ++i)
+	for (unsigned int i = 0; i < CELL_AUDIO_BLOCK_SAMPLES; ++i)
 	{
 		//just fill with a beautiful sine wave :P
 		buf[i*2+0] = sin(pos);
@@ -43,43 +42,43 @@ u32 playOneBlock(u64 *readIndex, float *audioDataStart)
 	printf("playOneBlock: %ld, %d\n",current_block,audio_block_index);
 
 	//get position of the block to write
-	float *buf = audioDataStart + 2 /*channelcount*/ * AUDIO_BLOCK_SAMPLES * audio_block_index;
+	float *buf = audioDataStart + 2 /*channelcount*/ * CELL_AUDIO_BLOCK_SAMPLES * audio_block_index;
 	fillBuffer(buf);
 
-	audio_block_index = (audio_block_index + 1) % AUDIO_BLOCK_8;
+	audio_block_index = (audio_block_index + 1) % CELL_AUDIO_BLOCK_8;
 
 	return 1;
 }
 
 int main(int argc, const char* argv[])
 {
-	AudioPortParam params;
-	AudioPortConfig config;
+	CellAudioPortParam params;
+	CellAudioPortConfig config;
 	u32 portNum;
 
 	//initialize the audio system
-	int ret=audioInit();
+	int ret=cellAudioInit();
 
-	printf("audioInit: %d\n",ret);
+	printf("cellAudioInit: %d\n",ret);
 
 	//set some parameters we want
 	//either 2 or 8 channel
-	params.numChannels = AUDIO_PORT_2CH;
+	params.numChannels = CELL_AUDIO_PORT_2CH;
 	//8 16 or 32 block buffer
-	params.numBlocks = AUDIO_BLOCK_8;
+	params.numBlocks = CELL_AUDIO_BLOCK_8;
 	//extended attributes
-	params.attr = 0;
+	params.attrib = 0;
 	//sound level (1 is default)
 	params.level = 1;
 
 	//open the port (still stopped)
-	ret=audioPortOpen(&params, &portNum);
-	printf("audioPortOpen: %d\n",ret);
+	ret=cellAudioPortOpen(&params, &portNum);
+	printf("cellAudioPortOpen: %d\n",ret);
 	printf("  portNum: %d\n",portNum);
 
 	//get the params for the buffers, etc
-	ret=audioGetPortConfig(portNum, &config);
-	printf("audioGetPortConfig: %d\n",ret);
+	ret=cellAudioGetPortConfig(portNum, &config);
+	printf("cellAudioGetPortConfig: %d\n",ret);
 	printf("  readIndex: 0x%8X\n",config.readIndex);
 	printf("  status: %d\n",config.status);
 	printf("  channelCount: %ld\n",config.channelCount);
@@ -88,8 +87,8 @@ int main(int argc, const char* argv[])
 	printf("  audioDataStart: 0x%8X\n",config.audioDataStart);
 
 	//start the loop
-	ret=audioPortStart(portNum);
-	printf("audioPortStart: %d\n",ret);
+	ret=cellAudioPortStart(portNum);
+	printf("cellAudioPortStart: %d\n",ret);
 
 	int i=0;
 	while(i<1000)
@@ -99,12 +98,12 @@ int main(int argc, const char* argv[])
 	}
 
 	//shutdown in reverse order
-	ret=audioPortStop(portNum);
-	printf("audioPortStop: %d\n",ret);
-	ret=audioPortClose(portNum);
-	printf("audioPortClose: %d\n",ret);
-	ret=audioQuit();
-	printf("audioQuit: %d\n",ret);
+	ret=cellAudioPortStop(portNum);
+	printf("cellAudioPortStop: %d\n",ret);
+	ret=cellAudioPortClose(portNum);
+	printf("cellAudioPortClose: %d\n",ret);
+	ret=cellAudioQuit();
+	printf("cellAudioQuit: %d\n",ret);
 
 	return 0;
 }

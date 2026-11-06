@@ -10,7 +10,7 @@
 
 #include <sys/file.h>
 
-static void convertLv2Dirent(struct dirent *result,sysFSDirent *source,DIR *dirp)
+static void convertLv2Dirent(struct dirent *result,CellFsDirent *source,DIR *dirp)
 {
 	result->d_reclen = sizeof(struct dirent);
 	result->d_seekoff = dirp->dd_seek;
@@ -23,7 +23,7 @@ static s32 readdir_i(DIR *dirp,struct dirent *entry,struct dirent **result)
 {
 	s32 ret;
 	u64 read = 0;
-	sysFSDirent lv2dir;
+	CellFsDirent lv2dir;
 
 	*result = NULL;
 	ret = sysLv2FsReadDir(dirp->dd_fd,&lv2dir,&read);

@@ -17,7 +17,7 @@
 #include "diffuse_specular_shader_vpo.h"
 #include "diffuse_specular_shader_fpo.h"
 
-#define GCM_APP_WAIT_LABEL_INDEX		128
+#define CELL_GCM_APP_WAIT_LABEL_INDEX		128
 
 #define HOSTBUFFER_SIZE		(128*1024*1024)
 
@@ -76,11 +76,11 @@ static void program_exit_callback()
 static void sysutil_exit_callback(u64 status,u64 param,void *usrdata)
 {
 	switch(status) {
-		case SYSUTIL_EXIT_GAME:
+		case CELL_SYSUTIL_EXIT_GAME:
 			running = 0;
 			break;
-		case SYSUTIL_DRAW_BEGIN:
-		case SYSUTIL_DRAW_END:
+		case CELL_SYSUTIL_DRAW_BEGIN:
+		case CELL_SYSUTIL_DRAW_END:
 			break;
 		default:
 			break;
@@ -334,34 +334,34 @@ static void setTexture(u8 textureUnit)
 	u32 width = 128;
 	u32 height = 128;
 	u32 pitch = (width*4);
-	gcmTexture texture;
+	CellGcmTexture texture;
 
 	if(!texture_buffer) return;
 
-	rsxInvalidateTextureCache(gGcmContext,GCM_INVALIDATE_TEXTURE);
+	rsxInvalidateTextureCache(gGcmContext,CELL_GCM_INVALIDATE_TEXTURE);
 
-	texture.format		= (GCM_TEXTURE_FORMAT_A8R8G8B8 | GCM_TEXTURE_FORMAT_LIN);
+	texture.format		= (CELL_GCM_TEXTURE_FORMAT_A8R8G8B8 | CELL_GCM_TEXTURE_FORMAT_LIN);
 	texture.mipmap		= 1;
-	texture.dimension	= GCM_TEXTURE_DIMS_2D;
-	texture.cubemap		= GCM_FALSE;
-	texture.remap		= ((GCM_TEXTURE_REMAP_TYPE_REMAP << GCM_TEXTURE_REMAP_TYPE_B_SHIFT) |
-						   (GCM_TEXTURE_REMAP_TYPE_REMAP << GCM_TEXTURE_REMAP_TYPE_G_SHIFT) |
-						   (GCM_TEXTURE_REMAP_TYPE_REMAP << GCM_TEXTURE_REMAP_TYPE_R_SHIFT) |
-						   (GCM_TEXTURE_REMAP_TYPE_REMAP << GCM_TEXTURE_REMAP_TYPE_A_SHIFT) |
-						   (GCM_TEXTURE_REMAP_COLOR_B << GCM_TEXTURE_REMAP_COLOR_B_SHIFT) |
-						   (GCM_TEXTURE_REMAP_COLOR_G << GCM_TEXTURE_REMAP_COLOR_G_SHIFT) |
-						   (GCM_TEXTURE_REMAP_COLOR_R << GCM_TEXTURE_REMAP_COLOR_R_SHIFT) |
-						   (GCM_TEXTURE_REMAP_COLOR_A << GCM_TEXTURE_REMAP_COLOR_A_SHIFT));
+	texture.dimension	= CELL_GCM_TEXTURE_DIMS_2D;
+	texture.cubemap		= CELL_GCM_FALSE;
+	texture.remap		= ((CELL_GCM_TEXTURE_REMAP_TYPE_REMAP << CELL_GCM_TEXTURE_REMAP_TYPE_B_SHIFT) |
+						   (CELL_GCM_TEXTURE_REMAP_TYPE_REMAP << CELL_GCM_TEXTURE_REMAP_TYPE_G_SHIFT) |
+						   (CELL_GCM_TEXTURE_REMAP_TYPE_REMAP << CELL_GCM_TEXTURE_REMAP_TYPE_R_SHIFT) |
+						   (CELL_GCM_TEXTURE_REMAP_TYPE_REMAP << CELL_GCM_TEXTURE_REMAP_TYPE_A_SHIFT) |
+						   (CELL_GCM_TEXTURE_REMAP_COLOR_B << CELL_GCM_TEXTURE_REMAP_COLOR_B_SHIFT) |
+						   (CELL_GCM_TEXTURE_REMAP_COLOR_G << CELL_GCM_TEXTURE_REMAP_COLOR_G_SHIFT) |
+						   (CELL_GCM_TEXTURE_REMAP_COLOR_R << CELL_GCM_TEXTURE_REMAP_COLOR_R_SHIFT) |
+						   (CELL_GCM_TEXTURE_REMAP_COLOR_A << CELL_GCM_TEXTURE_REMAP_COLOR_A_SHIFT));
 	texture.width		= width;
 	texture.height		= height;
 	texture.depth		= 1;
-	texture.location	= GCM_LOCATION_RSX;
+	texture.location	= CELL_GCM_LOCATION_RSX;
 	texture.pitch		= pitch;
 	texture.offset		= texture_offset;
 	rsxLoadTexture(gGcmContext,textureUnit,&texture);
-	rsxTextureControl(gGcmContext,textureUnit,GCM_TRUE,0<<8,12<<8,GCM_TEXTURE_MAX_ANISO_1);
-	rsxTextureFilter(gGcmContext,textureUnit,0,GCM_TEXTURE_LINEAR,GCM_TEXTURE_LINEAR,GCM_TEXTURE_CONVOLUTION_QUINCUNX);
-	rsxTextureWrapMode(gGcmContext,textureUnit,GCM_TEXTURE_CLAMP_TO_EDGE,GCM_TEXTURE_CLAMP_TO_EDGE,GCM_TEXTURE_CLAMP_TO_EDGE,0,GCM_TEXTURE_ZFUNC_LESS,0);
+	rsxTextureControl(gGcmContext,textureUnit,CELL_GCM_TRUE,0<<8,12<<8,CELL_GCM_TEXTURE_MAX_ANISO_1);
+	rsxTextureFilter(gGcmContext,textureUnit,0,CELL_GCM_TEXTURE_LINEAR,CELL_GCM_TEXTURE_LINEAR,CELL_GCM_TEXTURE_CONVOLUTION_QUINCUNX);
+	rsxTextureWrapMode(gGcmContext,textureUnit,CELL_GCM_TEXTURE_CLAMP_TO_EDGE,CELL_GCM_TEXTURE_CLAMP_TO_EDGE,CELL_GCM_TEXTURE_CLAMP_TO_EDGE,0,CELL_GCM_TEXTURE_ZFUNC_LESS,0);
 }
 
 static void setDrawEnv()
@@ -442,14 +442,14 @@ void drawFrame()
 
 	rsxSetClearColor(gGcmContext,color);
 	rsxSetClearDepthStencil(gGcmContext,0xffffff00);
-	rsxClearSurface(gGcmContext,GCM_CLEAR_R |
-							GCM_CLEAR_G |
-							GCM_CLEAR_B |
-							GCM_CLEAR_A |
-							GCM_CLEAR_S |
-							GCM_CLEAR_Z);
+	rsxClearSurface(gGcmContext,CELL_GCM_CLEAR_R |
+							CELL_GCM_CLEAR_G |
+							CELL_GCM_CLEAR_B |
+							CELL_GCM_CLEAR_A |
+							CELL_GCM_CLEAR_S |
+							CELL_GCM_CLEAR_Z);
 
-	rsxSetZMinMaxControl(gGcmContext,GCM_FALSE, GCM_TRUE, GCM_FALSE);
+	rsxSetZMinMaxControl(gGcmContext,CELL_GCM_FALSE, CELL_GCM_TRUE, CELL_GCM_FALSE);
 
 	for(i=0;i<8;i++)
 		rsxSetViewportClip(gGcmContext,i,display_width,display_height);
@@ -467,38 +467,38 @@ void drawFrame()
 	objLightPos = modelMatrixIT*lightPos;
 
 	rsxAddressToOffset(&mesh->vertices[0].pos,&offset);
-	rsxBindVertexArrayAttrib(gGcmContext,GCM_VERTEX_ATTRIB_POS,0,offset,sizeof(S3DVertex),3,GCM_VERTEX_DATA_TYPE_F32,GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(gGcmContext,CELL_GCM_VERTEX_ATTRIB_POS,0,offset,sizeof(S3DVertex),3,CELL_GCM_VERTEX_DATA_TYPE_F32,CELL_GCM_LOCATION_RSX);
 
 	rsxAddressToOffset(&mesh->vertices[0].nrm,&offset);
-	rsxBindVertexArrayAttrib(gGcmContext,GCM_VERTEX_ATTRIB_NORMAL,0,offset,sizeof(S3DVertex),3,GCM_VERTEX_DATA_TYPE_F32,GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(gGcmContext,CELL_GCM_VERTEX_ATTRIB_NORMAL,0,offset,sizeof(S3DVertex),3,CELL_GCM_VERTEX_DATA_TYPE_F32,CELL_GCM_LOCATION_RSX);
 
 	rsxAddressToOffset(&mesh->vertices[0].u,&offset);
-	rsxBindVertexArrayAttrib(gGcmContext,GCM_VERTEX_ATTRIB_TEX0,0,offset,sizeof(S3DVertex),2,GCM_VERTEX_DATA_TYPE_F32,GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(gGcmContext,CELL_GCM_VERTEX_ATTRIB_TEX0,0,offset,sizeof(S3DVertex),2,CELL_GCM_VERTEX_DATA_TYPE_F32,CELL_GCM_LOCATION_RSX);
 
 	rsxLoadVertexProgram(gGcmContext,vpo,vp_ucode);
 	rsxSetVertexProgramParameter(gGcmContext,vpo,projMatrix,(float*)&P);
 	rsxSetVertexProgramParameter(gGcmContext,vpo,mvMatrix,(float*)&modelViewMatrix);
 
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,eyePosition,(float*)&objEyePos,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,globalAmbient,globalAmbientColor,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,litPosition,(float*)&objLightPos,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,litColor,lightColor,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,spec,&shininess,fp_offset,GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,eyePosition,(float*)&objEyePos,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,globalAmbient,globalAmbientColor,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,litPosition,(float*)&objLightPos,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,litColor,lightColor,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,spec,&shininess,fp_offset,CELL_GCM_LOCATION_RSX);
 
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,Kd,materialColorDiffuse,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,Ks,materialColorSpecular,fp_offset,GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,Kd,materialColorDiffuse,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,Ks,materialColorSpecular,fp_offset,CELL_GCM_LOCATION_RSX);
 
-	rsxLoadFragmentProgramLocation(gGcmContext,fpo,fp_offset,GCM_LOCATION_RSX);
+	rsxLoadFragmentProgramLocation(gGcmContext,fpo,fp_offset,CELL_GCM_LOCATION_RSX);
 
-	rsxSetUserClipPlaneControl(gGcmContext,GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE);
+	rsxSetUserClipPlaneControl(gGcmContext,CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE);
 
 	rsxAddressToOffset(&mesh->indices[0],&offset);
-	rsxDrawIndexArray(gGcmContext,GCM_TYPE_TRIANGLES,offset,mesh->cnt_indices,GCM_INDEX_TYPE_16B,GCM_LOCATION_RSX);
+	rsxDrawIndexArray(gGcmContext,CELL_GCM_TYPE_TRIANGLES,offset,mesh->cnt_indices,CELL_GCM_INDEX_TYPE_16B,CELL_GCM_LOCATION_RSX);
 
 	mesh = donut;
 	rotX = Matrix4::rotationX(DEGTORAD(rot));
@@ -513,40 +513,40 @@ void drawFrame()
 	objLightPos = modelMatrixIT*lightPos;
 
 	rsxAddressToOffset(&mesh->vertices[0].pos,&offset);
-	rsxBindVertexArrayAttrib(gGcmContext,GCM_VERTEX_ATTRIB_POS,0,offset,sizeof(S3DVertex),3,GCM_VERTEX_DATA_TYPE_F32,GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(gGcmContext,CELL_GCM_VERTEX_ATTRIB_POS,0,offset,sizeof(S3DVertex),3,CELL_GCM_VERTEX_DATA_TYPE_F32,CELL_GCM_LOCATION_RSX);
 
 	rsxAddressToOffset(&mesh->vertices[0].nrm,&offset);
-	rsxBindVertexArrayAttrib(gGcmContext,GCM_VERTEX_ATTRIB_NORMAL,0,offset,sizeof(S3DVertex),3,GCM_VERTEX_DATA_TYPE_F32,GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(gGcmContext,CELL_GCM_VERTEX_ATTRIB_NORMAL,0,offset,sizeof(S3DVertex),3,CELL_GCM_VERTEX_DATA_TYPE_F32,CELL_GCM_LOCATION_RSX);
 
 	rsxAddressToOffset(&mesh->vertices[0].u,&offset);
-	rsxBindVertexArrayAttrib(gGcmContext,GCM_VERTEX_ATTRIB_TEX0,0,offset,sizeof(S3DVertex),2,GCM_VERTEX_DATA_TYPE_F32,GCM_LOCATION_RSX);
+	rsxBindVertexArrayAttrib(gGcmContext,CELL_GCM_VERTEX_ATTRIB_TEX0,0,offset,sizeof(S3DVertex),2,CELL_GCM_VERTEX_DATA_TYPE_F32,CELL_GCM_LOCATION_RSX);
 
 	rsxLoadVertexProgram(gGcmContext,vpo,vp_ucode);
 	rsxSetVertexProgramParameter(gGcmContext,vpo,projMatrix,(float*)&P);
 	rsxSetVertexProgramParameter(gGcmContext,vpo,mvMatrix,(float*)&modelViewMatrix);
 
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,eyePosition,(float*)&objEyePos,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,globalAmbient,globalAmbientColor,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,litPosition,(float*)&objLightPos,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,litColor,lightColor,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,spec,&shininess,fp_offset,GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,eyePosition,(float*)&objEyePos,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,globalAmbient,globalAmbientColor,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,litPosition,(float*)&objLightPos,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,litColor,lightColor,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,spec,&shininess,fp_offset,CELL_GCM_LOCATION_RSX);
 
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,Kd,materialColorDiffuse,fp_offset,GCM_LOCATION_RSX);
-	rsxSetFragmentProgramParameter(gGcmContext,fpo,Ks,materialColorSpecular,fp_offset,GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,Kd,materialColorDiffuse,fp_offset,CELL_GCM_LOCATION_RSX);
+	rsxSetFragmentProgramParameter(gGcmContext,fpo,Ks,materialColorSpecular,fp_offset,CELL_GCM_LOCATION_RSX);
 
-	rsxLoadFragmentProgramLocation(gGcmContext,fpo,fp_offset,GCM_LOCATION_RSX);
+	rsxLoadFragmentProgramLocation(gGcmContext,fpo,fp_offset,CELL_GCM_LOCATION_RSX);
 
-	rsxSetUserClipPlaneControl(gGcmContext,GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE,
-									   GCM_USER_CLIP_PLANE_DISABLE);
+	rsxSetUserClipPlaneControl(gGcmContext,CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE,
+									   CELL_GCM_USER_CLIP_PLANE_DISABLE);
 
 	rsxAddressToOffset(&mesh->indices[0],&offset);
-	rsxDrawIndexArray(gGcmContext,GCM_TYPE_TRIANGLES,offset,mesh->cnt_indices,GCM_INDEX_TYPE_16B,GCM_LOCATION_RSX);
+	rsxDrawIndexArray(gGcmContext,CELL_GCM_TYPE_TRIANGLES,offset,mesh->cnt_indices,CELL_GCM_INDEX_TYPE_16B,CELL_GCM_LOCATION_RSX);
 
-	rsxSetWriteTextureLabel(gGcmContext, GCM_APP_WAIT_LABEL_INDEX, sLabelValue);
+	rsxSetWriteTextureLabel(gGcmContext, CELL_GCM_APP_WAIT_LABEL_INDEX, sLabelValue);
 	rsxFlushBuffer(gGcmContext);
 	
 	rot += 2.0f;
@@ -555,18 +555,18 @@ void drawFrame()
 
 int main(int argc,const char *argv[])
 {
-	padInfo padinfo;
-	padData paddata;
+	CellPadInfo padinfo;
+	CellPadData paddata;
 
 	printf("rsxtest_dl started...\n");
 
-	ioPadInit(7);
+	cellPadInit(7);
 	initScreen(HOSTBUFFER_SIZE);
 
 	atexit(program_exit_callback);
-	sysUtilRegisterCallback(0,sysutil_exit_callback,NULL);
+	cellSysutilRegisterCallback(CELL_SYSUTIL_EVENT_SLOT0,sysutil_exit_callback,NULL);
 
-	wait_label = gcmGetLabelAddress(GCM_APP_WAIT_LABEL_INDEX);
+	wait_label = cellGcmGetLabelAddress(CELL_GCM_APP_WAIT_LABEL_INDEX);
 	*wait_label = sLabelValue;
 	
 	init_shader();
@@ -583,12 +583,12 @@ int main(int argc,const char *argv[])
 
 	running = 1;
 	while(running) {
-		sysUtilCheckCallback();
+		cellSysutilCheckCallback();
 
-		ioPadGetInfo(&padinfo);
-		for(int i=0; i < MAX_PADS; i++){
+		cellPadGetInfo(&padinfo);
+		for(int i=0; i < CELL_MAX_PADS; i++){
 			if(padinfo.status[i]){
-				ioPadGetData(i, &paddata);
+				cellPadGetData(i, &paddata);
 
 				if(paddata.BTN_CROSS)
 					goto done;

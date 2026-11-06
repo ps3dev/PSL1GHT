@@ -6,73 +6,73 @@
 
 
 /* transaction states */
-#define HTTP_TRANSACTION_STATE_GETTING_CONNECTION        (1)
-#define HTTP_TRANSACTION_STATE_PREPARING_REQUEST         (2)
-#define HTTP_TRANSACTION_STATE_SENDING_REQUEST           (3)
-#define HTTP_TRANSACTION_STATE_SENDING_BODY              (4)
-#define HTTP_TRANSACTION_STATE_WAITING_FOR_REPLY         (5)
-#define HTTP_TRANSACTION_STATE_READING_REPLY             (6)
-#define HTTP_TRANSACTION_STATE_SETTING_REDIRECTION       (7)
-#define HTTP_TRANSACTION_STATE_SETTING_AUTHENTICATION    (8)
+#define CELL_HTTP_TRANSACTION_STATE_GETTING_CONNECTION        (1)
+#define CELL_HTTP_TRANSACTION_STATE_PREPARING_REQUEST         (2)
+#define CELL_HTTP_TRANSACTION_STATE_SENDING_REQUEST           (3)
+#define CELL_HTTP_TRANSACTION_STATE_SENDING_BODY              (4)
+#define CELL_HTTP_TRANSACTION_STATE_WAITING_FOR_REPLY         (5)
+#define CELL_HTTP_TRANSACTION_STATE_READING_REPLY             (6)
+#define CELL_HTTP_TRANSACTION_STATE_SETTING_REDIRECTION       (7)
+#define CELL_HTTP_TRANSACTION_STATE_SETTING_AUTHENTICATION    (8)
 
 /* informational 1xx */
-#define HTTP_STATUS_CODE_Continue                        (100)
-#define HTTP_STATUS_CODE_Switching_Protocols             (101)
-#define HTTP_STATUS_CODE_Processing                      (102) /* RFC2518 WebDAV */
+#define CELL_HTTP_STATUS_CODE_Continue                        (100)
+#define CELL_HTTP_STATUS_CODE_Switching_Protocols             (101)
+#define CELL_HTTP_STATUS_CODE_Processing                      (102) /* RFC2518 WebDAV */
 
 /* successful 2xx */
-#define HTTP_STATUS_CODE_OK                              (200)
-#define HTTP_STATUS_CODE_Created                         (201)
-#define HTTP_STATUS_CODE_Accepted                        (202)
-#define HTTP_STATUS_CODE_NonAuthoritive_Information      (203)
-#define HTTP_STATUS_CODE_No_Content                      (204)
-#define HTTP_STATUS_CODE_Reset_Content                   (205)
-#define HTTP_STATUS_CODE_Partial_Content                 (206)
-#define HTTP_STATUS_CODE_MultiStatus                     (207) /* RFC2518 WebDAV */
+#define CELL_HTTP_STATUS_CODE_OK                              (200)
+#define CELL_HTTP_STATUS_CODE_Created                         (201)
+#define CELL_HTTP_STATUS_CODE_Accepted                        (202)
+#define CELL_HTTP_STATUS_CODE_NonAuthoritive_Information      (203)
+#define CELL_HTTP_STATUS_CODE_No_Content                      (204)
+#define CELL_HTTP_STATUS_CODE_Reset_Content                   (205)
+#define CELL_HTTP_STATUS_CODE_Partial_Content                 (206)
+#define CELL_HTTP_STATUS_CODE_MultiStatus                     (207) /* RFC2518 WebDAV */
 
 /* redirection 3xx */
-#define HTTP_STATUS_CODE_Multiple_Choices                (300)
-#define HTTP_STATUS_CODE_Moved_Permanently               (301)
-#define HTTP_STATUS_CODE_Moved_Temporarily               (302) /* RFC1945 */
-#define HTTP_STATUS_CODE_Found HTTP_STATUS_CODE_Moved_Temporarily /* RFC2616 */
-#define HTTP_STATUS_CODE_See_Other                       (303)
-#define HTTP_STATUS_CODE_Not_Modified                    (304)
-#define HTTP_STATUS_CODE_Use_Proxy                       (305)
-#define HTTP_STATUS_CODE_UNUSED                          (306)
-#define HTTP_STATUS_CODE_Temporary_Redirect              (307)
+#define CELL_HTTP_STATUS_CODE_Multiple_Choices                (300)
+#define CELL_HTTP_STATUS_CODE_Moved_Permanently               (301)
+#define CELL_HTTP_STATUS_CODE_Moved_Temporarily               (302) /* RFC1945 */
+#define CELL_HTTP_STATUS_CODE_Found HTTP_STATUS_CODE_Moved_Temporarily /* RFC2616 */
+#define CELL_HTTP_STATUS_CODE_See_Other                       (303)
+#define CELL_HTTP_STATUS_CODE_Not_Modified                    (304)
+#define CELL_HTTP_STATUS_CODE_Use_Proxy                       (305)
+#define CELL_HTTP_STATUS_CODE_UNUSED                          (306)
+#define CELL_HTTP_STATUS_CODE_Temporary_Redirect              (307)
 
 /* client error 4xx */
-#define HTTP_STATUS_CODE_Bad_Request                     (400)
-#define HTTP_STATUS_CODE_Unauthorized                    (401)
-#define HTTP_STATUS_CODE_Payment_Required                (402)
-#define HTTP_STATUS_CODE_Forbidden                       (403)
-#define HTTP_STATUS_CODE_Not_Found                       (404)
-#define HTTP_STATUS_CODE_Method_Not_Allowed              (405)
-#define HTTP_STATUS_CODE_Not_Acceptable                  (406)
-#define HTTP_STATUS_CODE_Proxy_Authentication_Required   (407)
-#define HTTP_STATUS_CODE_Request_Timeout                 (408)
-#define HTTP_STATUS_CODE_Conflict                        (409)
-#define HTTP_STATUS_CODE_Gone                            (410)
-#define HTTP_STATUS_CODE_Length_Required                 (411)
-#define HTTP_STATUS_CODE_Precondition_Failed             (412)
-#define HTTP_STATUS_CODE_Request_Entity_Too_Large        (413)
-#define HTTP_STATUS_CODE_RequestURI_Too_Long             (414)
-#define HTTP_STATUS_CODE_Unsupported_Media_Type          (415)
-#define HTTP_STATUS_CODE_Requested_Range_Not_Satisfiable (416)
-#define HTTP_STATUS_CODE_Expectation_Failed              (417)
-#define HTTP_STATUS_CODE_Unprocessable_Entity            (422)  /* RFC2518 WebDAV */
-#define HTTP_STATUS_CODE_Locked                          (423)  /* RFC2518 WebDAV */
-#define HTTP_STATUS_CODE_Failed_Dependency               (424)  /* RFC2518 WebDAV */
-#define HTTP_STATUS_CODE_Upgrade_Required                (426)  /* RFC2817 TLS/HTTP */
+#define CELL_HTTP_STATUS_CODE_Bad_Request                     (400)
+#define CELL_HTTP_STATUS_CODE_Unauthorized                    (401)
+#define CELL_HTTP_STATUS_CODE_Payment_Required                (402)
+#define CELL_HTTP_STATUS_CODE_Forbidden                       (403)
+#define CELL_HTTP_STATUS_CODE_Not_Found                       (404)
+#define CELL_HTTP_STATUS_CODE_Method_Not_Allowed              (405)
+#define CELL_HTTP_STATUS_CODE_Not_Acceptable                  (406)
+#define CELL_HTTP_STATUS_CODE_Proxy_Authentication_Required   (407)
+#define CELL_HTTP_STATUS_CODE_Request_Timeout                 (408)
+#define CELL_HTTP_STATUS_CODE_Conflict                        (409)
+#define CELL_HTTP_STATUS_CODE_Gone                            (410)
+#define CELL_HTTP_STATUS_CODE_Length_Required                 (411)
+#define CELL_HTTP_STATUS_CODE_Precondition_Failed             (412)
+#define CELL_HTTP_STATUS_CODE_Request_Entity_Too_Large        (413)
+#define CELL_HTTP_STATUS_CODE_RequestURI_Too_Long             (414)
+#define CELL_HTTP_STATUS_CODE_Unsupported_Media_Type          (415)
+#define CELL_HTTP_STATUS_CODE_Requested_Range_Not_Satisfiable (416)
+#define CELL_HTTP_STATUS_CODE_Expectation_Failed              (417)
+#define CELL_HTTP_STATUS_CODE_Unprocessable_Entity            (422)  /* RFC2518 WebDAV */
+#define CELL_HTTP_STATUS_CODE_Locked                          (423)  /* RFC2518 WebDAV */
+#define CELL_HTTP_STATUS_CODE_Failed_Dependency               (424)  /* RFC2518 WebDAV */
+#define CELL_HTTP_STATUS_CODE_Upgrade_Required                (426)  /* RFC2817 TLS/HTTP */
 
 /* server error 5xx */
-#define HTTP_STATUS_CODE_Internal_Server_Error           (500)
-#define HTTP_STATUS_CODE_Not_Implemented                 (501)
-#define HTTP_STATUS_CODE_Bad_Gateway                     (502)
-#define HTTP_STATUS_CODE_Service_Unavailable             (503)
-#define HTTP_STATUS_CODE_Gateway_Timeout                 (504)
-#define HTTP_STATUS_CODE_HTTP_Version_Not_Supported      (505)
-#define HTTP_STATUS_CODE_Insufficient_Storage            (507)  /* RFC2518 WebDAV */
+#define CELL_HTTP_STATUS_CODE_Internal_Server_Error           (500)
+#define CELL_HTTP_STATUS_CODE_Not_Implemented                 (501)
+#define CELL_HTTP_STATUS_CODE_Bad_Gateway                     (502)
+#define CELL_HTTP_STATUS_CODE_Service_Unavailable             (503)
+#define CELL_HTTP_STATUS_CODE_Gateway_Timeout                 (504)
+#define CELL_HTTP_STATUS_CODE_HTTP_Version_Not_Supported      (505)
+#define CELL_HTTP_STATUS_CODE_Insufficient_Storage            (507)  /* RFC2518 WebDAV */
 
 #define CELL_HTTP_MAX_USERNAME                           (256)
 #define CELL_HTTP_MAX_PASSWORD                           (256)
@@ -87,34 +87,34 @@ extern "C" {
  * http methods
  */
 
-static const char HTTP_METHOD_OPTIONS[] = "OPTIONS";
-static const char HTTP_METHOD_GET[]     = "GET";
-static const char HTTP_METHOD_HEAD[]    = "HEAD";
-static const char HTTP_METHOD_POST[]    = "POST";
-static const char HTTP_METHOD_PUT[]     = "PUT";
-static const char HTTP_METHOD_DELETE[]  = "DELETE";
-static const char HTTP_METHOD_TRACE[]   = "TRACE";
+static const char CELL_HTTP_METHOD_OPTIONS[] = "OPTIONS";
+static const char CELL_HTTP_METHOD_GET[]     = "GET";
+static const char CELL_HTTP_METHOD_HEAD[]    = "HEAD";
+static const char CELL_HTTP_METHOD_POST[]    = "POST";
+static const char CELL_HTTP_METHOD_PUT[]     = "PUT";
+static const char CELL_HTTP_METHOD_DELETE[]  = "DELETE";
+static const char CELL_HTTP_METHOD_TRACE[]   = "TRACE";
 
 
 /*
  * structures
  */
 
-typedef s32 httpClientId;
-typedef s32 httpTransId;
+typedef s32 CellHttpClientId;
+typedef s32 CellHttpTransId;
 
-typedef s32 httpSslId;
+typedef s32 CellHttpSslId;
 
 
 /*
  * callbacks
  */
 
-typedef s32 (*httpAuthenticationCallback)(httpTransId tid,const char *realm,const httpUri *uri,char *user,char *pword,bool *save,void *arg);
-typedef s32 (*httpTransactionStateCallback)(httpTransId tid,s32 state,void *arg);
-typedef s32 (*httpRedirectCallback)(httpTransId tid,const httpStatusLine *response,const httpUri *from,const httpUri *to,void *arg);
-typedef int (*httpCookieSendCallback)(httpTransId tid,const httpUri *uri,const char *cookie,void *arg);
-typedef int (*httpCookieRecvCallback)(httpTransId tid,const httpUri *uri,const char *cookie,void *arg);
+typedef s32 (*CellHttpAuthenticationCallback)(CellHttpTransId tid,const char *realm,const CellHttpUri *uri,char *user,char *pword,bool *save,void *arg);
+typedef s32 (*CellHttpTransactionStateCallback)(CellHttpTransId tid,s32 state,void *arg);
+typedef s32 (*CellHttpRedirectCallback)(CellHttpTransId tid,const CellHttpStatusLine *response,const CellHttpUri *from,const CellHttpUri *to,void *arg);
+typedef int (*CellHttpCookieSendCallback)(CellHttpTransId tid,const CellHttpUri *uri,const char *cookie,void *arg);
+typedef int (*CellHttpCookieRecvCallback)(CellHttpTransId tid,const CellHttpUri *uri,const char *cookie,void *arg);
 
 
 /*
@@ -122,48 +122,48 @@ typedef int (*httpCookieRecvCallback)(httpTransId tid,const httpUri *uri,const c
  */
 
 /* initialization */
-s32 httpInit(void *pool,u32 poolSize);
-s32 httpEnd(void);
+s32 cellHttpInit(void *pool,u32 poolSize);
+s32 cellHttpEnd(void);
 
 /* transaction request */
-s32 httpSendRequest(httpTransId tid,const char *buf,u32 size,u32 *sent);
-s32 httpRecvResponse(httpTransId tid,char *buf,u32 size,u32 *recvd);
+s32 cellHttpSendRequest(CellHttpTransId tid,const char *buf,u32 size,u32 *sent);
+s32 cellHttpRecvResponse(CellHttpTransId tid,char *buf,u32 size,u32 *recvd);
 
 /* proxy */
-s32 httpSetProxy(const httpUri *proxy);
-s32 httpGetProxy(httpUri *proxy,void *pool,u32 poolSize,u32 *required);
+s32 cellHttpSetProxy(const CellHttpUri *proxy);
+s32 cellHttpGetProxy(CellHttpUri *proxy,void *pool,u32 poolSize,u32 *required);
 
 /* request content length */
-s32 httpRequestSetContentLength(httpTransId tid,u64 totalSize);
-s32 httpRequestGetContentLength(httpTransId tid,u64 *totalSize);
+s32 cellHttpRequestSetContentLength(CellHttpTransId tid,u64 totalSize);
+s32 cellHttpRequestGetContentLength(CellHttpTransId tid,u64 *totalSize);
 
 /* request headers */
-s32 httpRequestGetAllHeaders(httpTransId tid,httpHeader **headers,u32 *items,void *pool,u32 poolSize,u32 *required);
-s32 httpRequestSetHeader(httpTransId tid,const httpHeader *header);
-s32 httpRequestGetHeader(httpTransId tid,httpHeader *header,const char *name,void *pool,u32 poolSize,u32 *required);
-s32 httpRequestAddHeader(httpTransId tid,const httpHeader *header);
-s32 httpRequestDeleteHeader(httpTransId tid,const char *name);
+s32 cellHttpRequestGetAllHeaders(CellHttpTransId tid,CellHttpHeader **headers,u32 *items,void *pool,u32 poolSize,u32 *required);
+s32 cellHttpRequestSetHeader(CellHttpTransId tid,const CellHttpHeader *header);
+s32 cellHttpRequestGetHeader(CellHttpTransId tid,CellHttpHeader *header,const char *name,void *pool,u32 poolSize,u32 *required);
+s32 cellHttpRequestAddHeader(CellHttpTransId tid,const CellHttpHeader *header);
+s32 cellHttpRequestDeleteHeader(CellHttpTransId tid,const char *name);
 
 /* response status code */
-s32 httpResponseGetStatusCode(httpTransId tid,int32_t *code);
+s32 cellHttpResponseGetStatusCode(CellHttpTransId tid,int32_t *code);
 
 /* response content length */
-s32 httpResponseGetContentLength(httpTransId tid,u64 *totalSize);
+s32 cellHttpResponseGetContentLength(CellHttpTransId tid,u64 *totalSize);
 
 /* response status line */
-s32 httpResponseGetStatusLine(httpTransId tid,httpStatusLine *status,void *pool,u32 poolSize,u32 *required);
+s32 cellHttpResponseGetStatusLine(CellHttpTransId tid,CellHttpStatusLine *status,void *pool,u32 poolSize,u32 *required);
 
 /* cookies */
-s32 httpInitCookie(void *pool,u32 poolSize);
-s32 httpEndCookie(void);
-s32 httpAddCookieWithClientId(const httpUri *uri,const char *cookie,httpClientId cid);
-s32 httpSessionCookieFlush(httpClientId cid);
-s32 httpCookieExportWithClientId(void *buf,u32 size,u32 *exportSize,httpClientId cid);
-s32 httpCookieImportWithClientId(const void *buf,u32 size,httpClientId cid);
+s32 cellHttpInitCookie(void *pool,u32 poolSize);
+s32 cellHttpEndCookie(void);
+s32 cellHttpAddCookieWithClientId(const CellHttpUri *uri,const char *cookie,CellHttpClientId cid);
+s32 cellHttpSessionCookieFlush(CellHttpClientId cid);
+s32 cellHttpCookieExportWithClientId(void *buf,u32 size,u32 *exportSize,CellHttpClientId cid);
+s32 cellHttpCookieImportWithClientId(const void *buf,u32 size,CellHttpClientId cid);
 
 /* cookie callbacks */
-s32 httpClientSetCookieSendCallback(httpClientId cid,httpCookieSendCallback cb,void *arg);
-s32 httpClientSetCookieRecvCallback(httpClientId cid,httpCookieRecvCallback cb,void *arg);
+s32 cellHttpClientSetCookieSendCallback(CellHttpClientId cid,CellHttpCookieSendCallback cb,void *arg);
+s32 cellHttpClientSetCookieRecvCallback(CellHttpClientId cid,CellHttpCookieRecvCallback cb,void *arg);
 
 
 /*
@@ -171,93 +171,93 @@ s32 httpClientSetCookieRecvCallback(httpClientId cid,httpCookieRecvCallback cb,v
  */
 
 /* client create / destroy */
-s32 httpCreateClient(httpClientId *cid);
-s32 httpDestroyClient(httpClientId cid);
+s32 cellHttpCreateClient(CellHttpClientId *cid);
+s32 cellHttpDestroyClient(CellHttpClientId cid);
 
 /* proxy */
-s32 httpClientSetProxy(httpClientId cid,const httpUri *proxy);
-s32 httpClientGetProxy(httpClientId cid,httpUri *proxy,void *pool,u32 poolSize,u32 *required);
+s32 cellHttpClientSetProxy(CellHttpClientId cid,const CellHttpUri *proxy);
+s32 cellHttpClientGetProxy(CellHttpClientId cid,CellHttpUri *proxy,void *pool,u32 poolSize,u32 *required);
 
 /* version */
-s32 httpClientSetVersion(httpClientId cid,u32 major,u32 minor);
-s32 httpClientGetVersion(httpClientId cid,u32 *major,u32 *minor);
+s32 cellHttpClientSetVersion(CellHttpClientId cid,u32 major,u32 minor);
+s32 cellHttpClientGetVersion(CellHttpClientId cid,u32 *major,u32 *minor);
 
 /* pipeline */
-s32 httpClientSetPipeline(httpClientId cid,u32 enable);
-s32 httpClientGetPipeline(httpClientId cid,u32 *enable);
+s32 cellHttpClientSetPipeline(CellHttpClientId cid,u32 enable);
+s32 cellHttpClientGetPipeline(CellHttpClientId cid,u32 *enable);
 
 /* keep alive */
-s32 httpClientSetKeepAlive(httpClientId cid,u32 enable);
-s32 httpClientGetKeepAlive(httpClientId cid,u32 *enable);
+s32 cellHttpClientSetKeepAlive(CellHttpClientId cid,u32 enable);
+s32 cellHttpClientGetKeepAlive(CellHttpClientId cid,u32 *enable);
 
 /* redirect */
-s32 httpClientSetAutoRedirect(httpClientId cid,u32 enable);
-s32 httpClientGetAutoRedirect(httpClientId cid,u32 *enable);
+s32 cellHttpClientSetAutoRedirect(CellHttpClientId cid,u32 enable);
+s32 cellHttpClientGetAutoRedirect(CellHttpClientId cid,u32 *enable);
 
 /* authentication */
-s32 httpClientSetAutoAuthentication(httpClientId cid,u32 enable);
-s32 httpClientGetAutoAuthentication(httpClientId cid,u32 *enable);
+s32 cellHttpClientSetAutoAuthentication(CellHttpClientId cid,u32 enable);
+s32 cellHttpClientGetAutoAuthentication(CellHttpClientId cid,u32 *enable);
 
 /* cache status */
-s32 httpClientSetAuthenticationCacheStatus(httpClientId cid,u32 enable);
-s32 httpClientGetAuthenticationCacheStatus(httpClientId cid,u32 *enable);
+s32 cellHttpClientSetAuthenticationCacheStatus(CellHttpClientId cid,u32 enable);
+s32 cellHttpClientGetAuthenticationCacheStatus(CellHttpClientId cid,u32 *enable);
 
 /* cookie status */
-s32 httpClientSetCookieStatus(httpClientId cid,u32 enable);
-s32 httpClientGetCookieStatus(httpClientId cid,u32 *enable); 
+s32 cellHttpClientSetCookieStatus(CellHttpClientId cid,u32 enable);
+s32 cellHttpClientGetCookieStatus(CellHttpClientId cid,u32 *enable); 
 
 /* user agent */
-s32 httpClientSetUserAgent(httpClientId cid,const char *userAgent);
-s32 httpClientGetUserAgent(httpClientId cid,char *userAgent,u32 size,u32 *required);
+s32 cellHttpClientSetUserAgent(CellHttpClientId cid,const char *userAgent);
+s32 cellHttpClientGetUserAgent(CellHttpClientId cid,char *userAgent,u32 size,u32 *required);
 
 /* buffer max */
-s32 httpClientSetResponseBufferMax(httpClientId cid,u32 max);
-s32 httpClientGetResponseBufferMax(httpClientId cid,u32 *max);
+s32 cellHttpClientSetResponseBufferMax(CellHttpClientId cid,u32 max);
+s32 cellHttpClientGetResponseBufferMax(CellHttpClientId cid,u32 *max);
 
 /* close connections */
-s32 httpClientCloseAllConnections(httpClientId cid);
-s32 httpClientCloseConnections(httpClientId cid,const httpUri *uri);
+s32 cellHttpClientCloseAllConnections(CellHttpClientId cid);
+s32 cellHttpClientCloseConnections(CellHttpClientId cid,const CellHttpUri *uri);
 
 /* poll connections */
-s32 httpClientPollConnections(httpClientId cid,httpTransId *tid,s64 usec);
+s32 cellHttpClientPollConnections(CellHttpClientId cid,CellHttpTransId *tid,s64 usec);
 
 /* receive timeout */
-s32 httpClientSetRecvTimeout(httpClientId cid,s64 usec);
-s32 httpClientGetRecvTimeout(httpClientId cid,s64 *usec);
+s32 cellHttpClientSetRecvTimeout(CellHttpClientId cid,s64 usec);
+s32 cellHttpClientGetRecvTimeout(CellHttpClientId cid,s64 *usec);
 
 /* send timeout */
-s32 httpClientSetSendTimeout(httpClientId cid,s64 usec);
-s32 httpClientGetSendTimeout(httpClientId cid,s64 *usec);
+s32 cellHttpClientSetSendTimeout(CellHttpClientId cid,s64 usec);
+s32 cellHttpClientGetSendTimeout(CellHttpClientId cid,s64 *usec);
 
 /* connection timeout */
-s32 httpClientSetConnTimeout(httpClientId cid,s64 usec);
-s32 httpClientGetConnTimeout(httpClientId cid,s64 *usec);
+s32 cellHttpClientSetConnTimeout(CellHttpClientId cid,s64 usec);
+s32 cellHttpClientGetConnTimeout(CellHttpClientId cid,s64 *usec);
 
 /* pool size */
-s32 httpClientSetTotalPoolSize(httpClientId cid,u32 poolSize);
-s32 httpClientGetTotalPoolSize(httpClientId cid,u32 *poolSize);
-s32 httpClientSetPerHostPoolSize(httpClientId cid,u32 poolSize);
-s32 httpClientGetPerHostPoolSize(httpClientId cid,u32 *poolSize);
+s32 cellHttpClientSetTotalPoolSize(CellHttpClientId cid,u32 poolSize);
+s32 cellHttpClientGetTotalPoolSize(CellHttpClientId cid,u32 *poolSize);
+s32 cellHttpClientSetPerHostPoolSize(CellHttpClientId cid,u32 poolSize);
+s32 cellHttpClientGetPerHostPoolSize(CellHttpClientId cid,u32 *poolSize);
 
 /* keep alive */
-s32 httpClientSetPerHostKeepAliveMax(httpClientId cid,u32 maxSize);
-s32 httpClientGetPerHostKeepAliveMax(httpClientId cid,u32 *maxSize);
+s32 cellHttpClientSetPerHostKeepAliveMax(CellHttpClientId cid,u32 maxSize);
+s32 cellHttpClientGetPerHostKeepAliveMax(CellHttpClientId cid,u32 *maxSize);
 
 /* pipeline */
-s32 httpClientSetPerPipelineMax(httpClientId cid,u32 pipeMax);
-s32 httpClientGetPerPipelineMax(httpClientId cid,u32 *pipeMax);
+s32 cellHttpClientSetPerPipelineMax(CellHttpClientId cid,u32 pipeMax);
+s32 cellHttpClientGetPerPipelineMax(CellHttpClientId cid,u32 *pipeMax);
 
 /* client headers */
-s32 httpClientGetAllHeaders(httpClientId cid,httpHeader **headers,u32 *items,void *pool,u32 poolSize,u32 *required);
-s32 httpClientSetHeader(httpClientId cid,const httpHeader *header);
+s32 cellHttpClientGetAllHeaders(CellHttpClientId cid,CellHttpHeader **headers,u32 *items,void *pool,u32 poolSize,u32 *required);
+s32 cellHttpClientSetHeader(CellHttpClientId cid,const CellHttpHeader *header);
 
-s32 httpClientGetHeader(httpClientId cid,httpHeader *header,const char *name,void *pool,u32 poolSize,u32 *required);
-s32 httpClientAddHeader(httpClientId cid,const httpHeader *header);
-s32 httpClientDeleteHeader(httpClientId cid,const char *name);
+s32 cellHttpClientGetHeader(CellHttpClientId cid,CellHttpHeader *header,const char *name,void *pool,u32 poolSize,u32 *required);
+s32 cellHttpClientAddHeader(CellHttpClientId cid,const CellHttpHeader *header);
+s32 cellHttpClientDeleteHeader(CellHttpClientId cid,const char *name);
 
 /* client callbacks */
-s32 httpClientSetAuthenticationCallback(httpClientId cid,httpAuthenticationCallback cb,void *arg);
-s32 httpClientSetRedirectCallback(httpClientId cid,httpRedirectCallback cb,void *arg);
+s32 cellHttpClientSetAuthenticationCallback(CellHttpClientId cid,CellHttpAuthenticationCallback cb,void *arg);
+s32 cellHttpClientSetRedirectCallback(CellHttpClientId cid,CellHttpRedirectCallback cb,void *arg);
 
 
 /*
@@ -265,24 +265,24 @@ s32 httpClientSetRedirectCallback(httpClientId cid,httpRedirectCallback cb,void 
  */
 
 /* general transactions */
-s32 httpCreateTransaction(httpTransId *tid,httpClientId cid,const char *method,const httpUri *uri);
-s32 httpDestroyTransaction(httpTransId tid);
-s32 httpTransactionGetUri(httpTransId tid,httpUri *uri,void *pool,u32 poolSize,u32 *required);
-s32 httpTransactionCloseConnection(httpTransId tid);
-s32 httpTransactionReleaseConnection(httpTransId tid,int *sid);
-s32 httpTransactionAbortConnection(httpTransId tid);
+s32 cellHttpCreateTransaction(CellHttpTransId *tid,CellHttpClientId cid,const char *method,const CellHttpUri *uri);
+s32 cellHttpDestroyTransaction(CellHttpTransId tid);
+s32 cellHttpTransactionGetUri(CellHttpTransId tid,CellHttpUri *uri,void *pool,u32 poolSize,u32 *required);
+s32 cellHttpTransactionCloseConnection(CellHttpTransId tid);
+s32 cellHttpTransactionReleaseConnection(CellHttpTransId tid,int *sid);
+s32 cellHttpTransactionAbortConnection(CellHttpTransId tid);
 
 /* SSL transactions */
-s32 httpTransactionGetSslCipherName(httpTransId tid,char *name,u32 size,u32 *required);
-s32 httpTransactionGetSslCipherId(httpTransId tid,int32_t *id);
-s32 httpTransactionGetSslCipherVersion(httpTransId tid,char *version,u32 size,u32 *required);
-s32 httpTransactionGetSslCipherBits(httpTransId tid,int32_t *effectiveBits,int32_t *algorithmBits);
-s32 httpTransactionGetSslCipherString(httpTransId tid,char *buffer,u32 size);
-s32 httpTransactionGetSslVersion(httpTransId tid,int32_t *version);
-s32 httpTransactionGetSslId(httpTransId tid,httpSslId *id);
+s32 cellHttpTransactionGetSslCipherName(CellHttpTransId tid,char *name,u32 size,u32 *required);
+s32 cellHttpTransactionGetSslCipherId(CellHttpTransId tid,int32_t *id);
+s32 cellHttpTransactionGetSslCipherVersion(CellHttpTransId tid,char *version,u32 size,u32 *required);
+s32 cellHttpTransactionGetSslCipherBits(CellHttpTransId tid,int32_t *effectiveBits,int32_t *algorithmBits);
+s32 cellHttpTransactionGetSslCipherString(CellHttpTransId tid,char *buffer,u32 size);
+s32 cellHttpTransactionGetSslVersion(CellHttpTransId tid,int32_t *version);
+s32 cellHttpTransactionGetSslId(CellHttpTransId tid,CellHttpSslId *id);
 
 /* transaction callback */
-s32 httpClientSetTransactionStateCallback(httpClientId cid,httpTransactionStateCallback cb,void *arg);
+s32 cellHttpClientSetTransactionStateCallback(CellHttpClientId cid,CellHttpTransactionStateCallback cb,void *arg);
 
 #ifdef __cplusplus
 	}

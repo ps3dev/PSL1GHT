@@ -23,11 +23,11 @@ The basic steps for managing the display are the following.
 
  - Create a RSX context (see \ref rsxInit).
  - Configure the video (video mode, color depth, aspect ratio). See
-    \ref videoConfigure for doing this. Default values can be obtained using
-    \ref videoGetState.
- - Set flip mode (see \ref gcmSetFlipMode). To prevent unpleasant flickering,
+    \ref cellVideoOutConfigure for doing this. Default values can be obtained using
+    \ref cellVideoOutGetState.
+ - Set flip mode (see \ref cellGcmSetFlipMode). To prevent unpleasant flickering,
     you usually want to synchronize screen flipping with vertical refresh (use
-    the \ref GCM_FLIP_VSYNC value).
+    the \ref CELL_GCM_FLIP_VSYNC value).
  - Allocate buffers in video memory. If you want to perform double buffering,
     you need to allocate two buffers. In the most commonly used color depth mode
     (32-bit = 4 bytes), each buffer has a size of
@@ -35,14 +35,14 @@ The basic steps for managing the display are the following.
     For each buffer, the steps are the following:
     - Allocate a 64-byte aligned buffer in RSX memory with \ref rsxMemalign.
     - Generate an offset for the buffer address using \ref rsxAddressToOffset.
-    - Setup the buffer using \ref gcmSetDisplayBuffer, providing the buffer
+    - Setup the buffer using \ref cellGcmSetDisplayBuffer, providing the buffer
       number (starting from 0) and the buffer offset generated from the previous
       step.
  - Allocate a depth buffer, aligned to 64-byte boundary, which size can be
     <code>screen_width*screen_height*2</code> if using 16-bit depth mode. Use
     \ref rsxMemalign for this. Generate an offset to that depth buffer with
     \ref rsxAddressToOffset.
- - Reset the flip status using \ref gcmResetFlipStatus.
+ - Reset the flip status using \ref cellGcmResetFlipStatus.
 
 \subsection rsxqk_flip Setting the render target and flipping
 
@@ -50,19 +50,19 @@ For each frame to be drawn, the steps are the following:
 
  - Write the pixel data to the buffer which is not being displayed. For
     instance, if buffer 0 is being displayed, write to buffer 1.
- - Push a flip command using \ref, gcmSetFlip specifying the buffer to be
+ - Push a flip command using \ref, cellGcmSetFlip specifying the buffer to be
     displayed (the one you just updated).
  - Flush the RSX buffer (\ref rsxFlushBuffer).
- - Force the RSX to wait for next flip (\ref gcmSetWaitFlip).
+ - Force the RSX to wait for next flip (\ref cellGcmSetWaitFlip).
  - Set the new render target using \ref rsxSetSurface. You'll have to provide
-    that function a pointer to a \ref gcmSurface structure you filled with
+    that function a pointer to a \ref CellGcmSurface structure you filled with
     proper color depth mode, buffer offset, depth buffer mode, etc. You can
     borrow proper valid values from the various graphics samples in the samples
     directory.
 
 
 Then, before modifying the next buffer, ensure the flip actually has occurred
-by querying for the flip status (\ref gcmGetFlipStatus) in a loop. Add timing
+by querying for the flip status (\ref cellGcmGetFlipStatus) in a loop. Add timing
 after each negative query in order not to take too much CPU time. For this,
 a <code>usleep(200)</code> call should be fine.
 
@@ -87,7 +87,7 @@ extern "C" {
 #endif
 
 /*! \brief Pointer to default command buffer context */
-extern gcmContextData *gGcmContext ATTRIBUTE_PRXPTR;
+extern CellGcmContextData *gGcmContext ATTRIBUTE_PRXPTR;
 
 /*! \brief Initialize the RSX context and the RSX memory manager.
 
@@ -103,13 +103,13 @@ dynamic memory allocation using \ref rsxMalloc, \ref rsxMemalign and
 \param ioAddress Pointer to an allocated buffer of \p ioSize bytes.
 \return zero if no error occured, nonzero otherwise.
 */
-s32 rsxInit(gcmContextData **context,u32 cmdSize,u32 ioSize,const void *ioAddress);
+s32 rsxInit(CellGcmContextData **context,u32 cmdSize,u32 ioSize,const void *ioAddress);
 
-void rsxSetupContextData(gcmContextData *context,const u32 *addr,u32 size,gcmContextCallback cb);
-void rsxSetCurrentBuffer(gcmContextData **context,const u32 *addr,u32 size);
-void rsxSetDefaultCommandBuffer(gcmContextData **context);
-void rsxSetUserCallback(gcmContextCallback cb);
-void rsxSetupContextData(gcmContextData *context,const u32 *addr,u32 size,gcmContextCallback cb);
+void rsxSetupContextData(CellGcmContextData *context,const u32 *addr,u32 size,CellGcmContextCallback cb);
+void rsxSetCurrentBuffer(CellGcmContextData **context,const u32 *addr,u32 size);
+void rsxSetDefaultCommandBuffer(CellGcmContextData **context);
+void rsxSetUserCallback(CellGcmContextCallback cb);
+void rsxSetupContextData(CellGcmContextData *context,const u32 *addr,u32 size,CellGcmContextCallback cb);
 
 u32* rsxGetCurrentBuffer();
 
@@ -120,7 +120,7 @@ u32* rsxGetCurrentBuffer();
 */
 static inline s32 rsxAddressToOffset(const void *ptr,u32 *offset)
 {
-	return gcmAddressToOffset(ptr,offset);
+	return cellGcmAddressToOffset(ptr,offset);
 }
 
 /*! \brief Convert a floating point coordinate into 32-bit signed fixed point format. */

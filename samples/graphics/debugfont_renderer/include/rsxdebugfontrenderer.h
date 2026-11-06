@@ -6,10 +6,10 @@
 #include <rsx/rsx.h>
 
 #ifdef DEBUGFONT_USE_QUADS
-#define DEBUGFONT_PRIMITIVE					GCM_TYPE_QUADS
+#define DEBUGFONT_PRIMITIVE					CELL_GCM_TYPE_QUADS
 #define NUM_VERTS_PER_GLYPH					4
 #else
-#define DEBUGFONT_PRIMITIVE					GCM_TYPE_TRIANGLES
+#define DEBUGFONT_PRIMITIVE					CELL_GCM_TYPE_TRIANGLES
 #define NUM_VERTS_PER_GLYPH					6
 #endif
 
@@ -17,7 +17,7 @@ class RSXDebugFontRenderer : public DebugFontRenderer
 {
 public:
 	RSXDebugFontRenderer();
-	RSXDebugFontRenderer(gcmContextData *context);
+	RSXDebugFontRenderer(CellGcmContextData *context);
 	virtual ~RSXDebugFontRenderer();
 
 	virtual void init();
@@ -29,7 +29,7 @@ public:
 private:
 	void initShader();
 
-	static gcmContextData *mContext;
+	static CellGcmContextData *mContext;
 
 	static u8 *spTextureData;
 

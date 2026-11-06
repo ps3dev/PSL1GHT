@@ -14,8 +14,8 @@ extern "C" {
 typedef struct _font_library_configFT
 {
 	void *library ATTRIBUTE_PRXPTR;
-	fontMemoryInterface memoryIF;
-} fontLibraryConfigFT;
+	CellFontMemoryInterface memoryIF;
+} CellFontLibraryConfigFT;
 
 typedef struct _font_renderer_configFT
 {
@@ -26,15 +26,15 @@ typedef struct _font_renderer_configFT
 		u32 expandSize;
 		u32 resetSize;
 	} bufferingPolicy;
-} fontRendererConfigFT;
+} CellFontRendererConfigFT;
 
-static inline void fontLibraryConfigFT_initialize(fontLibraryConfigFT *config)
+static inline void cellFontLibraryConfigFT_initialize(CellFontLibraryConfigFT *config)
 {
 	config->library = NULL;
-	fontMemoryInterface_initialize(&config->memoryIF);
+	cellFontMemoryInterface_initialize(&config->memoryIF);
 }
 
-s32 fontInitLibraryFreeType(fontLibraryConfigFT *config,const fontLibrary **lib);
+s32 cellFontInitLibraryFreeType(CellFontLibraryConfigFT *config,const CellFontLibrary **lib);
 
 #ifdef __cplusplus
 	}

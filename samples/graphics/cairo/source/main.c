@@ -103,12 +103,12 @@ drawFrame (rsxBuffer *buffer, int frame)
 int
 main (s32 argc, const char* argv[])
 {
-  gcmContextData *context;
+  CellGcmContextData *context;
   void *host_addr = NULL;
   rsxBuffer buffers[MAX_BUFFERS];
   int currentBuffer = 0;
-  padInfo padinfo;
-  padData paddata;
+  CellPadInfo padinfo;
+  CellPadData paddata;
   u16 width;
   u16 height;
   int frame = 0;
@@ -118,7 +118,7 @@ main (s32 argc, const char* argv[])
    * to be our shared IO memory with the RSX. */
   host_addr = memalign (1024*1024, HOST_SIZE);
   context = initScreen (host_addr, HOST_SIZE);
-  ioPadInit (7);
+  cellPadInit (7);
 
   getResolution(&width, &height);
   for (i = 0; i < MAX_BUFFERS; i++)
@@ -129,10 +129,10 @@ main (s32 argc, const char* argv[])
   DEBUG ("Starting Cairo test\n");
 
   while (1) {
-    ioPadGetInfo (&padinfo);
-    for(i = 0; i < MAX_PADS; i++) {
+    cellPadGetInfo (&padinfo);
+    for(i = 0; i < CELL_MAX_PADS; i++) {
         if(padinfo.status[i]) {
-            ioPadGetData (i, &paddata);
+            cellPadGetData (i, &paddata);
             if(paddata.BTN_START) {
               goto end;
             }
@@ -153,13 +153,13 @@ main (s32 argc, const char* argv[])
 
  end:
 
-  gcmSetWaitFlip(context);
+  cellGcmSetWaitFlip(context);
   for (i = 0; i < MAX_BUFFERS; i++)
     rsxFree (buffers[i].ptr);
 
   rsxFinish (context, 1);
   free (host_addr);
-  ioPadEnd();
+  cellPadEnd();
 
   return 0;
 }

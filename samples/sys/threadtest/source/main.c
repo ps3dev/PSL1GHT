@@ -37,13 +37,13 @@ int main(int argc,char *argv[])
 	s32 i,ret,running;
 	sys_ppu_thread_t id;
 	u64 prio = 1500;
-	padInfo padinfo;
-	padData paddata;
+	CellPadInfo padinfo;
+	CellPadData paddata;
 	size_t stacksize = 0x1000;
 	char *threadname = "myThread";
 	void *threadarg = (void*)0x1337;
 
-	ioPadInit(7);
+	cellPadInit(7);
 
 	ret = sysThreadCreate(&id,thread_start,threadarg,prio,stacksize,THREAD_JOINABLE,threadname);
 	printf("sysThreadCreate: %d\n",ret);
@@ -53,10 +53,10 @@ int main(int argc,char *argv[])
 
 	running = 1;
 	while(running) {
-		ioPadGetInfo(&padinfo);
-		for(i=0; i<MAX_PADS; i++){
+		cellPadGetInfo(&padinfo);
+		for(i=0; i<CELL_MAX_PADS; i++){
 			if(padinfo.status[i]){
-				ioPadGetData(i, &paddata);
+				cellPadGetData(i, &paddata);
 
 				if(paddata.BTN_CROSS){
 					running = 0;

@@ -11,19 +11,19 @@
 extern "C" {
 #endif
 
-typedef void* (*fontMallocCallback)(void *object,u32 size);
-typedef void  (*fontFreeCallback)(void *object,void *ptr);
-typedef void* (*fontReallocCallback)(void *object,void *p,u32 reallocSize);
-typedef void* (*fontCallocCallback)(void *object,u32 num,u32 size);
+typedef void* (*CellFontMallocCallback)(void *object,u32 size);
+typedef void  (*CellFontFreeCallback)(void *object,void *ptr);
+typedef void* (*CellFontReallocCallback)(void *object,void *p,u32 reallocSize);
+typedef void* (*CellFontCallocCallback)(void *object,u32 num,u32 size);
 
 typedef struct _font_memory_interface
 {
 	void *object ATTRIBUTE_PRXPTR;
-	fontMallocCallback malloc_func ATTRIBUTE_PRXPTR;
-	fontFreeCallback free_func ATTRIBUTE_PRXPTR;
-	fontReallocCallback realloc_func ATTRIBUTE_PRXPTR;
-	fontCallocCallback calloc_func ATTRIBUTE_PRXPTR;	
-} fontMemoryInterface;
+	CellFontMallocCallback malloc_func ATTRIBUTE_PRXPTR;
+	CellFontFreeCallback free_func ATTRIBUTE_PRXPTR;
+	CellFontReallocCallback realloc_func ATTRIBUTE_PRXPTR;
+	CellFontCallocCallback calloc_func ATTRIBUTE_PRXPTR;	
+} CellFontMemoryInterface;
 
 typedef struct _font_entry
 {
@@ -31,7 +31,7 @@ typedef struct _font_entry
 	u32 uniqueId;
 	const void* fontLib ATTRIBUTE_PRXPTR;
 	void* fontH ATTRIBUTE_PRXPTR;
-} fontEntry;
+} CellFontEntry;
 
 typedef struct _font_config
 {
@@ -41,31 +41,31 @@ typedef struct _font_config
 	} fileCache;
 	
 	u32 userFontEntryMax;
-	fontEntry *userFontEntries ATTRIBUTE_PRXPTR;
+	CellFontEntry *userFontEntries ATTRIBUTE_PRXPTR;
 	u32 flags;
-} fontConfig;
+} CellFontConfig;
 
 typedef struct _font_library
 {
 	u32 libraryType, libraryVersion;
 	u32 systemClosed[];
-} fontLibrary;
+} CellFontLibrary;
 
 typedef struct _font_type
 {
 	u32 type;
 	u32 map;
-} fontType;
+} CellFontType;
 
 typedef struct _font
 {
 	void* ATTRIBUTE_PRXPTR systemReserved[64];
-} font;
+} CellFont;
 
 typedef struct _font_renderer
 {
 	void* ATTRIBUTE_PRXPTR systemReserved[64];
-} fontRenderer;
+} CellFontRenderer;
 
 typedef struct _font_renderer_config
 {
@@ -76,21 +76,21 @@ typedef struct _font_renderer_config
 		u32 expandSize;
 		u32 resetSize;
 	} bufferingPolicy;
-} fontRendererConfig;
+} CellFontRendererConfig;
 
 typedef struct _font_horizontal_layout
 {
 	f32 baseLineY;
 	f32 lineHeight;
 	f32 effectHeight;
-} fontHorizontalLayout;
+} CellFontHorizontalLayout;
 
 typedef struct _font_vertical_layout
 {
 	f32 baseLineX;
 	f32 lineWidth;
 	f32 effectWidth;
-} fontVerticalLayout;
+} CellFontVerticalLayout;
 
 typedef struct _font_glyph_metrics
 {
@@ -107,7 +107,7 @@ typedef struct _font_glyph_metrics
 		f32 bearingY;
 		f32 advance;
 	} vertical;
-} fontGlyphMetrics;
+} CellFontGlyphMetrics;
 
 typedef struct _font_glyph_outline
 {
@@ -122,21 +122,21 @@ typedef struct _font_glyph_outline
 	u16* contourIndexs ATTRIBUTE_PRXPTR;
 	u32 flags;
 	void* generateEnv ATTRIBUTE_PRXPTR;
-} fontGlyphOutline;
+} CellFontGlyphOutline;
 
 typedef struct _font_glyph
 {
 	u16 cf_type, type;
 	u32 size;
-	fontGlyphMetrics metrics;
-	fontGlyphOutline outline;
-} fontGlyph;
+	CellFontGlyphMetrics metrics;
+	CellFontGlyphOutline outline;
+} CellFontGlyph;
 
 typedef struct _font_kerning
 {
 	f32 offsetX;
 	f32 offsetY;
-} fontKerning;
+} CellFontKerning;
 
 typedef struct _font_glyph_style
 {
@@ -148,7 +148,7 @@ typedef struct _font_glyph_style
 		f32 weight;
 		f32 slant;
 	} Effect;
-} fontGlyphStyle;
+} CellFontGlyphStyle;
 
 typedef struct _font_render_surface
 {
@@ -160,7 +160,7 @@ typedef struct _font_render_surface
 		u32 x0, y0;
 		u32 x1, y1;
 	} Scissor;
-} fontRenderSurface;
+} CellFontRenderSurface;
 
 typedef struct _font_image_trans_info
 {
@@ -170,9 +170,9 @@ typedef struct _font_image_trans_info
 	u32 imageHeight;
 	void *surface ATTRIBUTE_PRXPTR;
 	u32 surfWidthByte;
-} fontImageTransInfo;
+} CellFontImageTransInfo;
 
-static inline void fontMemoryInterface_initialize(fontMemoryInterface *mIF)
+static inline void cellFontMemoryInterface_initialize(CellFontMemoryInterface *mIF)
 {
 	mIF->object       = NULL;
 	mIF->malloc_func  = NULL;
@@ -181,7 +181,7 @@ static inline void fontMemoryInterface_initialize(fontMemoryInterface *mIF)
 	mIF->calloc_func  = NULL;
 }
 
-static inline void fontConfig_initialize(fontConfig *config)
+static inline void cellFontConfig_initialize(CellFontConfig *config)
 {
 	config->fileCache.buffer = NULL;
 	config->fileCache.size   = 0;
@@ -190,74 +190,74 @@ static inline void fontConfig_initialize(fontConfig *config)
 	config->flags 			 = 0x00000000;
 }
 
-static inline s32 fontInit(fontConfig *config)
+static inline s32 cellFontInit(CellFontConfig *config)
 {
-	extern void fontGetStubRevisionFlags(u64 *revisionFlags);
-	extern s32 fontInitializeWithRevision(u64 revision, fontConfig *config);
+	extern void cellFontGetStubRevisionFlags(u64 *revisionFlags);
+	extern s32 cellFontInitializeWithRevision(u64 revision, CellFontConfig *config);
 	u64 revisionFlags = 0LL;
 	
-	fontGetStubRevisionFlags(&revisionFlags);
-	return fontInitializeWithRevision(revisionFlags, config);
+	cellFontGetStubRevisionFlags(&revisionFlags);
+	return cellFontInitializeWithRevision(revisionFlags, config);
 }
 
-s32 fontOpenFontset(const fontLibrary *lib,fontType *type,font *f);
-s32 fontOpenFontsetOnMemory(const fontLibrary *lib,fontType *type,font *f);
-s32 fontOpenFontFile(const fontLibrary *lib,const char *fontPath,u32 subNum,s32 uniqueID,font *f);
-s32 fontOpenFontMemory(const fontLibrary *lib,void *fontAddr,u32 fontSize,u32 subNum,s32 uniqueID,font *f);
-s32 fontOpenFontInstance(font *openedFont,font *f);
-s32 fontGetLibrary(font *f,const fontLibrary **lib,u32 *type);
-s32 fontAdjustGlyphExpandBuffer(font *f,s32 pointN,s32 contourN);
-s32 fontGetGlyphExpandBufferInfo(font *f,s32 *pointN,s32 *contourN);
-s32 fontAdjustFontScaling(font *f,f32 fontScale);
-s32 fontSetResolutionDpi(font *f,u32 hDpi,u32 vDpi);
-s32 fontSetScalePoint(font *f,f32 w,f32 h);
-s32 fontontSetScalePixel(font *f,f32 w,f32 h);
-s32 fontSetEffectWeight(font *f,f32 effectWeight);
-s32 fontSetEffectSlant(font *f,f32 effectSlant);
-s32 fontGetResolutionDpi(font *f,u32 *hDpi,u32 *vDpi);
-s32 fontGetScalePoint(font *f,f32 *w,f32 *h);
-s32 fontGetScalePixel(font *f,f32 *w,f32 *h);
-s32 fontGetEffectWeight(font *f,f32 *effectWeight);
-s32 fontGetEffectSlant(font *f,f32 *effectSlant);
-s32 fontGetHorizontalLayout(font *f,fontHorizontalLayout *layout);
-s32 fontGetVerticalLayout(font *f,fontVerticalLayout *layout);
-s32 fontGetFontIdCode(font *f,u32 code,u32 *fontId,u32 *fontcode);
-s32 fontGetCharGlyphMetrics(font *f,u32 code,fontGlyphMetrics *metrics);
-s32 fontGetCharGlyphMetricsVertical(font *f,u32 code,fontGlyphMetrics *metrics);
-s32 fontGetKerning(font *f,u32 preCode,u32 code,fontKerning *kerning);
-s32 fontCreateRenderer(const fontLibrary *lib,fontRendererConfig *confing,fontRenderer *renderer);
-s32 fontBindRenderer(font *f,fontRenderer *renderer);
-s32 fontGetBindingRenderer(font *f,fontRenderer **renderer);
-s32 fontSetupRenderScalePoint(font *f,f32 w,f32 h);
-s32 fontSetupRenderScalePixel(font *f,f32 w,f32 h);
-s32 fontSetupRenderEffectWeight(font *f,f32 additionalWeight);
-s32 fontSetupRenderEffectSlant(font *f,f32 effectSlant);
-s32 fontGetRenderScalePoint(font *f,f32 *w,f32 *h);
-s32 fontGetRenderScalePixel(font *f,f32 *w,f32 *h);
-s32 fontGetRenderEffectWeight(font *f,f32 *effectWeight);
-s32 fontGetRenderEffectSlant(font *f,f32 *effectSlant);
-s32 fontGetRenderCharGlyphMetrics(font *f,u32 code,fontGlyphMetrics *metrics);
-s32 fontGetRenderCharGlyphMetricsVertical(font *cfEx,u32 code,fontGlyphMetrics *metrics);
-s32 fontGetRenderScaledKerning(font *f,u32 preCode,u32 code,fontKerning *kerning);
-s32 fontGenerateCharGlyph(font *f,u32 code,fontGlyph **glyph);
-s32 fontGenerateCharGlyphVertical(font *f,u32 code,fontGlyph **glyph);
-s32 fontDeleteGlyph(font *f,fontGlyph *glyph);
-s32 fontDelete(const fontLibrary *library,void *p);
-void fontRenderSurfaceInit(fontRenderSurface *surface,void *buffer,s32 bufWidthByte,s32 pixelSizeByte,s32 w,s32 h);
-void fontRenderSurfaceSetScissor(fontRenderSurface *surface,s32 x0,s32 y0,u32 w,u32 h);
-s32 fontRenderCharGlyphImage(font *f,u32 code,fontRenderSurface *surface,f32 x,f32 y,fontGlyphMetrics *metrics,fontImageTransInfo *transInfo);
-s32 fontRenderCharGlyphImageHorizontal(font *f,u32 code,fontRenderSurface *surface,f32 x,f32 y,fontGlyphMetrics *metrics,fontImageTransInfo *transInfo);
-s32 fontRenderCharGlyphImageVertical(font *f,u32 code,fontRenderSurface *surface,f32 x,f32 y,fontGlyphMetrics *metrics,fontImageTransInfo *transInfo);
-s32 fontUnbindRenderer(font *f);
-s32 fontGlyphRenderImage(fontGlyph *glyph,fontGlyphStyle *style,fontRenderer *renderer,fontRenderSurface *surface,f32 x,f32 y,fontGlyphMetrics *metrics,fontImageTransInfo *transInfo);
-s32 fontGlyphRenderImageHorizontal(fontGlyph *glyph,fontGlyphStyle *style,fontRenderer *renderer,fontRenderSurface *surface,f32 x,f32 y,fontGlyphMetrics *metrics,fontImageTransInfo *transInfo);
-s32 fontGlyphRenderImageVertical(fontGlyph *glyph,fontGlyphStyle *style,fontRenderer *renderer,fontRenderSurface *surface,f32 x,f32 y,fontGlyphMetrics *metrics,fontImageTransInfo *transInfo);
-s32 fontGlyphGetHorizontalShift(fontGlyph *glyph,f32 *shiftX,f32 *shiftY);
-s32 fontGlyphGetVerticalShift(fontGlyph *glyph,f32 *shiftX,f32 *shiftY);
-s32 fontDestroyRenderer(fontRenderer *renderer);
-s32 fontCloseFont(font *cf);
-s32 fontEndLibrary(const fontLibrary *lib);
-s32 fontEnd();
+s32 cellFontOpenFontset(const CellFontLibrary *lib,CellFontType *type,CellFont *f);
+s32 cellFontOpenFontsetOnMemory(const CellFontLibrary *lib,CellFontType *type,CellFont *f);
+s32 cellFontOpenFontFile(const CellFontLibrary *lib,const char *fontPath,u32 subNum,s32 uniqueID,CellFont *f);
+s32 cellFontOpenFontMemory(const CellFontLibrary *lib,void *fontAddr,u32 fontSize,u32 subNum,s32 uniqueID,CellFont *f);
+s32 cellFontOpenFontInstance(CellFont *openedFont,CellFont *f);
+s32 cellFontGetLibrary(CellFont *f,const CellFontLibrary **lib,u32 *type);
+s32 cellFontAdjustGlyphExpandBuffer(CellFont *f,s32 pointN,s32 contourN);
+s32 cellFontGetGlyphExpandBufferInfo(CellFont *f,s32 *pointN,s32 *contourN);
+s32 cellFontAdjustFontScaling(CellFont *f,f32 fontScale);
+s32 cellFontSetResolutionDpi(CellFont *f,u32 hDpi,u32 vDpi);
+s32 cellFontSetScalePoint(CellFont *f,f32 w,f32 h);
+s32 cellFontontSetScalePixel(CellFont *f,f32 w,f32 h);
+s32 cellFontSetEffectWeight(CellFont *f,f32 effectWeight);
+s32 cellFontSetEffectSlant(CellFont *f,f32 effectSlant);
+s32 cellFontGetResolutionDpi(CellFont *f,u32 *hDpi,u32 *vDpi);
+s32 cellFontGetScalePoint(CellFont *f,f32 *w,f32 *h);
+s32 cellFontGetScalePixel(CellFont *f,f32 *w,f32 *h);
+s32 cellFontGetEffectWeight(CellFont *f,f32 *effectWeight);
+s32 cellFontGetEffectSlant(CellFont *f,f32 *effectSlant);
+s32 cellFontGetHorizontalLayout(CellFont *f,CellFontHorizontalLayout *layout);
+s32 cellFontGetVerticalLayout(CellFont *f,CellFontVerticalLayout *layout);
+s32 cellFontGetFontIdCode(CellFont *f,u32 code,u32 *fontId,u32 *fontcode);
+s32 cellFontGetCharGlyphMetrics(CellFont *f,u32 code,CellFontGlyphMetrics *metrics);
+s32 cellFontGetCharGlyphMetricsVertical(CellFont *f,u32 code,CellFontGlyphMetrics *metrics);
+s32 cellFontGetKerning(CellFont *f,u32 preCode,u32 code,CellFontKerning *kerning);
+s32 cellFontCreateRenderer(const CellFontLibrary *lib,CellFontRendererConfig *confing,CellFontRenderer *renderer);
+s32 cellFontBindRenderer(CellFont *f,CellFontRenderer *renderer);
+s32 cellFontGetBindingRenderer(CellFont *f,CellFontRenderer **renderer);
+s32 cellFontSetupRenderScalePoint(CellFont *f,f32 w,f32 h);
+s32 cellFontSetupRenderScalePixel(CellFont *f,f32 w,f32 h);
+s32 cellFontSetupRenderEffectWeight(CellFont *f,f32 additionalWeight);
+s32 cellFontSetupRenderEffectSlant(CellFont *f,f32 effectSlant);
+s32 cellFontGetRenderScalePoint(CellFont *f,f32 *w,f32 *h);
+s32 cellFontGetRenderScalePixel(CellFont *f,f32 *w,f32 *h);
+s32 cellFontGetRenderEffectWeight(CellFont *f,f32 *effectWeight);
+s32 cellFontGetRenderEffectSlant(CellFont *f,f32 *effectSlant);
+s32 cellFontGetRenderCharGlyphMetrics(CellFont *f,u32 code,CellFontGlyphMetrics *metrics);
+s32 cellFontGetRenderCharGlyphMetricsVertical(CellFont *cfEx,u32 code,CellFontGlyphMetrics *metrics);
+s32 cellFontGetRenderScaledKerning(CellFont *f,u32 preCode,u32 code,CellFontKerning *kerning);
+s32 cellFontGenerateCharGlyph(CellFont *f,u32 code,CellFontGlyph **glyph);
+s32 cellFontGenerateCharGlyphVertical(CellFont *f,u32 code,CellFontGlyph **glyph);
+s32 cellFontDeleteGlyph(CellFont *f,CellFontGlyph *glyph);
+s32 cellFontDelete(const CellFontLibrary *library,void *p);
+void cellFontRenderSurfaceInit(CellFontRenderSurface *surface,void *buffer,s32 bufWidthByte,s32 pixelSizeByte,s32 w,s32 h);
+void cellFontRenderSurfaceSetScissor(CellFontRenderSurface *surface,s32 x0,s32 y0,u32 w,u32 h);
+s32 cellFontRenderCharGlyphImage(CellFont *f,u32 code,CellFontRenderSurface *surface,f32 x,f32 y,CellFontGlyphMetrics *metrics,CellFontImageTransInfo *transInfo);
+s32 cellFontRenderCharGlyphImageHorizontal(CellFont *f,u32 code,CellFontRenderSurface *surface,f32 x,f32 y,CellFontGlyphMetrics *metrics,CellFontImageTransInfo *transInfo);
+s32 cellFontRenderCharGlyphImageVertical(CellFont *f,u32 code,CellFontRenderSurface *surface,f32 x,f32 y,CellFontGlyphMetrics *metrics,CellFontImageTransInfo *transInfo);
+s32 cellFontUnbindRenderer(CellFont *f);
+s32 cellFontGlyphRenderImage(CellFontGlyph *glyph,CellFontGlyphStyle *style,CellFontRenderer *renderer,CellFontRenderSurface *surface,f32 x,f32 y,CellFontGlyphMetrics *metrics,CellFontImageTransInfo *transInfo);
+s32 cellFontGlyphRenderImageHorizontal(CellFontGlyph *glyph,CellFontGlyphStyle *style,CellFontRenderer *renderer,CellFontRenderSurface *surface,f32 x,f32 y,CellFontGlyphMetrics *metrics,CellFontImageTransInfo *transInfo);
+s32 cellFontGlyphRenderImageVertical(CellFontGlyph *glyph,CellFontGlyphStyle *style,CellFontRenderer *renderer,CellFontRenderSurface *surface,f32 x,f32 y,CellFontGlyphMetrics *metrics,CellFontImageTransInfo *transInfo);
+s32 cellFontGlyphGetHorizontalShift(CellFontGlyph *glyph,f32 *shiftX,f32 *shiftY);
+s32 cellFontGlyphGetVerticalShift(CellFontGlyph *glyph,f32 *shiftX,f32 *shiftY);
+s32 cellFontDestroyRenderer(CellFontRenderer *renderer);
+s32 cellFontCloseFont(CellFont *cf);
+s32 cellFontEndLibrary(const CellFontLibrary *lib);
+s32 cellFontEnd();
 
 #ifdef __cplusplus
 	}

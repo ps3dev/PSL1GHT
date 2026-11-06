@@ -9,7 +9,7 @@
 
 #include <sys/file.h>
 
-static void convertLv2Stat(struct stat *dst,sysFSStat *src)
+static void convertLv2Stat(struct stat *dst,CellFsStat *src)
 {
 	memset(dst,0,sizeof(struct stat));
 	dst->st_mode = src->st_mode;
@@ -30,7 +30,7 @@ _DEFUN(__librt_fstat_r,(r,fd,st),
 	   struct stat *st)
 {
 	s32 ret = 0;
-	sysFSStat stat;
+	CellFsStat stat;
 
 	ret = sysLv2FsFStat(fd,&stat);
 	if(!ret && st) convertLv2Stat(st,&stat);
@@ -45,7 +45,7 @@ _DEFUN(__librt_fstat64_r,(r,fd,st),
 	   struct stat *st)
 {
 	s32 ret = 0;
-	sysFSStat stat;
+	CellFsStat stat;
 
 	ret = sysLv2FsFStat(fd,&stat);
 	if(!ret && st) convertLv2Stat(st,&stat);
@@ -60,7 +60,7 @@ _DEFUN(__librt_stat_r,(r,path,st),
 	   struct stat *st)
 {
 	s32 ret = 0;
-	sysFSStat stat;
+	CellFsStat stat;
 
 	ret = sysLv2FsStat(path,&stat);
 	if(!ret && st) convertLv2Stat(st,&stat);
@@ -75,7 +75,7 @@ _DEFUN(__librt_stat64_r,(r,path,st),
 	   struct stat *st)
 {
 	s32 ret = 0;
-	sysFSStat stat;
+	CellFsStat stat;
 
 	ret = sysLv2FsStat(path,&stat);
 	if(!ret && st) convertLv2Stat(st,&stat);

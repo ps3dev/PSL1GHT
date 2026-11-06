@@ -13,18 +13,18 @@
 
 #define SPURS_PREFIX_NAME "gemsample"
 
-gemAttribute gem_attr;
-gemInfo gem_info;
-gemVideoConvertAttribute gem_video_convert;
-gemState gem_state;
-gemInertialState gem_inertial_state;
+CellGemAttribute gem_attr;
+CellGemInfo gem_info;
+CellGemVideoConvertAttribute gem_video_convert;
+CellGemState gem_state;
+CellGemInertialState gem_inertial_state;
 u16 oldGemPad = 0;
 u16 newGemPad = 0;
 u16 newGemAnalogT = 0;
 extern int tracking;
-extern cameraReadInfo camread;
-extern cameraInfoEx camInf;
-Spurs *spurs ATTRIBUTE_PRXPTR;
+extern CellCameraReadInfo camread;
+extern CellCameraInfoEx camInf;
+CellSpurs *spurs ATTRIBUTE_PRXPTR;
 void *gem_memory ATTRIBUTE_PRXPTR;
 extern rsxBuffer buffers[MAX_BUFFERS];
 extern int currentBuffer;
@@ -32,7 +32,7 @@ float rx, ry;
 
 int dx = 200;			// default step x
 int dy = 100;			// default step y
-gemImageState image_state;
+CellGemImageState image_state;
 void *buffer_mem ATTRIBUTE_PRXPTR;
 void *video_out ATTRIBUTE_PRXPTR;
 u8 video_frame[640*480*4];
@@ -65,31 +65,31 @@ proccessGem (int t)
 
     case 0:
 
-      ret = gemUpdateStart (camread.buffer, camread.timestamp);
+      ret = cellGemUpdateStart (camread.buffer, camread.timestamp);
 
       if (ret != 0) {
-	printf ("Return from gemUpdateStart %X\n", ret);
+	printf ("Return from cellGemUpdateStart %X\n", ret);
       }
       break;
     case 1:
 
-      ret = gemConvertVideoStart (camread.buffer);
+      ret = cellGemConvertVideoStart (camread.buffer);
 
       if (ret != 0) {
-	printf ("Return from gemConvertVideoStart %X\n", ret);
+	printf ("Return from cellGemConvertVideoStart %X\n", ret);
       }
       break;
     case 2:
 
-      ret = gemUpdateFinish ();
+      ret = cellGemUpdateFinish ();
       if (ret != 0) {
-	printf ("Return from gemUpdateFinish %X\n", ret);
+	printf ("Return from cellGemUpdateFinish %X\n", ret);
       }
       break;
     case 3:
-      ret = gemConvertVideoFinish ();
+      ret = cellGemConvertVideoFinish ();
       if (ret != 0) {
-	printf ("Return from gemConvertVideoFinish %X\n", ret);
+	printf ("Return from cellGemConvertVideoFinish %X\n", ret);
       }
       break;
     default:
@@ -121,33 +121,33 @@ initSpurs ()
 
   /* initialize spurs */
   printf ("Initializing spurs\n");
-  spurs = (void *) memalign (SPURS_ALIGN, sizeof (Spurs));
+  spurs = (void *) memalign (CELL_SPURS_ALIGN, sizeof (CellSpurs));
   printf ("Initializing spurs attribute\n");
-  SpursAttribute attributeSpurs;
+  CellSpursAttribute attributeSpurs;
 
-  ret = spursAttributeInitialize (&attributeSpurs, 5, 250, ppu_prio - 1, true);
+  ret = cellSpursAttributeInitialize (&attributeSpurs, 5, 250, ppu_prio - 1, true);
   if (ret) {
-    printf ("error : spursAttributeInitialize failed  %x\n", ret);
+    printf ("error : cellSpursAttributeInitialize failed  %x\n", ret);
     return (ret);
   }
 
   printf ("Setting name prefix\n");
   ret =
-      spursAttributeSetNamePrefix (&attributeSpurs, SPURS_PREFIX_NAME,
+      cellSpursAttributeSetNamePrefix (&attributeSpurs, SPURS_PREFIX_NAME,
       strlen (SPURS_PREFIX_NAME));
   if (ret) {
-    printf ("error : spursAttributeInitialize failed %x\n", ret);
+    printf ("error : cellSpursAttributeInitialize failed %x\n", ret);
     return (ret);
   }
 
   printf ("Initializing with attribute\n");
-  ret = spursInitializeWithAttribute (spurs, &attributeSpurs);
+  ret = cellSpursInitializeWithAttribute (spurs, &attributeSpurs);
   if (ret) {
-    printf ("error: spursInitializeWithAttribute failed  %x\n", ret);
+    printf ("error: cellSpursInitializeWithAttribute failed  %x\n", ret);
     return (ret);
   }
 
-  ret = spursGetNumSpuThread (spurs, &nthread);
+  ret = cellSpursGetNumSpuThread (spurs, &nthread);
   if (ret) {
     printf ("error: spursGetNumSpuThread failed %x\n", ret);
   }
@@ -155,7 +155,7 @@ initSpurs ()
   sys_spu_thread_t *threads =
       (sys_spu_thread_t *) malloc (sizeof (sys_spu_thread_t) * nthread);
 
-  ret = spursGetSpuThreadId (spurs, threads, &nthread);
+  ret = cellSpursGetSpuThreadId (spurs, threads, &nthread);
   if (ret) {
     printf ("error: spursGetSpuThreadId failed %x\n", ret);
   }
@@ -166,14 +166,14 @@ initSpurs ()
   }
   printf ("\n");
 
-  printf ("checking SpursInfo\n");
-  SpursInfo info;
+  printf ("checking CellSpursInfo\n");
+  CellSpursInfo info;
 
-  ret = spursGetInfo (spurs, &info);
+  ret = cellSpursGetInfo (spurs, &info);
   if (ret) {
     printf ("error: spursGetInfo failed %x\n", ret);
   }
-  printf ("SpursInfo: \n");
+  printf ("CellSpursInfo: \n");
   printf ("nSpus=%d \n", info.nSpus);
   printf ("spuGroupPriority=%d \n", info.spuGroupPriority);
   printf ("ppuThreadPriority=%d \n", info.ppuThreadPriority);
@@ -189,7 +189,7 @@ initSpurs ()
 int
 endSpurs ()
 {
-  spursFinalize (spurs);
+  cellSpursFinalize (spurs);
 
   return 0;
 }
@@ -198,13 +198,13 @@ int
 endGem ()
 {
   endSpurs ();
-  gemEnd ();
+  cellGemEnd ();
   return 0;
 }
 
 static inline void
-initAttributeGem (gemAttribute * attribute, u32 max_connect, void *memory_ptr,
-    Spurs * spurs, const u8 spu_priorities[8])
+initAttributeGem (CellGemAttribute * attribute, u32 max_connect, void *memory_ptr,
+    CellSpurs * spurs, const u8 spu_priorities[8])
 {
   int i;
 
@@ -221,8 +221,8 @@ initGemVideoConvert()
   int ret;
   printf("Preparing GemVideoConvert structure \n");	
   gem_video_convert.version=2;
-  gem_video_convert.format=2; //GEM_RGBA_640x480; 
-  gem_video_convert.conversion= GEM_AUTO_WHITE_BALANCE|GEM_COMBINE_PREVIOUS_INPUT_FRAME|GEM_FILTER_OUTLIER_PIXELS|GEM_GAMMA_BOOST; 
+  gem_video_convert.format=CELL_GEM_RGBA_640x480;; 
+  gem_video_convert.conversion= CELL_GEM_AUTO_WHITE_BALANCE|CELL_GEM_COMBINE_PREVIOUS_INPUT_FRAME|CELL_GEM_FILTER_OUTLIER_PIXELS|CELL_GEM_GAMMA_BOOST; 
   gem_video_convert.gain=1.0f;
   gem_video_convert.red_gain=1.0f;
   gem_video_convert.green_gain=1.0f;
@@ -232,7 +232,7 @@ initGemVideoConvert()
   gem_video_convert.buffer_memory=buffer_mem;
   gem_video_convert.video_data_out=video_out;
   gem_video_convert.alpha=255;		
-  ret=gemPrepareVideoConvert(&gem_video_convert); 
+  ret=cellGemPrepareVideoConvert(&gem_video_convert); 
   return ret;
 }
 int
@@ -243,7 +243,7 @@ initGem ()
 
   initSpurs ();
 
-  ret = gemGetMemorySize (1);
+  ret = cellGemGetMemorySize (1);
   printf
       ("return from GemGetMemorySize %X size in bytes needed for move device to init libgem\n",
       ret);
@@ -254,21 +254,21 @@ initGem ()
   u8 gem_spu_priorities[8] = { 1, 1, 1, 1, 1, 0, 0, 0 };	// execute
 								// libgem jobs
 								// on 5 spu
-  gemAttribute gem_attr;
+  CellGemAttribute gem_attr;
 
   initAttributeGem (&gem_attr, 1, gem_memory, spurs, gem_spu_priorities);
 
   printf
       ("calling GemInit with GemAttribute structure version=%d max_connect=%d spurs=%X memory_ptr=%X  \n",
       gem_attr.version, gem_attr.max, gem_attr.spurs, gem_attr.memory);
-  ret = gemInit (&gem_attr);
+  ret = cellGemInit (&gem_attr);
   printf ("return from GemInit %X \n", ret);
   ret= initGemVideoConvert();
   printf ("return from initGemVideoConvert %X \n", ret);
-  ret = gemPrepareCamera (128, 0.5);
+  ret = cellGemPrepareCamera (128, 0.5);
   printf ("GemPrepareCamera return %d exposure set to 128 and quality to 0.5\n",
       ret);
-  ret = gemReset (0);
+  ret = cellGemReset (0);
   printf ("GemReset return %X \n", ret);
   return ret;
 
@@ -279,7 +279,7 @@ readGemPad (int num_gem)
 {
   int ret;
   unsigned int hues[] = { 4 << 24, 4 << 24, 4 << 24, 4 << 24 };
-  ret = gemGetState (0, 0, -22000, &gem_state);
+  ret = cellGemGetState (0, 0, -22000, &gem_state);
 
   newGemPad = gem_state.paddata.buttons & (~oldGemPad);
   newGemAnalogT = gem_state.paddata.ANA_T;
@@ -287,11 +287,11 @@ readGemPad (int num_gem)
 
   switch (ret) {
     case 2:
-      gemForceRGB (num_gem, 0.5, 0.5, 0.5);
+      cellGemForceRGB (num_gem, 0.5, 0.5, 0.5);
       break;
     case 5:
 
-      gemTrackHues (hues, NULL);
+      cellGemTrackHues (hues, NULL);
       break;
     default:
       break;
@@ -304,7 +304,7 @@ readGemAccPosition (int num_gem)
 {
   vec_float4 position;
 
-  gemGetAccelerometerPositionInDevice (num_gem, &position);
+  cellGemGetAccelerometerPositionInDevice (num_gem, &position);
 
   printf (" accelerometer device coordinates [%f,%f,%f,%f]\n",
       vec_array (position, 0), vec_array (position, 1), vec_array (position, 2),
@@ -317,7 +317,7 @@ readGemInertial (int num_gem)
 {
   int ret;
 
-  ret = gemGetInertialState (num_gem, 0, -22000, &gem_inertial_state);
+  ret = cellGemGetInertialState (num_gem, 0, -22000, &gem_inertial_state);
   printf ("gemGetInertialState return %X\n", ret);
   printf ("counter %d temperature %f\n", gem_inertial_state.counter,
       gem_inertial_state.temperature);
@@ -369,7 +369,7 @@ readGem ()
       break;
     case 4:
       printf ("Move pressed \n");
-      gemCalibrate (0);
+      cellGemCalibrate (0);
       break;
     case 8:
       printf ("Start pressed \n");
@@ -404,9 +404,9 @@ getImageState ()
 {
   int ret;
 
-  gemImageState imgState;
+  CellGemImageState imgState;
 
-  gemGetImageState (0, &imgState);
+  cellGemGetImageState (0, &imgState);
   printf (" u  [%f]\n", imgState.u);
   printf (" v  [%f]\n", imgState.v);
   printf (" r  [%f]\n", imgState.r);

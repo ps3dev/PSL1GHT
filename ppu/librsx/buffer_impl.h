@@ -1,31 +1,31 @@
-void RSX_FUNC(ResetCommandBuffer)(gcmContextData *context)
+void RSX_FUNC(ResetCommandBuffer)(CellGcmContextData *context)
 {
 	u32 offset = 0x1000;			// init state offset;
 	RSX_FUNC(SetJumpCommand)(context,offset);
 
 	__sync();
 
-	gcmControlRegister volatile *ctrl = gcmGetControlRegister(context);
+	CellGcmControlRegister volatile *ctrl = cellGcmGetControlRegister();
 	ctrl->put = offset;
 	while(ctrl->get!=offset) usleep(30);
 }
 
-void RSX_FUNC(FlushBuffer)(gcmContextData *context)
+void RSX_FUNC(FlushBuffer)(CellGcmContextData *context)
 {
 	u32 offset = 0;
-	gcmControlRegister volatile *ctrl = gcmGetControlRegister(context);
+	CellGcmControlRegister volatile *ctrl = cellGcmGetControlRegister();
 	
 	__sync();
-	gcmAddressToOffset(context->current,&offset);
+	cellGcmAddressToOffset(context->current,&offset);
 	ctrl->put = offset;
 }
 
-void RSX_FUNC(Finish)(gcmContextData *context,u32 ref_value)
+void RSX_FUNC(Finish)(CellGcmContextData *context,u32 ref_value)
 {
 	RSX_FUNC(SetReferenceCommand)(context,ref_value);
 	RSX_FUNC(FlushBuffer)(context);
 
-	gcmControlRegister volatile *ctrl = gcmGetControlRegister(context);
+	CellGcmControlRegister volatile *ctrl = cellGcmGetControlRegister();
 	while(ctrl->ref!=ref_value) usleep(30);
 }
 

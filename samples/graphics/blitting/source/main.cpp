@@ -25,19 +25,19 @@ SYS_PROCESS_PARAM(1001, 0x100000);
 extern "C" {
 static void program_exit_callback()
 {
-    sysUtilUnregisterCallback(SYSUTIL_EVENT_SLOT0);
-	gcmSetWaitFlip(context);
+    cellSysutilUnregisterCallback(CELL_SYSUTIL_EVENT_SLOT0);
+	cellGcmSetWaitFlip(context);
 	rsxFinish(context,1);
 }
 
 static void sysutil_exit_callback(u64 status,u64 param,void *usrdata)
 {
 	switch(status) {
-		case SYSUTIL_EXIT_GAME:
+		case CELL_SYSUTIL_EXIT_GAME:
 			running = 0;
 			break;
-		case SYSUTIL_DRAW_BEGIN:
-		case SYSUTIL_DRAW_END:
+		case CELL_SYSUTIL_DRAW_BEGIN:
+		case CELL_SYSUTIL_DRAW_END:
 			break;
 		default:
 			break;
@@ -47,7 +47,7 @@ static void sysutil_exit_callback(u64 status,u64 param,void *usrdata)
 
 void blit_simple(Bitmap *bitmap, u32 dstX, u32 dstY, u32 srcX, u32 srcY, u32 w, u32 h)
 {
-  rsxSetTransferImage(context, GCM_TRANSFER_LOCAL_TO_LOCAL,
+  rsxSetTransferImage(context, CELL_GCM_TRANSFER_LOCAL_TO_LOCAL,
     color_offset[curr_fb], color_pitch, dstX-w/2, dstY-h/2,
     bitmap->offset, bitmap->width*4, rsxGetFixedUint16((float)srcX),
     rsxGetFixedUint16((float)srcY), w, h, 4);
@@ -55,21 +55,21 @@ void blit_simple(Bitmap *bitmap, u32 dstX, u32 dstY, u32 srcX, u32 srcY, u32 w, 
 
 void blit_data(Bitmap *bitmap, u32 dstX, u32 dstY, u32 srcX, u32 srcY, u32 w, u32 h)
 {
-  rsxSetTransferData(context, GCM_TRANSFER_LOCAL_TO_LOCAL,
+  rsxSetTransferData(context, CELL_GCM_TRANSFER_LOCAL_TO_LOCAL,
     color_offset[curr_fb], color_pitch, bitmap->offset, bitmap->width*4,
     w*4, h);
 }
 
 void blit_scale(Bitmap *bitmap, u32 dstX, u32 dstY, u32 srcX, u32 srcY, u32 w, u32 h, float zoom)
 {
-  gcmTransferScale scale;
-  gcmTransferSurface surface;
+  CellGcmTransferScale scale;
+  CellGcmTransferSurface surface;
 
-  scale.conversion = GCM_TRANSFER_CONVERSION_TRUNCATE;
-  scale.format = GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8;
-  scale.origin = GCM_TRANSFER_ORIGIN_CORNER;
-  scale.operation = GCM_TRANSFER_OPERATION_SRCCOPY_AND;
-  scale.interp = GCM_TRANSFER_INTERPOLATOR_NEAREST;
+  scale.conversion = CELL_GCM_TRANSFER_CONVERSION_TRUNCATE;
+  scale.format = CELL_GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8;
+  scale.origin = CELL_GCM_TRANSFER_ORIGIN_CORNER;
+  scale.operation = CELL_GCM_TRANSFER_OPERATION_SRCCOPY_AND;
+  scale.interp = CELL_GCM_TRANSFER_INTERPOLATOR_NEAREST;
   scale.clipX = 0;
   scale.clipY = 0;
   scale.clipW = display_width;
@@ -87,41 +87,41 @@ void blit_scale(Bitmap *bitmap, u32 dstX, u32 dstY, u32 srcX, u32 srcY, u32 w, u
   scale.offset = bitmap->offset;
   scale.pitch = sizeof(u32) * bitmap->width;
 
-  surface.format = GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8;
+  surface.format = CELL_GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8;
   surface.pitch = color_pitch;
   surface.offset = color_offset[curr_fb];
 
-  rsxSetTransferScaleMode(context, GCM_TRANSFER_LOCAL_TO_LOCAL, GCM_TRANSFER_SURFACE);
+  rsxSetTransferScaleMode(context, CELL_GCM_TRANSFER_LOCAL_TO_LOCAL, CELL_GCM_TRANSFER_SURFACE);
   rsxSetTransferScaleSurface(context, &scale, &surface);
 }
 
 int main(int argc,const char *argv[])
 {
     int k = 0;
-	padInfo padinfo;
-	padData paddata;
+	CellPadInfo padinfo;
+	CellPadData paddata;
     Bitmap bitmap;
 	void *host_addr = memalign(1024*1024,HOST_SIZE);
 
 	printf("blitting started...\n");
 
 	init_screen(host_addr,HOST_SIZE);
-	ioPadInit(7);
+	cellPadInit(7);
 
 	atexit(program_exit_callback);
-	sysUtilRegisterCallback(0,sysutil_exit_callback,NULL);
+	cellSysutilRegisterCallback(CELL_SYSUTIL_EVENT_SLOT0,sysutil_exit_callback,NULL);
 
     bitmapSetXpm(&bitmap, psl1ght_xpm);
 	setRenderTarget(curr_fb);
 
 	running = 1;
 	while(running) {
-		sysUtilCheckCallback();
+		cellSysutilCheckCallback();
 
-		ioPadGetInfo(&padinfo);
-		for(int i=0; i < MAX_PADS; i++){
+		cellPadGetInfo(&padinfo);
+		for(int i=0; i < CELL_MAX_PADS; i++){
 			if(padinfo.status[i]){
-				ioPadGetData(i, &paddata);
+				cellPadGetData(i, &paddata);
 
 				if(paddata.BTN_CROSS)
 					goto done;
@@ -132,17 +132,17 @@ int main(int argc,const char *argv[])
         /* Display some stuff on the screen */
         rsxSetClearColor(context, 0x200030);
         rsxSetClearDepthStencil(context, 0xffff);
-        rsxClearSurface(context,GCM_CLEAR_R |
-                                        GCM_CLEAR_G |
-                                        GCM_CLEAR_B |
-                                        GCM_CLEAR_A |
-                                        GCM_CLEAR_S |
-                                        GCM_CLEAR_Z);
+        rsxClearSurface(context,CELL_GCM_CLEAR_R |
+                                        CELL_GCM_CLEAR_G |
+                                        CELL_GCM_CLEAR_B |
+                                        CELL_GCM_CLEAR_A |
+                                        CELL_GCM_CLEAR_S |
+                                        CELL_GCM_CLEAR_Z);
 
         /* Enable blending (for rsxSetTransferScaleSurface) */
-        rsxSetBlendFunc(context, GCM_SRC_ALPHA, GCM_ONE_MINUS_SRC_ALPHA, GCM_SRC_ALPHA, GCM_ONE_MINUS_SRC_ALPHA);
-        rsxSetBlendEquation(context, GCM_FUNC_ADD, GCM_FUNC_ADD);
-        rsxSetBlendEnable(context, GCM_TRUE);
+        rsxSetBlendFunc(context, CELL_GCM_SRC_ALPHA, CELL_GCM_ONE_MINUS_SRC_ALPHA, CELL_GCM_SRC_ALPHA, CELL_GCM_ONE_MINUS_SRC_ALPHA);
+        rsxSetBlendEquation(context, CELL_GCM_FUNC_ADD, CELL_GCM_FUNC_ADD);
+        rsxSetBlendEnable(context, CELL_GCM_TRUE);
 
         /* Display the whole PSL1GHT image */
         blit_simple(&bitmap, display_width/4, 100, 0, 0, bitmap.width, bitmap.height);
